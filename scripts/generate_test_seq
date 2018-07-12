@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 import tests.dirty_seq as ds
 import argparse
-import pdb
 
 def parse_args():
     descr = 'Generates noisy periodical test sequence.\n'
