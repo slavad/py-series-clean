@@ -1,6 +1,6 @@
 import numpy as np
 #TODO: write tests
-#TODO: move to the pyclean dir?
+#TODO: move to the py_series_clean dir?
 def generate_dirty_periodical_series_with_random_time_grid(time_grid_length, max_time_value, periods, shifts, sigma):
     """generates time grid and noisy observations"""
     time_grid = generate_random_time_grid(time_grid_length, max_time_value)
