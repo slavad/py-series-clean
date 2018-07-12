@@ -12,8 +12,9 @@ setup(
     description='Python CLEAN implementation',
     long_description=long_description,
     long_description_content_type='text/markdown',
-    url='https://github.com/pypa/sampleproject',
+    url='https://github.com/slavad/py-series-clean',
     author='Viacheslav Dushin',
+    keywords='time series analysis, CLEAN algorithm',
     packages=find_packages(),
     classifiers=[
         #TODO: test with other versions
