@@ -1,6 +1,17 @@
 import numpy as np
 #TODO: write tests
 #TODO: move to the pyclean dir?
+def generate_dirty_periodical_seq_with_random_time_grid(time_grid_length, max_time_value, periods, shifts, sigma):
+    """generates time grid and noisy observations"""
+    time_grid = generate_random_time_grid(time_grid_length, max_time_value)
+    seq = generate_dirty_periodical_seq(time_grid, periods, shifts, sigma)
+    return time_grid.reshape(1,-1), seq
+
+def generate_random_time_grid(time_grid_length, max_time_value):
+    """generates random time grid for test sequence"""
+    result = np.sort(np.random.ranf(time_grid_length))
+    return result*max_time_value
+
 def generate_periodical_seq(time_grid, periods, shifts):
     """generates periodical sequence"""
     # all args should be in the same units: e.g. secs

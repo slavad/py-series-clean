@@ -4,7 +4,7 @@ from os import path
 
 setup(
     name='pyclean',
-    version='0.1.1',
+    version='0.0.1',
     description='Python CLEAN implementation',
     classifiers=[
         'Programming Language :: Python :: 3.6',
@@ -12,6 +12,8 @@ setup(
     install_requires=[
        'numpy>=1.14.0<1.15.0'
     ]
+    # TBD:
+    #scripts=['scripts/pyclean', 'scripts/generate_test_seq']
     # TBD: dev, test etc
     # extras_require={
     # }

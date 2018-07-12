@@ -1,0 +1,95 @@
+#!/usr/bin/env python
+import tests.dirty_seq as ds
+import argparse
+import pdb
+
+def parse_args():
+    descr = 'Generates noisy periodical test sequence.\n'
+    descr += 'Results is written to the specified text file in two columns:\n'
+    descr += 'time, value'
+    parser = argparse.ArgumentParser(description=descr)
+    parser.add_argument(
+        '-o',
+        required = True,
+        help='output file location',
+        metavar='OUTPUT'
+    )
+    parser.add_argument(
+        '-l',
+        required = True,
+        help='time sequence length',
+        metavar='SEQ_LENGTH',
+        type = check_positive_int
+    )
+    parser.add_argument(
+        '-t',
+        required = True,
+        help='maximum time value',
+        metavar='TIME_VAL',
+        type = check_positive_float
+    )
+    parser.add_argument(
+        '-p',
+        required = True,
+        help='periods to generate periodical sequence, number of args must be the same as for shifts',
+        metavar='PERIODS',
+        type = check_positive_float,
+        nargs='+'
+    )
+    parser.add_argument(
+        '-i',
+        required = True,
+        help='shifts for respective periods to generate periodical sequence, number of args must be the same as for periods',
+        metavar='SHIFTS',
+        type = check_positive_float,
+        nargs='+'
+    )
+    parser.add_argument(
+        '-s',
+        required = True,
+        help='sigma for normal distribution (to generate noise)',
+        metavar='SIGMA',
+        type = check_positive_float
+    )
+    args = parser.parse_args()
+    return args
+
+def generate_sequence(args):
+    """generate the sequence"""
+    result = ds.generate_dirty_periodical_seq_with_random_time_grid(
+        args.l,
+        args.t,
+        args.p,
+        args.i,
+        args.s
+    )
+    return result
+
+def check_positive_int(value):
+    return check_positive(value, int)
+
+def check_positive_float(value):
+    return check_positive(value, float)
+
+def check_positive(value, parser):
+    parsed_value = parser(value)
+    if parsed_value < 0:
+         raise argparse.ArgumentTypeError("%s is not a non-negative number" % value)
+    return parsed_value
+
+def save_seq(seq, file_path):
+    """docstring for save_seq"""
+    length = seq[0].shape[1]
+    file = open(file_path, "w")
+    for i in range(0, length):
+        string = '%e %e' % (seq[0][0][i], seq[1][0][i])
+        print(string, file=file)
+    file.close
+
+def main():
+    """entry point"""
+    args = parse_args()
+    seq = generate_sequence(args)
+    save_seq(seq, args.o)
+
+main()
