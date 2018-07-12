@@ -1,19 +1,19 @@
 import numpy as np
 #TODO: write tests
 #TODO: move to the pyclean dir?
-def generate_dirty_periodical_seq_with_random_time_grid(time_grid_length, max_time_value, periods, shifts, sigma):
+def generate_dirty_periodical_series_with_random_time_grid(time_grid_length, max_time_value, periods, shifts, sigma):
     """generates time grid and noisy observations"""
     time_grid = generate_random_time_grid(time_grid_length, max_time_value)
-    seq = generate_dirty_periodical_seq(time_grid, periods, shifts, sigma)
-    return time_grid.reshape(1,-1), seq
+    series = generate_dirty_periodical_series(time_grid, periods, shifts, sigma)
+    return time_grid.reshape(1,-1), series
 
 def generate_random_time_grid(time_grid_length, max_time_value):
-    """generates random time grid for test sequence"""
+    """generates random time grid for test series"""
     result = np.sort(np.random.ranf(time_grid_length))
     return result*max_time_value
 
-def generate_periodical_seq(time_grid, periods, shifts):
-    """generates periodical sequence"""
+def generate_periodical_series(time_grid, periods, shifts):
+    """generates periodical series"""
     # all args should be in the same units: e.g. secs
     # can be both scalars or vectors, but the must be of
     # the same shape: (n,1)
@@ -27,11 +27,11 @@ def generate_periodical_seq(time_grid, periods, shifts):
     result = np.cos(phases)
     return np.sum(result, axis=0).reshape(1,-1)
 
-def generate_dirty_periodical_seq(time_grid, periods, shifts, sigma):
+def generate_dirty_periodical_series(time_grid, periods, shifts, sigma):
     # all args should be in the same units: e.g. secs
-    """adds some random noise to the sequence"""
+    """adds some random noise to the series"""
     noise = np.random.normal(loc=0.0, scale=sigma, size=time_grid.shape)
-    result = noise + generate_periodical_seq(time_grid, periods, shifts)
+    result = noise + generate_periodical_series(time_grid, periods, shifts)
     return result
 
 def check_and_reshape_arguments(periods, shifts):

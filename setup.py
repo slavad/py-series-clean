@@ -25,7 +25,7 @@ setup(
        'numpy>=1.14.0<1.15.0'
     ]
     # TBD:
-    #scripts=['scripts/pyclean', 'scripts/generate_test_seq']
+    #scripts=['scripts/pyclean', 'scripts/generate_test_series']
     # TBD: dev, test etc
     # extras_require={
     # }
