@@ -45,7 +45,7 @@ def check_and_reshape_arguments(periods, shifts):
         return new_periods, new_shifts
 
 def reshape_one_value(value):
-    """docstring for reshape_or_convert_to_vector"""
+    """converting to verctors if needed and reshaping"""
     if np.isscalar:
         return np.array(value).reshape(-1,1)
     else:
