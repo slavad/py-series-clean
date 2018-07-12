@@ -40,7 +40,7 @@ def check_and_reshape_arguments(periods, shifts):
     new_periods = reshape_one_value(periods)
     new_shifts = reshape_one_value(shifts)
     if new_periods.shape != new_shifts.shape:
-        raise ValueError("both periods and shapes must be scalars or have the same shape")
+        raise ValueError("both periods and shifts must be scalars or have the same shape")
     else:
         return new_periods, new_shifts
 
