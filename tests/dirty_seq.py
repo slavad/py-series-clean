@@ -29,7 +29,7 @@ def generate_periodical_seq(time_grid, periods, shifts):
 
 def generate_dirty_periodical_seq(time_grid, periods, shifts, sigma):
     # all args should be in the same units: e.g. secs
-    """adds some random noies to the seq"""
+    """adds some random noise to the sequence"""
     noise = np.random.normal(loc=0.0, scale=sigma, size=time_grid.shape)
     result = noise + generate_periodical_seq(time_grid, periods, shifts)
     return result
@@ -45,7 +45,7 @@ def check_and_reshape_arguments(periods, shifts):
         return new_periods, new_shifts
 
 def reshape_one_value(value):
-    """converting to verctors if needed and reshaping"""
+    """converting to vectors if needed and reshaping"""
     if np.isscalar:
         return np.array(value).reshape(-1,1)
     else:

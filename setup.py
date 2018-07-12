@@ -12,7 +12,9 @@ setup(
     description='Python CLEAN implementation',
     long_description=long_description,
     long_description_content_type='text/markdown',
-    url='https://github.com/pypa/sampleproject'
+    url='https://github.com/pypa/sampleproject',
+    author='Viacheslav Dushin',
+    packages=find_packages(),
     classifiers=[
         #TODO: test with other versions
         'Programming Language :: Python :: 3.6',
