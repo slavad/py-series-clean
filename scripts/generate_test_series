@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 import tests.dirty_series as ds
+import helpers.input_validators as iv
 import argparse
 
 def parse_args():
@@ -17,22 +18,22 @@ def parse_args():
         '-l',
         required = True,
         help='time series length',
-        metavar='series_LENGTH',
-        type = check_positive_int
+        metavar='SERIES_LENGTH',
+        type = iv.check_positive_int
     )
     parser.add_argument(
         '-t',
         required = True,
         help='maximum time value',
         metavar='TIME_VAL',
-        type = check_positive_float
+        type = iv.check_positive_float
     )
     parser.add_argument(
         '-p',
         required = True,
         help='periods to generate periodical series, number of args must be the same as for shifts',
         metavar='PERIODS',
-        type = check_positive_float,
+        type = iv.check_positive_float,
         nargs='+'
     )
     parser.add_argument(
@@ -40,7 +41,7 @@ def parse_args():
         required = True,
         help='shifts for respective periods to generate periodical series, number of args must be the same as for periods',
         metavar='SHIFTS',
-        type = check_positive_float,
+        type = iv.check_positive_float,
         nargs='+'
     )
     parser.add_argument(
@@ -48,7 +49,7 @@ def parse_args():
         required = True,
         help='sigma for normal distribution (to generate noise)',
         metavar='SIGMA',
-        type = check_positive_float
+        type = iv.check_positive_float
     )
     args = parser.parse_args()
     return args
@@ -63,21 +64,6 @@ def generate_series(args):
         args.s
     )
     return result
-
-def check_positive_int(value):
-    """parse and validate int argument value"""
-    return check_positive(value, int)
-
-def check_positive_float(value):
-    """parse and validate float argument value"""
-    return check_positive(value, float)
-
-def check_positive(value, parser):
-    """parse and validate argument value"""
-    parsed_value = parser(value)
-    if parsed_value < 0:
-         raise argparse.ArgumentTypeError("%s is not a non-negative number" % value)
-    return parsed_value
 
 def save_series(series, file_path):
     """save seriess to the file """
