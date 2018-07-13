@@ -9,7 +9,6 @@ def clean(time_gird_and_values, khi, treshold):
     weights_vector = calculate_weights_vector(time_gird_and_values, number_of_freq_estimations, max_freq)
     super_resultion_vector = build_super_resultion_vector(number_of_freq_estimations)
     normalized_detection_treshold = calc_normalized_detection_treshold(dirty_vector, number_of_freq_estimations, treshold)
-    pdb.set_trace()
 
 def estimate_max_freq(time_gird, use_min=True):
     """estimates maximum frequency that can be found"""
@@ -17,7 +16,6 @@ def estimate_max_freq(time_gird, use_min=True):
     """otherwise average delta T is used"""
     """eq 146 in ref 2"""
     distance_vector = time_gird[0][1:] - time_gird[0][:-1]
-    delta = 0
     if use_min:
         delta = distance_vector.min()
     else:
