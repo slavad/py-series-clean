@@ -1,0 +1,38 @@
+#!/usr/bin/env python
+
+import argparse
+import numpy as np
+import pdb
+
+def parse_args():
+    descr = 'Reads and analizes file with time series.\n'
+    descr += 'Input file should be a text file of two columns:\n'
+    descr += 'time, value'
+    parser = argparse.ArgumentParser(description=descr)
+    parser.add_argument(
+        '-f',
+        required = True,
+        help='input file location',
+        metavar='INPUT'
+    )
+    args = parser.parse_args()
+    return args
+
+def read_file(file_path):
+    """reads file with time series"""
+    time_grid = [];
+    values = []
+    with open(file_path, 'r') as file:
+        line = file.readline()
+        while line:
+            result = list(map(float, line.strip().split(' ')))
+            time_grid.append(result[0])
+            time_grid.append(result[1])
+            line = file.readline()
+    return np.array(time_grid).reshape(1,-1), np.array(values).reshape(1,-1)
+
+def main():
+    """entry point"""
+    args = parse_args()
+    time_gird_and_values = read_file(args.f)
+main()
