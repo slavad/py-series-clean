@@ -21,10 +21,9 @@ def calculate_dirty_matrix(time_grid, random_series, number_of_freq_estimations,
     return result
 def find_max_counts(dirty_matrix_for_random_series):
     """max counts in Schuster periodogram"""
-    arraq_of_squares = np.power(
-        np.abs(dirty_matrix_for_random_series), 2
-    )
-    result = np.max(arraq_of_squares, axis=0).reshape(-1,1)
+    arraq_of_abs = np.abs(dirty_matrix_for_random_series)
+    #do we need to take max counts
+    result = np.max(arraq_of_abs, axis=0).reshape(-1,1)
     return result
 
 def estimate_threshold(time_grid_and_values, number_of_random_series, sigma, khi):
