@@ -47,13 +47,13 @@ def build_exp_matrix(time_grid, values, matrix_size, number_of_freq_estimations,
     if matrix_size % 2 == 0:
         raise ValueError("matrix_size must be odd")
     max_index = (matrix_size - 1)/2
-    indeces_vector = np.arange(-max_index, max_index + 1, 1).reshape(1,-1)
+    indeces_vector = np.arange(-max_index, max_index + 1, 1).reshape(-1,1)
     # see eq 150 in ref 2
     freq_vector = indeces_vector*max_freq/number_of_freq_estimations
     # the result will be a rectangular matrix:
-    matrix_for_exp = (-1j*2*np.pi*freq_vector)*time_grid
+    matrix_for_exp = (-1j*2*np.pi*freq_vector)*time_grid.T
     exp_vector = np.exp(matrix_for_exp)
-    result = np.matmul(exp_vector.T, values)/values.shape[0]
+    result = np.matmul(exp_vector, values)/values.shape[0]
     return result
 
 def calculate_dirty_array(time_grid, values, number_of_freq_estimations, max_freq):
