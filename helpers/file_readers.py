@@ -10,4 +10,4 @@ def read_file(file_path):
             time_grid.append(result[0])
             values.append(result[1])
             line = file.readline()
-    return np.array(time_grid).reshape(1,-1), np.array(values).reshape(1,-1)
+    return np.array(time_grid).reshape(-1,1), np.array(values).reshape(-1,1)

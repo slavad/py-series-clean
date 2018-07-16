@@ -1,15 +1,16 @@
 import numpy as np
+import pdb
 #TODO: write tests
 #TODO: move to the py_series_clean dir?
 def generate_dirty_periodical_series_with_random_time_grid(time_grid_length, max_time_value, periods, shifts, sigma):
     """generates time grid and noisy observations"""
     time_grid = generate_random_time_grid(time_grid_length, max_time_value)
     series = generate_dirty_periodical_series(time_grid, periods, shifts, sigma)
-    return time_grid.reshape(1,-1), series
+    return time_grid, series
 
 def generate_random_time_grid(time_grid_length, max_time_value):
     """generates random time grid for test series"""
-    result = np.sort(np.random.ranf(time_grid_length))
+    result = np.sort(np.random.ranf(time_grid_length)).reshape(-1,1)
     return result*max_time_value
 
 def generate_periodical_series(time_grid, periods, shifts):
@@ -21,11 +22,11 @@ def generate_periodical_series(time_grid, periods, shifts):
     # reshaping of time grid will be done automatically
     # after we add new_shifts to it.
     # the new shape will be (m,n)
-    # where m is the height of time_grid.reshape(1,-1)
+    # where m is the height of time_grid.reshape(-1,1)
     # and n is the length of both new_periods and new_shifts
-    phases = (time_grid.reshape(1,-1) + new_shifts)/new_periods*2*np.pi;
+    phases = (time_grid.T + new_shifts)/new_periods*2*np.pi;
     result = np.cos(phases)
-    return np.sum(result, axis=0).reshape(1,-1)
+    return np.sum(result, axis=0).reshape(-1,1)
 
 def generate_dirty_periodical_series(time_grid, periods, shifts, sigma):
     # all args should be in the same units: e.g. secs
