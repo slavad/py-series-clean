@@ -15,16 +15,12 @@ def generate_index_vector(vector_size):
 def calculate_dirty_matrix(time_grid, random_series, number_of_freq_estimations, max_freq):
     """caclculates dirty matrix for Schuster periodorgram"""
     index_vector = generate_index_vector(number_of_freq_estimations)
-    result = pscc.build_exp_matrix(
-        time_grid, random_series, index_vector, number_of_freq_estimations, max_freq
-    )
-    return result
-def find_max_counts(dirty_matrix_for_random_series):
-    """max counts in Schuster periodogram"""
-    arraq_of_abs = np.abs(dirty_matrix_for_random_series)
-    #do we need to take absolute max counts?
-    result = np.max(arraq_of_abs, axis=0).reshape(-1,1)
-    return result
+    #FIXME: that's not Schuster's periodorgram
+    # build_exp_matrix sums the values, but we should sum squared values!
+    # result = pscc.build_exp_matrix(
+    #     time_grid, random_series, index_vector, number_of_freq_estimations, max_freq
+    # )
+    # return result
 
 def estimate_threshold(time_grid_and_values, number_of_random_series, sigma, khi):
     """estimate treshold for the given params"""
@@ -35,8 +31,6 @@ def estimate_threshold(time_grid_and_values, number_of_random_series, sigma, khi
         max_freq, time_grid, khi
     )
     random_series = generate_random_series(time_grid.shape[0], number_of_random_series, sigma)
-    # we need to calculate schuster periodogram, not this (eq 9 in ref 3):
     dirty_matrix_for_random_series = calculate_dirty_matrix(
         time_grid, random_series, number_of_freq_estimations, max_freq
     )
-    max_counts = find_max_counts(dirty_matrix_for_random_series)
