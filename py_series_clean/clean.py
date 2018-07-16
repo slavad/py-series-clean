@@ -20,7 +20,6 @@ def clean(time_grid_and_values, khi, treshold):
     normalized_detection_treshold = calc_normalized_detection_treshold(
         dirty_subvector, number_of_freq_estimations, treshold
     )
-    pdb.set_trace()
 
 def estimate_max_freq(time_grid, use_min=True):
     """estimates maximum frequency that can be found"""
