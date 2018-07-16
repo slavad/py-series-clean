@@ -4,11 +4,19 @@ import pdb
 def clean(time_gird_and_values, khi, treshold):
     """do clean"""
     max_freq = estimate_max_freq(time_gird_and_values[0])
-    number_of_freq_estimations = calculate_estimations_vector_size(max_freq, time_gird_and_values[0], khi)
-    dirty_vector = calculate_dirty_vector(time_gird_and_values, number_of_freq_estimations, max_freq)
-    weights_vector = calculate_weights_vector(time_gird_and_values, number_of_freq_estimations, max_freq)
+    number_of_freq_estimations = calculate_estimations_vector_size(
+        max_freq, time_gird_and_values[0], khi
+    )
+    dirty_vector = calculate_dirty_vector(
+        time_gird_and_values, number_of_freq_estimations, max_freq
+    )
+    weights_vector = calculate_weights_vector(
+        time_gird_and_values, number_of_freq_estimations, max_freq
+    )
     super_resultion_vector = build_super_resultion_vector(number_of_freq_estimations)
-    normalized_detection_treshold = calc_normalized_detection_treshold(dirty_vector, number_of_freq_estimations, treshold)
+    normalized_detection_treshold = calc_normalized_detection_treshold(
+        dirty_vector, number_of_freq_estimations, treshold
+    )
 
 def estimate_max_freq(time_gird, use_min=True):
     """estimates maximum frequency that can be found"""
@@ -48,7 +56,9 @@ def calculate_dirty_vector(time_gird_and_values, number_of_freq_estimations, max
     matrix_size = 2*number_of_freq_estimations + 1
     time_gird = time_gird_and_values[0]
     values = time_gird_and_values[1]
-    result = build_exp_matrix(time_gird, values, matrix_size, number_of_freq_estimations, max_freq)
+    result = build_exp_matrix(
+        time_gird, values, matrix_size, number_of_freq_estimations, max_freq
+    )
     return result
 
 def calculate_weights_vector(time_gird_and_values, number_of_freq_estimations, max_freq):
@@ -56,7 +66,9 @@ def calculate_weights_vector(time_gird_and_values, number_of_freq_estimations, m
     matrix_size = 4*number_of_freq_estimations + 1
     time_gird = time_gird_and_values[0]
     values = np.ones(time_gird_and_values[1].shape[1]).reshape(-1,1)
-    result = build_exp_matrix(time_gird, values, matrix_size, number_of_freq_estimations, max_freq)
+    result = build_exp_matrix(
+        time_gird, values, matrix_size, number_of_freq_estimations, max_freq
+    )
     return result
 
 def build_super_resultion_vector(number_of_freq_estimations):
@@ -66,6 +78,8 @@ def build_super_resultion_vector(number_of_freq_estimations):
 
 def calc_normalized_detection_treshold(dirty_vector, number_of_freq_estimations, treshold):
     """eq 152 and 153 in ref 2"""
-    drirty_vector_norm = np.power(np.abs(dirty_vector), 2).sum()/(number_of_freq_estimations + 1)
+    drirty_vector_norm = np.power(
+        np.abs(dirty_vector), 2).sum()/(number_of_freq_estimations + 1
+    )
     result = drirty_vector_norm*treshold
     return result

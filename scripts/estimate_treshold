@@ -1,1 +1,42 @@
 #!/usr/bin/env python
+
+import argparse
+import numpy as np
+import py_series_clean.threshold as threshold
+import helpers.input_validators as iv
+import helpers.argument_parsers as ap
+import helpers.file_readers as fr
+
+HELP_FOR_SERIES_LENGTH = "RANDOM_SERIES_LENGTH must be >> lenght of the input time series"
+
+def parse_args():
+    descr = 'Estimates treshold used in eq 152 ref 2'
+    parser = argparse.ArgumentParser(description=descr)
+    ap.parse_common_series_args(parser)
+    parser.add_argument(
+        '-r',
+        required = True,
+        help='number of random time series generated\n {}'.format(HELP_FOR_SERIES_LENGTH),
+        metavar='RANDOM_SERIES_LENGTH',
+        type = iv.check_positive_int
+    )
+    parser.add_argument(
+        '-s',
+        required = True,
+        help='sigma for the normal distribution used to generate random series',
+        metavar='SIGMA',
+        type = iv.check_positive_float
+    )
+    args = parser.parse_args()
+    return args
+
+
+def main():
+    """entry point"""
+    args = parse_args()
+    time_gird_and_values = fr.read_file(args.f)
+    if time_gird_and_values[0].shape[1] >= args.r:
+        raise ValueError(HELP_FOR_SERIES_LENGTH)
+    series = threshold.estimate_threshold(time_gird_and_values, args.r, args.s, args.k)
+
+main()

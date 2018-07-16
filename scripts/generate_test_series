@@ -4,14 +4,12 @@ import helpers.input_validators as iv
 import argparse
 
 def parse_args():
-    descr = 'Generates noisy periodical test series.\n'
-    descr += 'Results is written to the specified text file in two columns:\n'
-    descr += 'time, value'
+    descr = 'Generates noisy periodical test series'
     parser = argparse.ArgumentParser(description=descr)
     parser.add_argument(
         '-o',
         required = True,
-        help='output file location',
+        help='output file location, results is written to the specified text file in two columns: time, value',
         metavar='OUTPUT'
     )
     parser.add_argument(

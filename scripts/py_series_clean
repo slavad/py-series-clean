@@ -1,33 +1,15 @@
 #!/usr/bin/env python
 
 import argparse
-import numpy as np
 import py_series_clean.clean as pscc
+import helpers.file_readers as fr
+import helpers.argument_parsers as ap
 import helpers.input_validators as iv
 
 def parse_args():
-    descr = 'Reads and analyzes file with time series.\n'
-    descr += 'Input file should be a text file of two columns:\n'
-    descr += 'time, value'
+    descr = 'Reads and analyzes file with time series'
     parser = argparse.ArgumentParser(description=descr)
-    parser.add_argument(
-        '-f',
-        required = True,
-        help='input file location',
-        metavar='INPUT'
-    )
-    khi_default = 4
-    khi_help = 'scale coefficient for the size of the dirty spectrum, see eq 147 in ref 2,\n'
-    khi_help += 'default value is {}'.format(khi_default)
-    parser.add_argument(
-        '-k',
-        required = False,
-        help = khi_help,
-        metavar ='KHI',
-        default = khi_default,
-        type = iv.check_positive_int
-    )
-
+    ap.parse_common_series_args(parser)
     parser.add_argument(
         '-t',
         required = True,
@@ -38,23 +20,10 @@ def parse_args():
     args = parser.parse_args()
     return args
 
-def read_file(file_path):
-    """reads file with time series"""
-    time_grid = [];
-    values = []
-    with open(file_path, 'r') as file:
-        line = file.readline()
-        while line:
-            result = list(map(float, line.strip().split(' ')))
-            time_grid.append(result[0])
-            values.append(result[1])
-            line = file.readline()
-    return np.array(time_grid).reshape(1,-1), np.array(values).reshape(1,-1)
-
 def main():
     """entry point"""
     args = parse_args()
-    time_gird_and_values = read_file(args.f)
+    time_gird_and_values = fr.read_file(args.f)
     pscc.clean(time_gird_and_values, args.k, args.t)
 
 main()
