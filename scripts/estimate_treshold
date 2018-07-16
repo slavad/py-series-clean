@@ -34,9 +34,9 @@ def parse_args():
 def main():
     """entry point"""
     args = parse_args()
-    time_gird_and_values = fr.read_file(args.f)
-    if time_gird_and_values[0].shape[1] >= args.r:
+    time_grid_and_values = fr.read_file(args.f)
+    if time_grid_and_values[0].shape[1] >= args.r:
         raise ValueError(HELP_FOR_SERIES_LENGTH)
-    series = threshold.estimate_threshold(time_gird_and_values, args.r, args.s, args.k)
+    series = threshold.estimate_threshold(time_grid_and_values, args.r, args.s, args.k)
 
 main()
