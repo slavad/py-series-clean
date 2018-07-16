@@ -24,7 +24,7 @@ def generate_periodical_series(time_grid, periods, shifts):
     # the new shape will be (m,n)
     # where m is the height of time_grid.reshape(-1,1)
     # and n is the length of both new_periods and new_shifts
-    phases = (time_grid.T + new_shifts)/new_periods*2*np.pi;
+    phases = (time_grid.T + new_shifts)/new_periods*2*np.pi
     result = np.cos(phases)
     return np.sum(result, axis=0).reshape(-1,1)
 
