@@ -22,7 +22,7 @@ def calculate_dirty_matrix(time_grid, random_series, number_of_freq_estimations,
 def find_max_counts(dirty_matrix_for_random_series):
     """max counts in Schuster periodogram"""
     arraq_of_abs = np.abs(dirty_matrix_for_random_series)
-    #do we need to take max counts
+    #do we need to take absolute max counts?
     result = np.max(arraq_of_abs, axis=0).reshape(-1,1)
     return result
 
