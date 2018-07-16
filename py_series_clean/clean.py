@@ -9,10 +9,10 @@ def clean(time_grid_and_values, khi, treshold):
     number_of_freq_estimations = calculate_estimations_vector_size(
         max_freq, time_grid, khi
     )
-    dirty_vector = calculate_dirty_vector(
+    dirty_vector = calculate_dirty_array(
         time_grid, values, number_of_freq_estimations, max_freq
     )
-    weights_vector = calculate_weights_vector(
+    weights_vector = calculate_weights_array(
         time_grid, values, number_of_freq_estimations, max_freq
     )
     super_resultion_vector = build_super_resultion_vector(number_of_freq_estimations)
@@ -56,7 +56,7 @@ def build_exp_matrix(time_grid, values, matrix_size, number_of_freq_estimations,
     result = np.matmul(exp_vector.T, values)/values.shape[0]
     return result
 
-def calculate_dirty_vector(time_grid, values, number_of_freq_estimations, max_freq):
+def calculate_dirty_array(time_grid, values, number_of_freq_estimations, max_freq):
     """eq 148 in ref 2"""
     matrix_size = 2*number_of_freq_estimations + 1
     result = build_exp_matrix(
@@ -64,7 +64,7 @@ def calculate_dirty_vector(time_grid, values, number_of_freq_estimations, max_fr
     )
     return result
 
-def calculate_weights_vector(time_grid, values, number_of_freq_estimations, max_freq):
+def calculate_weights_array(time_grid, values, number_of_freq_estimations, max_freq):
     """eq 148 in ref 2"""
     matrix_size = 4*number_of_freq_estimations + 1
     values = np.ones((values.shape[0],1))
@@ -78,10 +78,10 @@ def build_super_resultion_vector(number_of_freq_estimations):
     vector_size = 2*number_of_freq_estimations + 1
     return np.ones((vector_size,1))
 
-def calc_normalized_detection_treshold(dirty_vector, number_of_freq_estimations, treshold):
+def calc_normalized_detection_treshold(dirty_array, number_of_freq_estimations, treshold):
     """eq 152 and 153 in ref 2"""
     drirty_vector_norm = np.power(
-        np.abs(dirty_vector), 2
+        np.abs(dirty_array), 2
     ).sum()/(number_of_freq_estimations + 1)
     result = drirty_vector_norm*treshold
     return result

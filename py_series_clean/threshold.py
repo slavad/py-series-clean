@@ -15,7 +15,7 @@ def estimate_threshold(time_grid_and_values, numbe_of_random_series, sigma, khi)
     number_of_freq_estimations = pscc.calculate_estimations_vector_size(
         max_freq, time_grid, khi
     )
-    random_series = generate_random_series(time_grid.shape[1], numbe_of_random_series, sigma)
-    random_dirty_vector = pscc.calculate_dirty_vector(
-        time_grid, random_series, number_of_freq_estimations, max_freq, values.shape[1]
+    random_series = generate_random_series(time_grid.shape[0], numbe_of_random_series, sigma)
+    dirty_matrix_for_random_series = pscc.calculate_dirty_array(
+        time_grid, random_series, number_of_freq_estimations, max_freq
     )
