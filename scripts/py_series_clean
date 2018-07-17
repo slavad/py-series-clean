@@ -13,7 +13,7 @@ def parse_args():
     parser.add_argument(
         '-t',
         required = True,
-        help = 'detection treshold, see eq 48 and 152 in ref 2, can be esitmated using estimate_treshold script',
+        help = 'detection treshold (aka X_q), see eq 48 and 152 in ref 2, can be esitmated using estimate_treshold script',
         metavar ='TRESHOLD',
         type = iv.check_positive_float
     )
