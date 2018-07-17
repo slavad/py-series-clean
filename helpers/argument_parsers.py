@@ -7,6 +7,12 @@ def parse_common_series_args(parser):
         help='input file location, input file should be a text file of two columns: "time value"',
         metavar='INPUT'
     )
+    parser.add_argument(
+        '-o',
+        required = True,
+        help='output file location"',
+        metavar='OUTPUT'
+    )
     khi_default = 4
     khi_help = 'scale coefficient for the size of the dirty spectrum, see eq 147 in ref 2,'
     khi_help += ' default value is {}'.format(khi_default)

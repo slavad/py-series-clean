@@ -30,14 +30,28 @@ def parse_args():
     args = parser.parse_args()
     return args
 
+def write_result(args, threshold):
+    """writes results to the output file"""
+    file = open(args.o, "w")
+    print('Input params:', file=file)
+    print('input file: {}:'.format(args.f), file=file)
+    print('sigma: %e:' % args.s, file=file)
+    print('number of random series sets: %i:' % args.r, file=file)
+    print('khi scaling factor: %i:' % args.k, file=file)
+    print('sigma: %e:' % args.s, file=file)
+    print('Output:', file=file)
+    print('treshold (aka X_q in eq 152 ref 2): %e:' % threshold, file=file)
+    file.close
 
 def main():
     """entry point"""
+    print('started')
     args = parse_args()
     time_grid_and_values = fr.read_file(args.f)
     if time_grid_and_values[0].shape[1] >= args.r:
         raise ValueError(HELP_FOR_SERIES_LENGTH)
     threshold = thrs.estimate_threshold(time_grid_and_values, args.r, args.s, args.k)
-    msg = 'treshold (X_q)={} for sigma={} estimated for {} random series sets'
-    print(msg.format(threshold, args.s, args.r))
+    write_result(args, threshold)
+    print('done'.format(args.o))
+    print('output is written to {}'.format(args.o))
 main()
