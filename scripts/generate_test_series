@@ -36,7 +36,7 @@ def parse_args():
         nargs='+'
     )
     parser.add_argument(
-        '-i',
+        '-d',
         required = True,
         help='shifts for respective periods to generate periodical series, number of args must be the same as for periods',
         metavar='SHIFTS',
@@ -59,7 +59,7 @@ def generate_series(args):
         args.l,
         args.t,
         args.p,
-        args.i,
+        args.d,
         args.s
     )
     return result

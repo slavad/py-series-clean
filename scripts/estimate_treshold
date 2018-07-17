@@ -34,7 +34,7 @@ def write_result(args, threshold):
     """writes results to the output file"""
     file = open(args.o, "w")
     print('Input params:', file=file)
-    print('input file: {}:'.format(args.f), file=file)
+    print('input file: {}:'.format(args.i), file=file)
     print('sigma: %e:' % args.s, file=file)
     print('number of random series sets: %i:' % args.r, file=file)
     print('khi scaling factor: %i:' % args.k, file=file)
@@ -47,7 +47,7 @@ def main():
     """entry point"""
     print('started')
     args = parse_args()
-    time_grid_and_values = fr.read_file(args.f)
+    time_grid_and_values = fr.read_file(args.i)
     if time_grid_and_values[0].shape[1] >= args.r:
         raise ValueError(HELP_FOR_SERIES_LENGTH)
     threshold = thrs.estimate_threshold(time_grid_and_values, args.r, args.s, args.k)
