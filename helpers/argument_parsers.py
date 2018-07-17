@@ -8,8 +8,8 @@ def parse_common_series_args(parser):
         metavar='INPUT'
     )
     khi_default = 4
-    khi_help = 'scale coefficient for the size of the dirty spectrum, see eq 147 in ref 2,\n'
-    khi_help += 'default value is {}'.format(khi_default)
+    khi_help = 'scale coefficient for the size of the dirty spectrum, see eq 147 in ref 2,'
+    khi_help += ' default value is {}'.format(khi_default)
     parser.add_argument(
         '-k',
         required = False,

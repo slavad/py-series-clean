@@ -17,8 +17,9 @@ def clean(time_grid_and_values, khi, treshold):
     )
     super_resultion_vector = build_super_resultion_vector(number_of_freq_estimations)
     dirty_subvector = dirty_vector[number_of_freq_estimations:]
+    schuster_counts = calc_schuster_counts(dirty_subvector, method_flag='average')
     normalized_detection_treshold = calc_normalized_detection_treshold(
-        dirty_subvector, number_of_freq_estimations, treshold
+        schuster_counts[0], treshold
     )
 
 def estimate_max_freq(time_grid, use_min=True):
@@ -83,10 +84,25 @@ def build_super_resultion_vector(number_of_freq_estimations):
     vector_size = 2*number_of_freq_estimations + 1
     return np.ones((vector_size,1))
 
-def calc_normalized_detection_treshold(dirty_vector, number_of_freq_estimations, treshold):
-    """eq 152 and 153 in ref 2"""
-    drirty_vector_norm = np.power(
-        np.abs(dirty_vector), 2
-    ).sum()/(number_of_freq_estimations + 1)
-    result = drirty_vector_norm*treshold
+def calc_schuster_counts(series_array, method_flag):
+    """
+        calculates max or average value in the periodogram
+        eq 153 in ref 2.
+        The function chooses either the average or the max count
+        depending on the flag.
+    """
+    schuster_periodogram = np.power(
+        np.abs(series_array), 2
+    )
+    if method_flag == 'average': # let's estimate by average counts
+        desired_value = np.average(schuster_periodogram, axis=0)
+    elif method_flag == 'max': # by max counts
+        desired_value = np.max(schuster_periodogram, axis=0)
+    else:
+        raise ValueError("unknown method_flag")
+    return desired_value
+
+def calc_normalized_detection_treshold(schuster_count, treshold):
+    """eq 152 in ref 2"""
+    result = schuster_count*treshold
     return result

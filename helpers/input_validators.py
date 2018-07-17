@@ -14,3 +14,16 @@ def check_positive(value, parser):
     if parsed_value < 0:
          raise argparse.ArgumentTypeError("%s is not a non-negative number" % value)
     return parsed_value
+
+def str2bool(v):
+    true_vals = ('yes', 'true', 't', 'y', '1')
+    false_vals = ('no', 'false', 'f', 'n', '0')
+    if v.lower() in true_vals:
+        return True
+    elif v.lower() in false_vals:
+        return False
+    else:
+        msg = '{} is not a boolean value,'.format(v)
+        msg += ' allowed values (case insensetive) for True: {}'.format(', '.join(true_vals))
+        msg += ' and for False: {}'.format(', '.join(false_vals))
+        raise argparse.ArgumentTypeError(msg)

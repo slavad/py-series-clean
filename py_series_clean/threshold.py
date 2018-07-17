@@ -12,15 +12,25 @@ def generate_index_vector(vector_size):
     index_vector = np.arange(0, vector_size + 1, 1).reshape(-1,1)
     return index_vector
 
-def calculate_dirty_matrix(time_grid, random_series, number_of_freq_estimations, max_freq):
-    """caclculates dirty matrix for Schuster periodorgram"""
-    index_vector = generate_index_vector(number_of_freq_estimations)
-    #FIXME: that's not Schuster's periodorgram
-    # build_exp_matrix sums the values, but we should sum squared values!
-    # result = pscc.build_exp_matrix(
-    #     time_grid, random_series, index_vector, number_of_freq_estimations, max_freq
-    # )
-    # return result
+def find_max_counts_and_relation(random_series, values):
+    """
+        Finds the number of maximun counts in the
+        Schuster periodorgrams for the random series
+        that are > than the average
+        count in the Schuster periodorgram for the examined observation,
+        then calculates the relation of the number above
+        to the total number of the random series.
+    """
+    number_of_random_series = random_series.shape[1]
+    max_counts_random = pscc.calc_schuster_counts(random_series, method_flag='max')
+    average_count_series = pscc.calc_schuster_counts(values, method_flag='average')[0]
+    # extract ids that fit to our condition
+    ids_list = np.where(max_counts_random >= average_count_series)
+    count_of_items = ids_list[0].shape[0]
+    # the probabilty that the examined series contain noise only:
+    relation = count_of_items/number_of_random_series
+    # the probabilty that the examined series contain also signal:
+    return 1 - relation
 
 def estimate_threshold(time_grid_and_values, number_of_random_series, sigma, khi):
     """estimate treshold for the given params"""
@@ -31,6 +41,7 @@ def estimate_threshold(time_grid_and_values, number_of_random_series, sigma, khi
         max_freq, time_grid, khi
     )
     random_series = generate_random_series(time_grid.shape[0], number_of_random_series, sigma)
-    dirty_matrix_for_random_series = calculate_dirty_matrix(
-        time_grid, random_series, number_of_freq_estimations, max_freq
+    threshold = find_max_counts_and_relation(
+        random_series, values
     )
+    return threshold
