@@ -24,6 +24,6 @@ def str2bool(v):
         return False
     else:
         msg = '{} is not a boolean value,'.format(v)
-        msg += ' allowed values (case insensetive) for True: {}'.format(', '.join(true_vals))
+        msg += ' allowed values (case insensitive) for True: {}'.format(', '.join(true_vals))
         msg += ' and for False: {}'.format(', '.join(false_vals))
         raise argparse.ArgumentTypeError(msg)
