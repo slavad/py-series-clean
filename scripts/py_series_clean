@@ -6,6 +6,15 @@ import helpers.file_readers as fr
 import helpers.argument_parsers as ap
 import helpers.input_validators as iv
 
+ADDITIONAL_HELP = 'iterations stop if the number of maximum iterations is exceeded or the series do not contain signal at the given treshold'
+
+def check_treshold(value):
+    """checks treshold value"""
+    number = iv.check_positive_float(value)
+    if number <= 0 or number > 1:
+        raise argparse.ArgumentTypeError("treshold value must > 0 and <= 1, but your's is %s" % value)
+    return number
+
 def parse_args():
     descr = 'Reads and analyzes file with time series'
     parser = argparse.ArgumentParser(description=descr)
@@ -13,9 +22,16 @@ def parse_args():
     parser.add_argument(
         '-t',
         required = True,
-        help = 'detection treshold (aka X_q), see eq 48 and 152 in ref 2, can be esitmated using estimate_treshold script',
+        help = 'detection treshold (aka X_q), see eq 48 and 152 in ref 2, can be esitmated using estimate_treshold script {}'.format(ADDITIONAL_HELP),
         metavar ='TRESHOLD',
-        type = iv.check_positive_float
+        type = check_treshold
+    )
+    parser.add_argument(
+        '-r',
+        required = True,
+        help = 'maximum number of iteratoins: {}'.format(ADDITIONAL_HELP),
+        metavar ='MAX_ITERATIONS',
+        type = iv.check_positive_int
     )
     args = parser.parse_args()
     return args
@@ -24,6 +40,6 @@ def main():
     """entry point"""
     args = parse_args()
     time_grid_and_values = fr.read_file(args.i)
-    pscc.clean(time_grid_and_values, args.k, args.t)
+    pscc.clean(time_grid_and_values, args.k, args.t, args.r)
 
 main()

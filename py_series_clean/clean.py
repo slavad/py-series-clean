@@ -3,7 +3,7 @@ import py_series_clean.matrix_builder as mb
 import py_series_clean.schuster as sch
 import py_series_clean.iterator as itr
 
-def clean(time_grid_and_values, khi, treshold):
+def clean(time_grid_and_values, khi, treshold, max_iterations):
     """do clean"""
     time_grid = time_grid_and_values[0]
     values = time_grid_and_values[1]
