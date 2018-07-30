@@ -1,9 +1,8 @@
 import numpy as np
 import py_series_clean.matrix_builder as mb
-import py_series_clean.schuster as sch
 import py_series_clean.iterator as itr
 
-def clean(time_grid_and_values, khi, treshold, max_iterations):
+def clean(time_grid_and_values, khi, treshold, max_iterations, harmonic_share):
     """do clean"""
     time_grid = time_grid_and_values[0]
     values = time_grid_and_values[1]
@@ -18,8 +17,4 @@ def clean(time_grid_and_values, khi, treshold, max_iterations):
         time_grid, values, number_of_freq_estimations, max_freq
     )
     super_resultion_vector = mb.build_super_resultion_vector(number_of_freq_estimations)
-    dirty_subvector = dirty_vector[number_of_freq_estimations:]
-    schuster_counts = sch.calc_schuster_counts(dirty_subvector, method_flag='average')
-    normalized_detection_treshold = itr.calc_normalized_detection_treshold(
-        schuster_counts[0], treshold
-    )
+    itr.iterate(dirty_vector, weights_vector, super_resultion_vector, treshold, max_iterations, harmonic_share, number_of_freq_estimations)
