@@ -36,17 +36,25 @@ def build_exp_matrix(time_grid, values, index_vector, number_of_freq_estimations
     result = np.matmul(exp_vector, values)/values.shape[0]
     return result
 
+def size_of_dirty_vector(number_of_freq_estimations):
+    """size of dirty vector"""
+    return 2*number_of_freq_estimations + 1
+
 def calculate_dirty_vector(time_grid, values, number_of_freq_estimations, max_freq):
     """eq 148 in ref 2"""
-    index_vector = generate_index_vector(2*number_of_freq_estimations + 1)
+    index_vector = generate_index_vector(size_of_dirty_vector(number_of_freq_estimations))
     result = build_exp_matrix(
         time_grid, values, index_vector, number_of_freq_estimations, max_freq
     )
     return result
 
-def calculate_weights_vector(time_grid, values, number_of_freq_estimations, max_freq):
+def size_of_window_vector(number_of_freq_estimations):
+    """size of the window vector"""
+    return 4*number_of_freq_estimations + 1
+
+def calculate_window_vector(time_grid, values, number_of_freq_estimations, max_freq):
     """eq 148 in ref 2"""
-    index_vector = generate_index_vector(4*number_of_freq_estimations + 1)
+    index_vector = generate_index_vector(size_of_window_vector(number_of_freq_estimations))
     values = np.ones((values.shape[0],1))
     result = build_exp_matrix(
         time_grid, values, index_vector, number_of_freq_estimations, max_freq

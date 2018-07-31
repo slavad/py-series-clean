@@ -13,10 +13,10 @@ def clean(time_grid_and_values, khi, treshold, max_iterations, harmonic_share):
     dirty_vector = mb.calculate_dirty_vector(
         time_grid, values, number_of_freq_estimations, max_freq
     )
-    weights_vector = mb.calculate_weights_vector(
+    window_vector = mb.calculate_window_vector(
         time_grid, values, number_of_freq_estimations, max_freq
     )
     super_resultion_vector = itr.iterate(
-        dirty_vector, weights_vector, treshold,
+        dirty_vector, window_vector, treshold,
         max_iterations, harmonic_share, number_of_freq_estimations
     )
