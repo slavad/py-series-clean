@@ -16,5 +16,7 @@ def clean(time_grid_and_values, khi, treshold, max_iterations, harmonic_share):
     weights_vector = mb.calculate_weights_vector(
         time_grid, values, number_of_freq_estimations, max_freq
     )
-    super_resultion_vector = mb.build_super_resultion_vector(number_of_freq_estimations)
-    itr.iterate(dirty_vector, weights_vector, super_resultion_vector, treshold, max_iterations, harmonic_share, number_of_freq_estimations)
+    super_resultion_vector = itr.iterate(
+        dirty_vector, weights_vector, treshold,
+        max_iterations, harmonic_share, number_of_freq_estimations
+    )

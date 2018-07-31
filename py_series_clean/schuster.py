@@ -7,13 +7,19 @@ def calc_schuster_counts(series_array, method_flag):
         The function chooses either the average or the max count
         depending on the flag.
     """
-    schuster_periodogram = np.power(
-        np.abs(series_array), 2
-    )
+    schuster_periodogram = periodogram(series_array)
     if method_flag == 'average': # let's estimate by average counts
         desired_value = np.average(schuster_periodogram, axis=0)
-    elif method_flag == 'max': # by max counts
+    elif method_flag == 'max': # by max counts (value)
         desired_value = np.max(schuster_periodogram, axis=0)
+    elif method_flag == 'argmax': # by max counts (index)
+        desired_value = np.argmax(schuster_periodogram, axis=0)
     else:
         raise ValueError("unknown method_flag")
     return desired_value
+
+def periodogram(series_array):
+    """calculates periodorgram array"""
+    return np.power(
+        np.abs(series_array), 2
+    )
