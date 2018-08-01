@@ -71,7 +71,7 @@ def iterate(dirty_vector, window_vector, treshold, max_iterations, harmonic_shar
     normalized_detection_treshold = calc_normalized_detection_treshold(
         schuster_counts[0], treshold
     )
-    current_step = 1
+    current_step = 0
 
     while current_step <= max_iterations:
         result = one_step(dirty_vector, window_vector,super_resultion_vector, number_of_freq_estimations, normalized_detection_treshold, harmonic_share)
@@ -79,5 +79,5 @@ def iterate(dirty_vector, window_vector, treshold, max_iterations, harmonic_shar
             break
         else:
             dirty_vector, super_resultion_vector = result
-        current_step += 1
-    return super_resultion_vector
+            current_step += 1
+    return super_resultion_vector, current_step
