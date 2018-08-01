@@ -64,4 +64,4 @@ def calculate_window_vector(time_grid, values, number_of_freq_estimations, max_f
 def build_super_resultion_vector(number_of_freq_estimations):
     """eq 151 in ref 2"""
     vector_size = 2*number_of_freq_estimations + 1
-    return np.ones((vector_size,1))
+    return np.zeros((vector_size,1))*(0+0j)
