@@ -62,9 +62,15 @@ def one_step(dirty_vector, window_vector, super_resultion_vector, number_of_freq
         return None
 
 
-def iterate(dirty_vector, window_vector, treshold, max_iterations, harmonic_share, number_of_freq_estimations):
+def iterate(treshold, max_iterations, harmonic_share, number_of_freq_estimations, time_grid, values, max_freq):
     """iterator: steps 7 to 17 pp 51-52 ref 2"""
     #TODO: check if vector shifts are ok here and above and below
+    dirty_vector = mb.calculate_dirty_vector(
+        time_grid, values, number_of_freq_estimations, max_freq
+    )
+    window_vector = mb.calculate_window_vector(
+        time_grid, number_of_freq_estimations, max_freq
+    )
     super_resultion_vector = mb.build_super_resultion_vector(number_of_freq_estimations)
     dirty_subvector = dirty_vector[number_of_freq_estimations:]
     schuster_counts = sch.calc_schuster_counts(dirty_subvector, method_flag='average')

@@ -52,10 +52,10 @@ def size_of_window_vector(number_of_freq_estimations):
     """size of the window vector"""
     return 4*number_of_freq_estimations + 1
 
-def calculate_window_vector(time_grid, values, number_of_freq_estimations, max_freq):
+def calculate_window_vector(time_grid, number_of_freq_estimations, max_freq):
     """eq 148 in ref 2"""
     index_vector = generate_index_vector(size_of_window_vector(number_of_freq_estimations))
-    values = np.ones((values.shape[0],1))
+    values = np.ones((time_grid.shape[0],1))
     result = build_exp_matrix(
         time_grid, values, index_vector, number_of_freq_estimations, max_freq
     )
