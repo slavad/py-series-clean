@@ -65,7 +65,7 @@ def parse_args():
 
 def save_results(restoration_result, args):
     """saving restoration results"""
-    #TODO: output warning if max_iterations + 1 == iterations
+    #TODO: output warning if max_iterations == iterations + 1, iterations start with zero
     khi = args.k
     treshold = args.t
     max_iterations = args.r
