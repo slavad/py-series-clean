@@ -79,7 +79,7 @@ def iterate(treshold, max_iterations, harmonic_share, number_of_freq_estimations
     )
     current_step = 0
 
-    while current_step <= max_iterations:
+    while current_step < max_iterations:
         result = one_step(dirty_vector, window_vector,super_resultion_vector, number_of_freq_estimations, normalized_detection_treshold, harmonic_share)
         if not result:
             break
