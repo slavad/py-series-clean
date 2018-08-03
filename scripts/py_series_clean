@@ -6,6 +6,7 @@ import helpers.file_readers as fr
 import helpers.argument_parsers as ap
 import helpers.input_validators as iv
 import helpers.constants as constants
+import pdb
 
 ADDITIONAL_HELP = 'iterations stop if the number of maximum iterations is exceeded or the series do not contain signal at the given treshold'
 
@@ -81,4 +82,5 @@ def main():
     time_grid_and_values = fr.read_file(args.i)
     restoration_result = pscc.clean(time_grid_and_values, args.k, args.t, args.r, args.g)
     save_results(restoration_result, args)
+
 main()

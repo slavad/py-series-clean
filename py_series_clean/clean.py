@@ -22,5 +22,8 @@ def clean(time_grid_and_values, khi, treshold, max_iterations, harmonic_share):
         super_resultion_vector, iterations,
         number_of_freq_estimations, time_grid, max_freq
     )
-
-    return restoration_result
+    if restoration_result:
+       uniform_time_grid, clean_spectrum, correlogram, uniform_series = restoration_result
+       return iterations, uniform_time_grid, clean_spectrum, correlogram, uniform_series
+    else:
+        return None

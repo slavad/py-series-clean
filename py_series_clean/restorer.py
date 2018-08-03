@@ -22,7 +22,7 @@ def restore(super_resultion_vector, iterations, number_of_freq_estimations, time
         uniform_series = build_uniform_series(
             clean_spectrum, number_of_freq_estimations, uniform_time_grid, max_freq
         )
-        return iterations, uniform_time_grid, clean_spectrum, correlogram, uniform_series
+        return uniform_time_grid, clean_spectrum, correlogram, uniform_series
 
 def build_uniform_time_grid(time_grid):
     """eq 158 ref 2"""
