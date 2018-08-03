@@ -5,6 +5,7 @@ import py_series_clean.clean as pscc
 import helpers.file_readers as fr
 import helpers.argument_parsers as ap
 import helpers.input_validators as iv
+import helpers.constants as constants
 
 ADDITIONAL_HELP = 'iterations stop if the number of maximum iterations is exceeded or the series do not contain signal at the given treshold'
 
@@ -41,13 +42,43 @@ def parse_args():
         metavar ='HARONIC_SHARE',
         type = check_share
     )
+    parser.add_argument(
+        '-c',
+        required = True,
+        help='correlogram output file location, {}'.format(constants.OUTPUT_FORMAT_INFO),
+        metavar='CORRELOGRAM_FILE'
+    )
+    parser.add_argument(
+        '-s',
+        required = True,
+        help='cleaned time series output file location, {}'.format(constants.OUTPUT_FORMAT_INFO),
+        metavar='SERIES_FILE'
+    )
+    parser.add_argument(
+        '-o',
+        required = True,
+        help='summary output file location',
+        metavar='SUMMARY_FILE'
+    )
     args = parser.parse_args()
     return args
+
+def save_results(restoration_result, args):
+    """saving restoration results"""
+    #TODO: output warning if max_iterations == iterations
+    khi = args.k
+    treshold = args.t
+    max_iterations = args.r
+    harmonic_share = args.g
+    input_file = args.i
+    correlogram_file = args.c
+    series_file = args.s
+    summary_file = args.o
 
 def main():
     """entry point"""
     args = parse_args()
     time_grid_and_values = fr.read_file(args.i)
-    pscc.clean(time_grid_and_values, args.k, args.t, args.r, args.g)
-
+    restoration_result = pscc.clean(time_grid_and_values, args.k, args.t, args.r, args.g)
+    save_results(restoration_result, args)
 main()

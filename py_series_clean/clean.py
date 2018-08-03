@@ -18,4 +18,9 @@ def clean(time_grid_and_values, khi, treshold, max_iterations, harmonic_share):
         harmonic_share, number_of_freq_estimations,
         time_grid, values, max_freq
     )
-    rst.restore(super_resultion_vector, iterations, number_of_freq_estimations, time_grid, max_freq)
+    restoration_result = rst.restore(
+        super_resultion_vector, iterations,
+        number_of_freq_estimations, time_grid, max_freq
+    )
+
+    return restoration_result

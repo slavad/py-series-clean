@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 import tests.dirty_series as ds
 import helpers.input_validators as iv
+import helpers.constants as constants
 import argparse
 import pdb
 
@@ -10,7 +11,7 @@ def parse_args():
     parser.add_argument(
         '-o',
         required = True,
-        help='output file location, results is written to the specified text file in two columns: time, value',
+        help='output file location, {}'.format(constants.OUTPUT_FORMAT_INFO),
         metavar='OUTPUT'
     )
     parser.add_argument(

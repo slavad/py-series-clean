@@ -27,6 +27,12 @@ def parse_args():
         metavar='SIGMA',
         type = iv.check_positive_float
     )
+    parser.add_argument(
+        '-o',
+        required = True,
+        help='output file location"',
+        metavar='OUTPUT'
+    )
     args = parser.parse_args()
     return args
 
