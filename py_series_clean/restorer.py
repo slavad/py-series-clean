@@ -8,8 +8,12 @@ def restore(super_resultion_vector, iterations, number_of_freq_estimations, time
     if iterations == 0:
         return None
     else:
-        clean_window_vector = build_clean_window_vector(number_of_freq_estimations, time_grid, max_freq)
-        clean_spectrum = build_clean_spectrum(clean_window_vector, super_resultion_vector, number_of_freq_estimations)
+        clean_window_vector = build_clean_window_vector(
+            number_of_freq_estimations, time_grid, max_freq
+        )
+        clean_spectrum = build_clean_spectrum(
+            clean_window_vector, super_resultion_vector, number_of_freq_estimations
+        )
 
 def build_uniform_time_grid(time_grid):
     """eq 158 ref 2"""
@@ -21,21 +25,15 @@ def build_uniform_time_grid(time_grid):
 
 def build_clean_spectrum(clean_window_vector, super_resultion_vector, number_of_freq_estimations):
     """eq 159 ref 2"""
-    clean_window_matrix = build_clean_window_matrix(clean_window_vector, super_resultion_vector, number_of_freq_estimations)
-
-def build_clean_window_matrix(clean_window_vector, super_resultion_vector, number_of_freq_estimations):
-    """
-        the result of eq 159 ref 2 can be presented as matrix mult
-        of C and the result of this function
-    """
     number_of_rows = super_resultion_vector.shape[0]
-    result = []
+    array = []
     for index in range(0, number_of_rows):
         #TODO: check correctness of the index shifts:
         min_index = 2*number_of_freq_estimations - index
         max_index = 4*number_of_freq_estimations + 1 - index
-        result[index] = clean_window_vector[min_index:max_index]
-    pdb.set_trace()
+        subvector = clean_window_vector[min_index:max_index]
+        array.append(np.matmul(super_resultion_vector.T, subvector)[0][0])
+    result = np.array(array).reshape(-1,1)
     return result
 
 def build_clean_window_vector(number_of_freq_estimations, time_grid, max_freq):
