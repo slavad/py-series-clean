@@ -5,7 +5,7 @@ import numpy as np
 import py_series_clean.threshold as thrs
 import helpers.input_validators as iv
 import helpers.argument_parsers as ap
-import helpers.file_readers as fr
+import helpers.file_readers_and_writers as frw
 
 HELP_FOR_SERIES_LENGTH = "RANDOM_SERIES_LENGTH must be >> lenght of the input time series"
 
@@ -53,7 +53,7 @@ def main():
     """entry point"""
     print('started')
     args = parse_args()
-    time_grid_and_values = fr.read_file(args.i)
+    time_grid_and_values = frw.read_file(args.i)
     if time_grid_and_values[0].shape[1] >= args.r:
         raise ValueError(HELP_FOR_SERIES_LENGTH)
     threshold = thrs.estimate_threshold(time_grid_and_values, args.r, args.s, args.k)

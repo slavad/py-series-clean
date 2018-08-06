@@ -2,6 +2,7 @@
 import tests.dirty_series as ds
 import helpers.input_validators as iv
 import helpers.constants as constants
+import helpers.file_readers_and_writers as frw
 import argparse
 import pdb
 
@@ -65,20 +66,10 @@ def generate_series(args):
     )
     return result
 
-def save_series(series, file_path):
-    """save seriess to the file """
-    length = series[0].shape[0]
-    file = open(file_path, "w")
-    for i in range(0, length):
-        # time and value
-        string = '%e %e' % (series[0][i][0], series[1][i][0])
-        print(string, file=file)
-    file.close
-
 def main():
     """entry point"""
     args = parse_args()
     series = generate_series(args)
-    save_series(series, args.o)
+    frw.save_series(series, args.o, 'real')
 
 main()

@@ -2,10 +2,11 @@
 
 import argparse
 import py_series_clean.clean as pscc
-import helpers.file_readers as fr
+import helpers.file_readers_and_writers as frw
 import helpers.argument_parsers as ap
 import helpers.input_validators as iv
 import helpers.constants as constants
+import numpy as np
 import pdb
 
 ADDITIONAL_HELP = 'iterations stop if the number of maximum iterations is exceeded or the series do not contain signal at the given treshold'
@@ -31,7 +32,7 @@ def parse_args():
     parser.add_argument(
         '-r',
         required = True,
-        help = 'maximum number of iteratoins: {}'.format(ADDITIONAL_HELP),
+        help = 'maximum number of iterations: {}'.format(ADDITIONAL_HELP),
         metavar ='MAX_ITERATIONS',
         type = iv.check_positive_int
     )
@@ -67,6 +68,16 @@ def parse_args():
 def save_results(restoration_result, args):
     """saving restoration results"""
     #TODO: output warning if max_iterations == iterations + 1, iterations start with zero
+
+    if restoration_result:
+        iterations, uniform_time_grid, clean_spectrum, correlogram, uniform_series = restoration_result
+        frw.save_series([uniform_time_grid, correlogram], args.c, 'complex')
+        frw.save_series([uniform_time_grid, uniform_series], args.s, 'complex')
+    else:
+        iterations = 0
+    save_summary(args, iterations)
+
+def save_summary(args, iterations):
     khi = args.k
     treshold = args.t
     max_iterations = args.r
@@ -79,7 +90,7 @@ def save_results(restoration_result, args):
 def main():
     """entry point"""
     args = parse_args()
-    time_grid_and_values = fr.read_file(args.i)
+    time_grid_and_values = frw.read_file(args.i)
     restoration_result = pscc.clean(time_grid_and_values, args.k, args.t, args.r, args.g)
     save_results(restoration_result, args)
 
