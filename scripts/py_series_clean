@@ -66,7 +66,7 @@ def parse_args():
     return args
 
 def save_results(restoration_result, args):
-    """saving restoration results"""
+    """saves restoration results"""
     #TODO: output warning if max_iterations == iterations + 1, iterations start with zero
 
     if restoration_result:
@@ -78,14 +78,27 @@ def save_results(restoration_result, args):
     save_summary(args, iterations)
 
 def save_summary(args, iterations):
-    khi = args.k
-    treshold = args.t
-    max_iterations = args.r
-    harmonic_share = args.g
-    input_file = args.i
-    correlogram_file = args.c
-    series_file = args.s
-    summary_file = args.o
+    """writes summary to the output file"""
+    file = open(args.o, "w")
+    if iterations == 0:
+        print('No harmonical components found', file=file)
+    if iterations + 1 == args.r:
+        print('Iterations did not converge, iterations where stopped because they reached maximum number of iterations', file=file)
+    print('Input params:', file=file)
+    print('khi: {}:'.format(args.k), file=file)
+    print('treshold: {}:'.format(args.t), file=file)
+    print('max iterations: {}:'.format(args.r), file=file)
+    print('harmonic share: {}:'.format(args.g), file=file)
+    print('dirty series file: {}:'.format(args.i), file=file)
+    print('correlogram file: {}:'.format(args.c), file=file)
+    print('clean series file: {}:'.format(args.s), file=file)
+    print('summary file: {}:'.format(args.o), file=file)
+    print('Output:', file=file)
+    if iterations == 0:
+        print('None')
+    else:
+        print('number of iterations: {}:'.format(iterations + 1), file=file)
+    file.close()
 
 def main():
     """entry point"""
