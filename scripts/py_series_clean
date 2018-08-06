@@ -47,14 +47,21 @@ def parse_args():
     parser.add_argument(
         '-c',
         required = True,
-        help='correlogram output file location, {}'.format(constants.OUTPUT_FORMAT_INFO),
+        help='correlogram output file location, {}: time, value'.format(constants.OUTPUT_FORMAT_INFO),
         metavar='CORRELOGRAM_FILE'
     )
     parser.add_argument(
         '-s',
         required = True,
-        help='cleaned time series output file location, {}'.format(constants.OUTPUT_FORMAT_INFO),
+        help='cleaned time series output file location, {}: time, value'.format(constants.OUTPUT_FORMAT_INFO),
         metavar='SERIES_FILE'
+    )
+
+    parser.add_argument(
+        '-p',
+        required = True,
+        help='cleaned spectrum output file location, {}: frequency, value'.format(constants.OUTPUT_FORMAT_INFO),
+        metavar='SPECTRUM_FILE'
     )
     parser.add_argument(
         '-o',
@@ -70,9 +77,10 @@ def save_results(restoration_result, args):
     #TODO: output warning if max_iterations == iterations + 1, iterations start with zero
 
     if restoration_result:
-        iterations, uniform_time_grid, clean_spectrum, correlogram, uniform_series = restoration_result
+        iterations, uniform_time_grid, clean_spectrum, correlogram, uniform_series, freq_vector = restoration_result
         frw.save_series([uniform_time_grid, correlogram], args.c, 'complex')
         frw.save_series([uniform_time_grid, uniform_series], args.s, 'complex')
+        frw.save_series([freq_vector, clean_spectrum], args.p, 'complex')
     else:
         iterations = 0
     save_summary(args, iterations)
@@ -92,6 +100,7 @@ def save_summary(args, iterations):
     print('dirty series file: {}:'.format(args.i), file=file)
     print('correlogram file: {}:'.format(args.c), file=file)
     print('clean series file: {}:'.format(args.s), file=file)
+    print('clean spectrum file: {}:'.format(args.p), file=file)
     print('summary file: {}:'.format(args.o), file=file)
     print('Output:', file=file)
     if iterations == 0:

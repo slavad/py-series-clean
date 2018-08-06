@@ -21,8 +21,10 @@ def save_series(series, file_path, flag):
     for i in range(0, length):
         # time and value
         if flag == 'real':
-            string = '%e %e' % (series[0][i][0], series[1][i][0])
+            string = '%e %e' % (series[0][i][0], np.real(series[1][i][0]))
         elif flag == 'complex':
-            string = '%e %e+%ei' % (series[0][i][0], np.real(series[1][i][0]), np.imag(series[1][i][0]))
+            string = '%e %e %ei' % (series[0][i][0], np.real(series[1][i][0]), np.imag(series[1][i][0]))
+        else:
+            raise ValueError("unknown flag")
         print(string, file=file)
     file.close

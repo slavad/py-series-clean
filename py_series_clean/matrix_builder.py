@@ -26,14 +26,14 @@ def generate_index_vector(vector_size):
     index_vector = np.arange(-max_index, max_index + 1, 1).reshape(-1,1)
     return index_vector
 
-def build_exp_matrix(time_grid, values, index_vector, number_of_freq_estimations, max_freq, kind):
+def build_exp_matrix(time_grid, values, freq_vector, number_of_freq_estimations, kind):
     """
         builds (index_vector.shape[0])xN exp matrix
         for usage in eq 148, 149, 160 and 161 ref 2
     """
     # direct or inverse FT
     # see eq 150 in ref 2
-    freq_vector = index_vector*max_freq/number_of_freq_estimations
+
     if kind == 'direct':
         coeff = -1j
         norm = 1/values.shape[0]
@@ -59,8 +59,9 @@ def size_of_spectrum_vector(number_of_freq_estimations):
 def calculate_dirty_vector(time_grid, values, number_of_freq_estimations, max_freq):
     """eq 148 in ref 2"""
     index_vector = generate_index_vector(size_of_spectrum_vector(number_of_freq_estimations))
+    freq_vector = index_vector*max_freq/number_of_freq_estimations
     result = build_exp_matrix(
-        time_grid, values, index_vector, number_of_freq_estimations, max_freq, 'direct'
+        time_grid, values, freq_vector,number_of_freq_estimations, 'direct'
     )
     return result
 
@@ -71,9 +72,10 @@ def size_of_window_vector(number_of_freq_estimations):
 def calculate_window_vector(time_grid, number_of_freq_estimations, max_freq):
     """eq 148 in ref 2"""
     index_vector = generate_index_vector(size_of_window_vector(number_of_freq_estimations))
+    freq_vector = index_vector*max_freq/number_of_freq_estimations
     values = np.ones((time_grid.shape[0],1))
     result = build_exp_matrix(
-        time_grid, values, index_vector, number_of_freq_estimations, max_freq, 'direct'
+        time_grid, values, freq_vector,number_of_freq_estimations, 'direct'
     )
     return result
 

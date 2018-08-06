@@ -12,7 +12,7 @@ def parse_args():
     parser.add_argument(
         '-o',
         required = True,
-        help='output file location, {}'.format(constants.OUTPUT_FORMAT_INFO),
+        help='output file location, {}: time, value'.format(constants.OUTPUT_FORMAT_INFO),
         metavar='OUTPUT'
     )
     parser.add_argument(

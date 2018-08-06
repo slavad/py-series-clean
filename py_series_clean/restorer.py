@@ -10,6 +10,10 @@ def restore(super_resultion_vector, iterations, number_of_freq_estimations, time
         return None
     else:
         uniform_time_grid = build_uniform_time_grid(time_grid)
+        index_vector = mb.generate_index_vector(
+            mb.size_of_spectrum_vector(number_of_freq_estimations)
+        )
+        freq_vector = index_vector*max_freq/number_of_freq_estimations
         clean_window_vector = build_clean_window_vector(
             number_of_freq_estimations, uniform_time_grid, max_freq
         )
@@ -17,12 +21,12 @@ def restore(super_resultion_vector, iterations, number_of_freq_estimations, time
             clean_window_vector, super_resultion_vector, number_of_freq_estimations
         )
         correlogram = build_correlogram(
-            clean_spectrum, number_of_freq_estimations, uniform_time_grid, max_freq
+            clean_spectrum, freq_vector, uniform_time_grid, number_of_freq_estimations
         )
         uniform_series = build_uniform_series(
-            clean_spectrum, number_of_freq_estimations, uniform_time_grid, max_freq
+            clean_spectrum, freq_vector, uniform_time_grid, number_of_freq_estimations
         )
-        return uniform_time_grid, clean_spectrum, correlogram, uniform_series
+        return uniform_time_grid, clean_spectrum, correlogram, uniform_series, freq_vector
 
 def build_uniform_time_grid(time_grid):
     """eq 158 ref 2"""
@@ -52,29 +56,24 @@ def build_clean_window_vector(number_of_freq_estimations, uniform_time_grid, max
     )
     return clean_window_vector
 
-def build_correlogram(clean_spectrum, number_of_freq_estimations, uniform_time_grid, max_freq):
+def build_correlogram(clean_spectrum, freq_vector, uniform_time_grid,number_of_freq_estimations):
     """eq 160 ref 2"""
     values = sch.squared_abs(clean_spectrum)
     result = build_correlogram_or_uniform_series(
-        values, number_of_freq_estimations,
-        uniform_time_grid, max_freq
+        values, freq_vector, uniform_time_grid,number_of_freq_estimations
     )
     return result
 
-def build_uniform_series(clean_spectrum, number_of_freq_estimations, uniform_time_grid, max_freq):
+def build_uniform_series(clean_spectrum, freq_vector, uniform_time_grid, number_of_freq_estimations):
     """eq 161 ref 2"""
     result = build_correlogram_or_uniform_series(
-        clean_spectrum, number_of_freq_estimations,
-        uniform_time_grid, max_freq
+        clean_spectrum, freq_vector, uniform_time_grid,number_of_freq_estimations
     )
     return result
 
-def build_correlogram_or_uniform_series(values, number_of_freq_estimations, uniform_time_grid, max_freq):
+def build_correlogram_or_uniform_series(values, freq_vector, uniform_time_grid,number_of_freq_estimations):
     """eq 160 and 161 ref 2"""
-    index_vector = mb.generate_index_vector(
-        mb.size_of_spectrum_vector(number_of_freq_estimations)
-    )
     result = mb.build_exp_matrix(
-        uniform_time_grid, values, index_vector, number_of_freq_estimations, max_freq, 'inverse'
+        uniform_time_grid, values, freq_vector,number_of_freq_estimations, 'inverse'
     )
     return result
