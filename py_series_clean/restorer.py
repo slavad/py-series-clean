@@ -22,6 +22,7 @@ def restore(super_resultion_vector, iterations, number_of_freq_estimations, time
         uniform_series = build_uniform_series(
             clean_spectrum, number_of_freq_estimations, uniform_time_grid, max_freq
         )
+        pdb.set_trace()
         return uniform_time_grid, clean_spectrum, correlogram, uniform_series
 
 def build_uniform_time_grid(time_grid):
@@ -71,4 +72,10 @@ def build_uniform_series(clean_spectrum, number_of_freq_estimations, uniform_tim
 
 def build_correlogram_or_uniform_series(values, number_of_freq_estimations, uniform_time_grid, max_freq):
     """eq 160 and 161 ref 2"""
-    pass
+    index_vector = mb.generate_index_vector(
+        mb.size_of_spectrum_vector(number_of_freq_estimations)
+    )
+    result = mb.build_exp_matrix(
+        uniform_time_grid, values, index_vector, number_of_freq_estimations, max_freq, 'inverse'
+    )
+    return result

@@ -45,16 +45,20 @@ def build_exp_matrix(time_grid, values, index_vector, number_of_freq_estimations
     # the result will be a rectangular matrix:
     matrix_for_exp = (coeff*2*np.pi*freq_vector)*time_grid.T
     exp_vector = np.exp(matrix_for_exp)
-    result = np.matmul(exp_vector, values)*norm
+    if kind == 'direct':
+        exp_vector_for_mult = exp_vector
+    elif kind == 'inverse':
+        exp_vector_for_mult = exp_vector.T
+    result = np.matmul(exp_vector_for_mult, values)*norm
     return result
 
-def size_of_dirty_vector(number_of_freq_estimations):
+def size_of_spectrum_vector(number_of_freq_estimations):
     """size of dirty vector"""
     return 2*number_of_freq_estimations + 1
 
 def calculate_dirty_vector(time_grid, values, number_of_freq_estimations, max_freq):
     """eq 148 in ref 2"""
-    index_vector = generate_index_vector(size_of_dirty_vector(number_of_freq_estimations))
+    index_vector = generate_index_vector(size_of_spectrum_vector(number_of_freq_estimations))
     result = build_exp_matrix(
         time_grid, values, index_vector, number_of_freq_estimations, max_freq, 'direct'
     )
