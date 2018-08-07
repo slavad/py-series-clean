@@ -30,26 +30,26 @@ def parse_args():
         type = iv.check_positive_float
     )
     parser.add_argument(
-        '-p',
+        '-f',
         required = True,
-        help='periods to generate periodical series, number of args must be the same as for shifts',
-        metavar='PERIODS',
+        help='linear frequencies to generate periodical series, number of args must be the same as for phases',
+        metavar='FREQS',
         type = iv.check_positive_float,
         nargs='+'
     )
     parser.add_argument(
         '-a',
         required = True,
-        help='amplutdes to generate periodical series, number of args must be the same as for shifts',
+        help='amplutdes to generate periodical series, number of args must be the same as for phases',
         metavar='AMPLITUDES',
         type = iv.check_positive_float,
         nargs='+'
     )
     parser.add_argument(
-        '-d',
+        '-p',
         required = True,
-        help='shifts for respective periods to generate periodical series, number of args must be the same as for periods',
-        metavar='SHIFTS',
+        help='phase (in radians) for respective periods to generate periodical series, number of args must be the same as for periods',
+        metavar='PHASE',
         type = iv.check_positive_float,
         nargs='+'
     )
@@ -68,9 +68,9 @@ def generate_series(args):
     result = ds.generate_dirty_periodical_series_with_random_time_grid(
         args.l,
         args.t,
-        args.p,
-        args.d,
+        args.f,
         args.a,
+        args.p,
         args.s
     )
     return result

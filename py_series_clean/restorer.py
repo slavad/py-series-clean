@@ -51,6 +51,11 @@ def build_clean_spectrum(clean_window_vector, super_resultion_vector, number_of_
     for index in range(0, number_of_rows):
         #TODO: check correctness of the index shifts:
         # probably shifts here are wrong.
+        # maybe reverse the array here?
+        # in eq 159 B[j-k]
+        # here j == index,
+        # but in our formula [k-j]!
+        # probably the subvector should also be inverted
         min_index = 2*number_of_freq_estimations - index
         max_index = 4*number_of_freq_estimations + 1 - index
         subvector = clean_window_vector[min_index:max_index]

@@ -2,10 +2,10 @@ import numpy as np
 import pdb
 #TODO: write tests
 #TODO: move to the py_series_clean dir?
-def generate_dirty_periodical_series_with_random_time_grid(time_grid_length, max_time_value, periods, shifts,amplitudes, sigma):
+def generate_dirty_periodical_series_with_random_time_grid(time_grid_length, max_time_value, frequencies, amplitudes,phases, sigma):
     """generates time grid and noisy observations"""
     time_grid = generate_random_time_grid(time_grid_length, max_time_value)
-    series = generate_dirty_periodical_series(time_grid, periods, shifts,amplitudes, sigma)
+    series = generate_dirty_periodical_series(time_grid, frequencies, amplitudes,phases, sigma)
     return time_grid, series
 
 def generate_random_time_grid(time_grid_length, max_time_value):
@@ -13,38 +13,39 @@ def generate_random_time_grid(time_grid_length, max_time_value):
     result = np.sort(np.random.ranf(time_grid_length)).reshape(-1,1)
     return result*max_time_value
 
-def generate_periodical_series(time_grid, periods, shifts,amplitudes):
+def generate_periodical_series(time_grid, frequencies, amplitudes,phases):
     """generates periodical series"""
     # all args should be in the same units: e.g. secs
     # can be both scalars or vectors, but the must be of
     # the same shape: (n,1)
-    new_periods, new_shifts, new_amplitudes = check_and_reshape_arguments(periods, shifts, amplitudes)
-    # reshaping of time grid will be done automatically
-    # after we add new_shifts to it.
-    # the new shape will be (m,n)
+    new_frequencies, new_amplitudes, new_phases = check_and_reshape_arguments(frequencies, amplitudes, phases)
+    circular_frequnecies = 2*np.pi*new_frequencies
+    # broadcasting of time grid will be done automatically
+    # after we add divide it by circular_frequnecies.
+    # the new shape will be (n,m)
     # where m is the height of time_grid.reshape(-1,1)
-    # and n is the length of both new_periods and new_shifts
-    phases = (time_grid.T + new_shifts)/new_periods*2*np.pi
-    result = np.cos(phases)*new_amplitudes
+    # and n is the length of both new_phases, new_amplitudes and new_frequencies
+    current_phases = time_grid.T/circular_frequnecies + new_phases
+    result = np.cos(current_phases)*new_amplitudes
     return np.sum(result, axis=0).reshape(-1,1)
 
-def generate_dirty_periodical_series(time_grid, periods, shifts,amplitudes, sigma):
+def generate_dirty_periodical_series(time_grid, frequencies, amplitudes,phases, sigma):
     # all args should be in the same units: e.g. secs
     """adds some random noise to the series"""
     noise = np.random.normal(loc=0.0, scale=sigma, size=time_grid.shape)
-    result = noise + generate_periodical_series(time_grid, periods, shifts,amplitudes)
+    result = noise + generate_periodical_series(time_grid, frequencies, amplitudes,phases)
     return result
 
-def check_and_reshape_arguments(periods, shifts,amplitudes):
+def check_and_reshape_arguments(frequencies, amplitudes,phases):
     """reshapes arguments and check their shape"""
-    shape_error = "both periods and shapes must be scalars or have the same shape"
-    new_periods = reshape_one_value(periods)
-    new_shifts = reshape_one_value(shifts)
+    shape_error = "both phases and shapes must be scalars or have the same shape"
+    new_frequencies = reshape_one_value(frequencies)
     new_amplitudes = reshape_one_value(amplitudes)
-    if (new_periods.shape != new_shifts.shape) or (new_periods.shape != new_amplitudes.shape):
-        raise ValueError("periods shifts and amplitudes must be scalars or have the same shape")
+    new_phases = reshape_one_value(phases)
+    if (new_phases.shape != new_amplitudes.shape) or (new_frequencies.shape != new_phases.shape):
+        raise ValueError("phases amplitudes and phases must be scalars or have the same shape")
     else:
-        return new_periods, new_shifts, new_amplitudes
+        return new_frequencies, new_amplitudes, new_phases
 
 def reshape_one_value(value):
     """converting to vectors if needed and reshaping"""
