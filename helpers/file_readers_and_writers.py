@@ -13,7 +13,7 @@ def read_file(file_path):
     return np.array(time_grid).reshape(-1,1), np.array(values).reshape(-1,1)
 
 def save_series(series, file_path, flag):
-    """save seriess to the file """
+    """save series to the file """
     length = series[0].shape[0]
     file = open(file_path, "w")
     for i in range(0, length):
@@ -26,5 +26,15 @@ def save_series(series, file_path, flag):
             string = '%e %e' % (series[0][i][0], np.abs(series[1][i][0]))
         else:
             raise ValueError("unknown flag")
+        print(string, file=file)
+    file.close
+
+def save_harmonics(harmonics, file_path):
+    """save harmonics to the file """
+    length = harmonics[0].shape[0]
+    file = open(file_path, "w")
+    for i in range(0, length):
+        # linear freq, amplitude, phase
+        string = '%e %e %e' % (harmonics[0][i][0], harmonics[1][i][0], harmonics[2][i][0])
         print(string, file=file)
     file.close

@@ -65,8 +65,8 @@ def parse_args():
     parser.add_argument(
         '-a',
         required = True,
-        help='amplitueds and phases found, {}: amplitude, phase'.format(constants.OUTPUT_FORMAT_INFO),
-        metavar='SPECTRUM_FILE'
+        help='harmonics file, {}:linear frequency, amplitude, phase'.format(constants.OUTPUT_FORMAT_INFO),
+        metavar='HARMONICS_FILE'
     )
     parser.add_argument(
         '-o',
@@ -82,11 +82,11 @@ def save_results(restoration_result, args):
     #TODO: output warning if max_iterations == iterations + 1, iterations start with zero
 
     if restoration_result:
-        iterations, uniform_time_grid, clean_spectrum, correlogram, uniform_series, freq_vector,amplitudes, phases = restoration_result
+        iterations, uniform_time_grid, clean_spectrum, correlogram, uniform_series, freq_vector,freqs,amplitudes, phases = restoration_result
         frw.save_series([uniform_time_grid, correlogram], args.c, 'complex')
         frw.save_series([uniform_time_grid, uniform_series], args.s, 'complex')
         frw.save_series([freq_vector, clean_spectrum], args.p, 'complex')
-        frw.save_series([amplitudes, phases], args.a, 'real')
+        frw.save_harmonics([freqs, amplitudes, phases], args.a)
     else:
         iterations = 0
     save_summary(args, iterations)
@@ -107,6 +107,7 @@ def save_summary(args, iterations):
     print('correlogram file: {}:'.format(args.c), file=file)
     print('clean series file: {}:'.format(args.s), file=file)
     print('clean spectrum file: {}:'.format(args.p), file=file)
+    print('harmonics file: {}:'.format(args.a), file=file)
     print('summary file: {}:'.format(args.o), file=file)
     print('Output:', file=file)
     if iterations == 0:

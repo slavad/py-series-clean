@@ -17,7 +17,7 @@ def restore(super_resultion_vector, iterations, number_of_freq_estimations, time
         clean_window_vector = build_clean_window_vector(
             number_of_freq_estimations, uniform_time_grid, max_freq
         )
-        amplitudes, phases = restore_amplitude_and_phase(super_resultion_vector)
+        freqs, amplitudes, phases = restore_amplitude_and_phase(super_resultion_vector, freq_vector)
         clean_spectrum = build_clean_spectrum(
             clean_window_vector, super_resultion_vector, number_of_freq_estimations
         )
@@ -27,14 +27,15 @@ def restore(super_resultion_vector, iterations, number_of_freq_estimations, time
         uniform_series = build_uniform_series(
             clean_spectrum, freq_vector, uniform_time_grid, number_of_freq_estimations
         )
-        return uniform_time_grid, clean_spectrum, correlogram, uniform_series, freq_vector, amplitudes, phases
+        return uniform_time_grid, clean_spectrum, correlogram, uniform_series, freq_vector, freqs, amplitudes, phases
 
-def restore_amplitude_and_phase(super_resultion_vector):
+def restore_amplitude_and_phase(super_resultion_vector, freq_vector):
     """req 143 and 144 ref 2"""
     non_zeroes = np.extract(np.abs(super_resultion_vector) != 0,super_resultion_vector)
+    freqs = np.extract(np.abs(super_resultion_vector) != 0,freq_vector)
     amplitudes = 2*np.abs(non_zeroes)
     phases = np.arctan2(np.imag(non_zeroes),np.real(non_zeroes))
-    return amplitudes.reshape(-1,1), phases.reshape(-1,1)
+    return freqs.reshape(-1,1), amplitudes.reshape(-1,1), phases.reshape(-1,1)
 
 def build_uniform_time_grid(time_grid):
     """eq 158 ref 2"""
