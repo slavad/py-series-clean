@@ -15,8 +15,6 @@ def read_file(file_path):
 def save_series(series, file_path, flag):
     """save seriess to the file """
     length = series[0].shape[0]
-    if flag != 'complex' and flag != 'real':
-        raise ValueError("unknown flag")
     file = open(file_path, "w")
     for i in range(0, length):
         # time and value
@@ -24,6 +22,8 @@ def save_series(series, file_path, flag):
             string = '%e %e' % (series[0][i][0], np.real(series[1][i][0]))
         elif flag == 'complex':
             string = '%e %e %ei' % (series[0][i][0], np.real(series[1][i][0]), np.imag(series[1][i][0]))
+        elif flag == 'abs':
+            string = '%e %e' % (series[0][i][0], np.abs(series[1][i][0]))
         else:
             raise ValueError("unknown flag")
         print(string, file=file)

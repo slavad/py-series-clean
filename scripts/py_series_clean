@@ -64,6 +64,12 @@ def parse_args():
         metavar='SPECTRUM_FILE'
     )
     parser.add_argument(
+        '-a',
+        required = True,
+        help='amplitueds and phases found, {}: amplitude, phase'.format(constants.OUTPUT_FORMAT_INFO),
+        metavar='SPECTRUM_FILE'
+    )
+    parser.add_argument(
         '-o',
         required = True,
         help='summary output file location',
@@ -77,10 +83,11 @@ def save_results(restoration_result, args):
     #TODO: output warning if max_iterations == iterations + 1, iterations start with zero
 
     if restoration_result:
-        iterations, uniform_time_grid, clean_spectrum, correlogram, uniform_series, freq_vector = restoration_result
+        iterations, uniform_time_grid, clean_spectrum, correlogram, uniform_series, freq_vector,amplitudes, phases = restoration_result
         frw.save_series([uniform_time_grid, correlogram], args.c, 'complex')
         frw.save_series([uniform_time_grid, uniform_series], args.s, 'complex')
         frw.save_series([freq_vector, clean_spectrum], args.p, 'complex')
+        frw.save_series([amplitudes, phases], args.a, 'real')
     else:
         iterations = 0
     save_summary(args, iterations)
