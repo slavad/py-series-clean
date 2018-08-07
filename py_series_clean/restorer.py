@@ -50,6 +50,7 @@ def build_clean_spectrum(clean_window_vector, super_resultion_vector, number_of_
     array = []
     for index in range(0, number_of_rows):
         #TODO: check correctness of the index shifts:
+        # probably shifts here are wrong.
         min_index = 2*number_of_freq_estimations - index
         max_index = 4*number_of_freq_estimations + 1 - index
         subvector = clean_window_vector[min_index:max_index]

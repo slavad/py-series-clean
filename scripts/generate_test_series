@@ -38,6 +38,14 @@ def parse_args():
         nargs='+'
     )
     parser.add_argument(
+        '-a',
+        required = True,
+        help='amplutdes to generate periodical series, number of args must be the same as for shifts',
+        metavar='AMPLITUDES',
+        type = iv.check_positive_float,
+        nargs='+'
+    )
+    parser.add_argument(
         '-d',
         required = True,
         help='shifts for respective periods to generate periodical series, number of args must be the same as for periods',
@@ -62,6 +70,7 @@ def generate_series(args):
         args.t,
         args.p,
         args.d,
+        args.a,
         args.s
     )
     return result
