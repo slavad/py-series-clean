@@ -56,11 +56,11 @@ def build_clean_spectrum(clean_window_vector, super_resultion_vector, number_of_
         # in eq 159 B[j-k]
         # here j == index,
         # but in our formula [k-j]!
-        # probably the subvector should also be inverted
-        min_index = 2*number_of_freq_estimations - index
-        max_index = 4*number_of_freq_estimations + 1 - index
-        subvector = clean_window_vector[min_index:max_index]
-        array.append(np.matmul(super_resultion_vector.T, subvector)[0][0])
+        # probably the subvector should also be flipped
+        max_index = index + 2*number_of_freq_estimations
+        min_index = max_index - 2*number_of_freq_estimations
+        subvector = clean_window_vector[min_index:max_index+1]
+        array.append(np.matmul(super_resultion_vector.T, np.flip(subvector, axis=0))[0][0])
     result = np.array(array).reshape(-1,1)
     return result
 

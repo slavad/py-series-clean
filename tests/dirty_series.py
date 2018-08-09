@@ -32,8 +32,9 @@ def generate_periodical_series(time_grid, frequencies, amplitudes,phases):
 def generate_dirty_periodical_series(time_grid, frequencies, amplitudes,phases, sigma):
     # all args should be in the same units: e.g. secs
     """adds some random noise to the series"""
-    noise = np.random.normal(loc=0.0, scale=sigma, size=time_grid.shape)
-    result = noise + generate_periodical_series(time_grid, frequencies, amplitudes,phases)
+    result = generate_periodical_series(time_grid, frequencies, amplitudes,phases)
+    if sigma != 0:
+        result += np.random.normal(loc=0.0, scale=sigma, size=time_grid.shape)
     return result
 
 def check_and_reshape_arguments(frequencies, amplitudes,phases):
