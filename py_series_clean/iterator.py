@@ -5,9 +5,8 @@ import pdb
 
 class Iterator(object):
     """iterates over the dirty spectrum and extracts clean one"""
-    def __init__(self, treshold, max_iterations, harmonic_share, number_of_freq_estimations, time_grid, values, max_freq):
+    def __init__(self, treshold, harmonic_share, number_of_freq_estimations, time_grid, values, max_freq):
         self.treshold = treshold
-        self.max_iterations = max_iterations
         self.harmonic_share = harmonic_share
         self.number_of_freq_estimations = number_of_freq_estimations
         self.time_grid = time_grid
@@ -17,7 +16,7 @@ class Iterator(object):
             self.time_grid, self.number_of_freq_estimations, self.max_freq
         )
 
-    def iterate(self):
+    def iterate(self, max_iterations):
         """iterator: steps 7 to 17 pp 51-52 ref 2"""
         super_resultion_vector = mb.build_super_resultion_vector(self.number_of_freq_estimations)
         dirty_vector = mb.calculate_dirty_vector(
@@ -25,7 +24,7 @@ class Iterator(object):
         )
         current_step = 0
 
-        while current_step < self.max_iterations:
+        while current_step < max_iterations:
             result = self.one_step(super_resultion_vector, dirty_vector)
             if not result:
                 break
