@@ -70,8 +70,8 @@ class Iterator(object):
         """one step of the iteration process"""
         dirty_subvector = old_dirty_vector[self.number_of_freq_estimations:]
         schuster_count = sch.calc_schuster_counts(dirty_subvector, method_flag='average')[0]
-        normalized_detection_treshold = schuster_count*self.treshold
         # eq 152 in ref 2
+        normalized_detection_treshold = schuster_count*self.treshold
         dirty_subvector_wo_zero = old_dirty_vector[self.number_of_freq_estimations+1:]
         # we need to add 1 to the index, because our dirty_vector index has different indexing:
         # from -number_of_freq_estimations to number_of_freq_estimations

@@ -79,8 +79,6 @@ def parse_args():
 
 def save_results(restoration_result, args):
     """saves restoration results"""
-    #TODO: output warning if max_iterations == iterations + 1, iterations start with zero
-
     if restoration_result:
         iterations, uniform_time_grid, clean_spectrum, correlogram, uniform_series, freq_vector,freqs,amplitudes, phases = restoration_result
         frw.save_series([uniform_time_grid, correlogram], args.c, 'complex')
@@ -96,7 +94,7 @@ def save_summary(args, iterations):
     file = open(args.o, "w")
     if iterations == 0:
         print('No harmonical components found', file=file)
-    if iterations + 1 == args.r:
+    if iterations == args.r:
         print('Iterations did not converge, iterations where stopped because they reached maximum number of iterations', file=file)
     print('Input params:', file=file)
     print('khi: {}:'.format(args.k), file=file)
@@ -113,7 +111,7 @@ def save_summary(args, iterations):
     if iterations == 0:
         print('None')
     else:
-        print('number of iterations: {}:'.format(iterations + 1), file=file)
+        print('number of iterations: {}:'.format(iterations), file=file)
     file.close()
 
 def main():
