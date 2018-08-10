@@ -111,7 +111,7 @@ def save_summary(args, iterations):
     if iterations == 0:
         print('None')
     else:
-        print('number of iterations: {}:'.format(iterations), file=file)
+        print('number of iterations: {}'.format(iterations), file=file)
     file.close()
 
 def main():
