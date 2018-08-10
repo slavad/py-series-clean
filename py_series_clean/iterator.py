@@ -30,7 +30,7 @@ class Iterator(object):
         current_step = 0
         dirty_vector = self.dirty_vector
         while current_step < max_iterations:
-            result = self.one_step(super_resultion_vector, dirty_vector)
+            result = self.__one_step(super_resultion_vector, dirty_vector)
             if not result:
                 break
             else:
@@ -38,7 +38,7 @@ class Iterator(object):
                 current_step += 1
         return super_resultion_vector, current_step
 
-    def calculate_complex_amplitude(self, dirty_vector, max_count_index):
+    def __calculate_complex_amplitude(self, dirty_vector, max_count_index):
         """eq 154 ref 2"""
         max_count_value = dirty_vector[self.number_of_freq_estimations:][max_count_index][0]
         window_value = self.window_vector[2*self.number_of_freq_estimations:][2*max_count_index][0]
@@ -46,7 +46,7 @@ class Iterator(object):
         denominator = 1 - sch.squared_abs(window_value)
         return nominator/denominator
 
-    def extract_data_from_dirty_spec(self, dirty_vector, max_count_index, complex_amplitude):
+    def ___extract_data_from_dirty_spec(self, dirty_vector, max_count_index, complex_amplitude):
         """eq 155 ref 2"""
         #TODO: check if vector shifts are ok here and above and below
         min_index = self.number_of_freq_estimations
@@ -61,7 +61,7 @@ class Iterator(object):
         result = dirty_vector - self.harmonic_share*difference
         return result
 
-    def add_data_to_super_resultion_vector(self, super_resultion_vector, max_count_index, complex_amplitude):
+    def __add_data_to_super_resultion_vector(self, super_resultion_vector, max_count_index, complex_amplitude):
         """eq 156 ref 2"""
         #TODO: check if vector shifts are ok here and above and below
         vector_to_add = mb.build_super_resultion_vector(self.number_of_freq_estimations)
@@ -70,7 +70,7 @@ class Iterator(object):
         result = vector_to_add + super_resultion_vector
         return result
 
-    def one_step(self, old_super_resultion_vector, old_dirty_vector):
+    def __one_step(self, old_super_resultion_vector, old_dirty_vector):
         """one step of the iteration process"""
         dirty_subvector_wo_zero = old_dirty_vector[self.number_of_freq_estimations+1:]
         # we need to add 1 to the index, because our dirty_vector index has different indexing:
@@ -79,12 +79,12 @@ class Iterator(object):
         max_count_value = dirty_subvector_wo_zero[max_count_index - 1][0]
         if sch.squared_abs(max_count_value) >= self.normalized_detection_treshold:
             # eq 154 ref 2
-            complex_amplitude = self.calculate_complex_amplitude(old_dirty_vector, max_count_index)
-            dirty_vector = self.extract_data_from_dirty_spec(
+            complex_amplitude = self.__calculate_complex_amplitude(old_dirty_vector, max_count_index)
+            dirty_vector = self.___extract_data_from_dirty_spec(
                 old_dirty_vector,
                 max_count_index, complex_amplitude
             )
-            super_resultion_vector = self.add_data_to_super_resultion_vector(
+            super_resultion_vector = self.__add_data_to_super_resultion_vector(
                 old_super_resultion_vector,max_count_index,
                 complex_amplitude
             )
