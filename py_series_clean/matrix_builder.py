@@ -36,10 +36,10 @@ def build_exp_matrix(time_grid, values, freq_vector, number_of_freq_estimations,
 
     if kind == 'direct':
         coeff = -1j
-        norm = 1/values.shape[0]
+        norm = 1/time_grid.shape[0]
     elif kind == 'inverse':
         coeff = 1j
-        norm = values.shape[0]/number_of_freq_estimations
+        norm = time_grid.shape[0]/number_of_freq_estimations
     else:
        raise ValueError("unknown kind")
     # the result will be a rectangular matrix:
