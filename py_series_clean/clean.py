@@ -13,11 +13,14 @@ def clean(time_grid_and_values, khi, treshold, max_iterations, harmonic_share):
         max_freq, time_grid, khi
     )
 
-    super_resultion_vector, iterations = itr.iterate(
+    iterator = itr.Iterator(
         treshold, max_iterations,
         harmonic_share, number_of_freq_estimations,
         time_grid, values, max_freq
     )
+
+    super_resultion_vector, iterations = iterator.iterate()
+
     restoration_result = rst.restore(
         super_resultion_vector, iterations,
         number_of_freq_estimations, time_grid, max_freq
