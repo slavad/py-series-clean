@@ -12,7 +12,6 @@ class Iterator(object):
         self.values = values
         self.max_freq = max_freq
 
-
         self.dirty_vector = mb.calculate_dirty_vector(
             self.time_grid, self.values, self.number_of_freq_estimations, self.max_freq
         )
