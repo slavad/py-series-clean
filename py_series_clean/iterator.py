@@ -6,12 +6,20 @@ import pdb
 class Iterator(object):
     """iterates over the dirty spectrum and extracts clean one"""
     def __init__(self, treshold, harmonic_share, number_of_freq_estimations, time_grid, values, max_freq):
-        self.treshold = treshold
         self.harmonic_share = harmonic_share
         self.number_of_freq_estimations = number_of_freq_estimations
         self.time_grid = time_grid
         self.values = values
         self.max_freq = max_freq
+
+
+        self.dirty_vector = mb.calculate_dirty_vector(
+            self.time_grid, self.values, self.number_of_freq_estimations, self.max_freq
+        )
+        dirty_subvector = self.dirty_vector[number_of_freq_estimations:]
+        schuster_count = sch.calc_schuster_counts(dirty_subvector, method_flag='average')[0]
+        # eq 152 in ref 2
+        self.normalized_detection_treshold = schuster_count*treshold
         self.window_vector = mb.calculate_window_vector(
             self.time_grid, self.number_of_freq_estimations, self.max_freq
         )
@@ -19,11 +27,9 @@ class Iterator(object):
     def iterate(self, max_iterations):
         """iterator: steps 7 to 17 pp 51-52 ref 2"""
         super_resultion_vector = mb.build_super_resultion_vector(self.number_of_freq_estimations)
-        dirty_vector = mb.calculate_dirty_vector(
-            self.time_grid, self.values, self.number_of_freq_estimations, self.max_freq
-        )
-        current_step = 0
 
+        current_step = 0
+        dirty_vector = self.dirty_vector
         while current_step < max_iterations:
             result = self.one_step(super_resultion_vector, dirty_vector)
             if not result:
@@ -67,16 +73,12 @@ class Iterator(object):
 
     def one_step(self, old_super_resultion_vector, old_dirty_vector):
         """one step of the iteration process"""
-        dirty_subvector = old_dirty_vector[self.number_of_freq_estimations:]
-        schuster_count = sch.calc_schuster_counts(dirty_subvector, method_flag='average')[0]
-        # eq 152 in ref 2
-        normalized_detection_treshold = schuster_count*self.treshold
         dirty_subvector_wo_zero = old_dirty_vector[self.number_of_freq_estimations+1:]
         # we need to add 1 to the index, because our dirty_vector index has different indexing:
         # from -number_of_freq_estimations to number_of_freq_estimations
         max_count_index = sch.calc_schuster_counts(dirty_subvector_wo_zero, method_flag='argmax')[0] + 1
         max_count_value = dirty_subvector_wo_zero[max_count_index - 1][0]
-        if sch.squared_abs(max_count_value) >= normalized_detection_treshold:
+        if sch.squared_abs(max_count_value) >= self.normalized_detection_treshold:
             # eq 154 ref 2
             complex_amplitude = self.calculate_complex_amplitude(old_dirty_vector, max_count_index)
             dirty_vector = self.extract_data_from_dirty_spec(
