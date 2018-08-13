@@ -18,21 +18,6 @@ class Restorer(object):
             self.freq_vector = self.__index_vector*self.__max_freq/self.__number_of_freq_estimations
             self.__clean_window_vector = self.__build_clean_window_vector()
 
-    def __build_clean_window_vector(self):
-        """eq 157 ref 2"""
-        clean_window_vector = mb.calculate_window_vector(
-            self.uniform_time_grid, self.__number_of_freq_estimations, self.__max_freq
-        )
-        return clean_window_vector
-
-    def __build_uniform_time_grid(self, time_grid):
-        """eq 158 ref 2"""
-        step_size = (time_grid[-1][0] - time_grid[0][0])/(time_grid.shape[0] - 1)
-        start = 0
-        stop = step_size*time_grid.shape[0]
-        result = np.arange(start,stop,step_size).reshape(-1,1)
-        return result
-
     def restore_ccs(self):
         """restores clean spectrum, algorithm steps 18 to 21 ref 2"""
         # if nothing was detected:
@@ -54,6 +39,21 @@ class Restorer(object):
             amplitudes = 2*np.abs(non_zeroes)
             phases = np.arctan2(np.imag(non_zeroes),np.real(non_zeroes))
             return freqs.reshape(-1,1), amplitudes.reshape(-1,1), phases.reshape(-1,1)
+
+    def __build_clean_window_vector(self):
+        """eq 157 ref 2"""
+        clean_window_vector = mb.calculate_window_vector(
+            self.uniform_time_grid, self.__number_of_freq_estimations, self.__max_freq
+        )
+        return clean_window_vector
+
+    def __build_uniform_time_grid(self, time_grid):
+        """eq 158 ref 2"""
+        step_size = (time_grid[-1][0] - time_grid[0][0])/(time_grid.shape[0] - 1)
+        start = 0
+        stop = step_size*time_grid.shape[0]
+        result = np.arange(start,stop,step_size).reshape(-1,1)
+        return result
 
     def __build_clean_spectrum(self):
         """eq 159 ref 2"""
