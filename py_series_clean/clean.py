@@ -24,9 +24,11 @@ def clean(time_grid_and_values, khi, treshold, max_iterations, harmonic_share):
         super_resultion_vector, iterations,
         number_of_freq_estimations, time_grid, max_freq
     )
-    restoration_result = restorer.restore()
-    if restoration_result:
-       uniform_time_grid, clean_spectrum, correlogram, uniform_series, freq_vector,freqs,amplitudes, phases = restoration_result
-       return iterations, uniform_time_grid, clean_spectrum, correlogram, uniform_series, freq_vector, freqs,amplitudes, phases
+    if iterations != 0:
+       uniform_time_grid = restorer.uniform_time_grid
+       freq_vector = restorer.freq_vector
+       freqs, amplitudes, phases = restorer.restore_fap()
+       clean_spectrum, correlogram, uniform_series = restorer.restore_ccs()
+       return iterations, uniform_time_grid, clean_spectrum, correlogram, uniform_series, freq_vector, freqs, amplitudes, phases
     else:
         return None
