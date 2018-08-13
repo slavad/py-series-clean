@@ -56,7 +56,8 @@ def main():
     time_grid_and_values = frw.read_file(args.i)
     if time_grid_and_values[0].shape[1] >= args.r:
         raise ValueError(HELP_FOR_SERIES_LENGTH)
-    threshold = thrs.estimate_threshold(time_grid_and_values, args.r, args.s, args.k)
+    estimator = thrs.Threshold(time_grid_and_values, args.s, args.k)
+    threshold = estimator.estimate(args.r)
     write_result(args, threshold)
     print('done'.format(args.o))
     print('output is written to {}'.format(args.o))
