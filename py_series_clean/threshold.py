@@ -18,7 +18,7 @@ class Threshold(object):
 
     def estimate(self, number_of_random_series):
         """estimates the treshold"""
-        random_series = self.__generate_random_series(self.__time_grid.shape[0])
+        random_series = self.__generate_random_series(number_of_random_series)
         threshold = self.__find_max_counts_and_relation(
             random_series, self.__values
         )
