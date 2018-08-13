@@ -65,7 +65,7 @@ def parse_args():
 
 def generate_series(args):
     """generate the series"""
-    result = ds.generate_dirty_periodical_series_with_random_time_grid(
+    generator = ds.DirtySeries(
         args.l,
         args.t,
         args.f,
@@ -73,6 +73,7 @@ def generate_series(args):
         args.p,
         args.s
     )
+    result = generator.generate()
     return result
 
 def main():
