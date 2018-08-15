@@ -1,7 +1,7 @@
 import numpy as np
-import py_series_clean.matrix_builder as mb
-import py_series_clean.iterator as itr
-import py_series_clean.restorer as rst
+import clean.matrix_builder as mb
+import clean.iterator as itr
+import clean.restorer as rst
 import pdb
 
 def clean(time_grid_and_values, khi, treshold, max_iterations, harmonic_share):

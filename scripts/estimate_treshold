@@ -2,7 +2,7 @@
 
 import argparse
 import numpy as np
-import py_series_clean.threshold as thrs
+import clean.threshold as thrs
 import helpers.input_validators as iv
 import helpers.argument_parsers as ap
 import helpers.file_readers_and_writers as frw

@@ -1,6 +1,6 @@
 import numpy as np
-import py_series_clean.schuster as sch
-import py_series_clean.matrix_builder as mb
+import clean.schuster as sch
+import clean.matrix_builder as mb
 import pdb
 
 class Iterator(object):

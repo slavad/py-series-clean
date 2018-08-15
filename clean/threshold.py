@@ -1,6 +1,6 @@
 import numpy as np
-import py_series_clean.matrix_builder as mb
-import py_series_clean.schuster as sch
+import clean.matrix_builder as mb
+import clean.schuster as sch
 
 class Threshold(object):
     """estimate treshold for the given params"""
