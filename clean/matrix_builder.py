@@ -1,5 +1,4 @@
-import numpy as np
-import pdb
+from helpers.common_imports import *
 def estimate_max_freq(time_grid, use_min=True):
     """estimates maximum frequency that can be found"""
     """if use_min is True, then minimum delta T is used"""

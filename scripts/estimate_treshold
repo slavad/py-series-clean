@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 import argparse
-import numpy as np
+from helpers.common_imports import *
 import clean.threshold as thrs
 import helpers.input_validators as iv
 import helpers.argument_parsers as ap

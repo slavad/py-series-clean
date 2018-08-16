@@ -1,7 +1,6 @@
-import numpy as np
+from helpers.common_imports import *
 import clean.schuster as sch
 import clean.matrix_builder as mb
-import pdb
 
 class Iterator(object):
     """iterates over the dirty spectrum and extracts clean one"""

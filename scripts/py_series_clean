@@ -6,8 +6,7 @@ import helpers.file_readers_and_writers as frw
 import helpers.argument_parsers as ap
 import helpers.input_validators as iv
 import helpers.constants as constants
-import numpy as np
-import pdb
+from helpers.common_imports import *
 
 ADDITIONAL_HELP = 'iterations stop if the number of maximum iterations is exceeded or the series do not contain signal at the given treshold'
 

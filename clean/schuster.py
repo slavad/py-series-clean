@@ -1,4 +1,4 @@
-import numpy as np
+from helpers.common_imports import *
 
 def calc_schuster_counts(series_array, method_flag):
     """

@@ -1,4 +1,4 @@
-import numpy as np
+from helpers.common_imports import *
 import clean.matrix_builder as mb
 import clean.schuster as sch
 
