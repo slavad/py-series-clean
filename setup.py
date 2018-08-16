@@ -24,10 +24,14 @@ setup(
     ],
     install_requires=[
        'numpy>=1.14.0<1.15.0'
-    ]
+    ],
     # TBD:
     #scripts=['scripts/clean', 'scripts/generate_test_series']
     # TBD: dev, test etc
-    # extras_require={
-    # }
+    extras_require={
+        'spec': [
+            "mamba>=0.9.0<1.1.0",
+            "expects>=0.8.0<1.1.0"
+        ]
+    }
 )
