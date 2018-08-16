@@ -9,12 +9,14 @@ with description(ds.DirtySeries) as self:
       self.phases = np.array([0.4, 0.6])
       self.amplitudes = np.array([10, 20])
       self.sigma = 1
+
     with before.each:
         self.generator = ds.DirtySeries(
             self.time_grid_length, self.max_time_value,
             self.frequencies, self.phases,
             self.amplitudes, self.sigma
         )
+
     with description('DirtySeries#__reshape_one_value'):
         with it('converts scalar to array'):
             expect(
@@ -22,6 +24,7 @@ with description(ds.DirtySeries) as self:
             ).to(
                 equal(np.array([[1]]))
             )
+
         with it('reshapes 1d array'):
             expect(
                 np.all(
