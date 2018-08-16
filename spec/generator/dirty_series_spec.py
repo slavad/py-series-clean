@@ -17,7 +17,7 @@ with description(ds.DirtySeries) as self:
             self.amplitudes, self.sigma
         )
 
-    with description('DirtySeries#__reshape_one_value'):
+    with description('#__reshape_one_value'):
         with it('converts scalar to array'):
             expect(
                 self.generator._DirtySeries__reshape_one_value(1)
