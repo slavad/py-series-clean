@@ -30,9 +30,13 @@ setup(
         'bin/generate_test_series',
         'bin/py_series_clean'
     ],
+    #TODO: remove deprecated dependency_links
+    dependency_links = [
+        'git+https://github.com/nestorsalceda/mamba.git@915aa2e#egg=mamba-0.9.99'
+    ],
     extras_require={
         'spec': [
-            "mamba>=0.9.0<1.1.0",
+            "mamba>=0.9.99<1.1.0",
             "expects>=0.8.0<1.1.0"
         ]
     }
