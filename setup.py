@@ -25,9 +25,11 @@ setup(
     install_requires=[
        'numpy>=1.14.0<1.15.0'
     ],
-    # TBD:
-    #scripts=['scripts/clean', 'scripts/generate_test_series']
-    # TBD: dev, test etc
+    scripts=[
+        'bin/estimate_treshold',
+        'bin/generate_test_series',
+        'bin/py_series_clean'
+    ],
     extras_require={
         'spec': [
             "mamba>=0.9.0<1.1.0",
