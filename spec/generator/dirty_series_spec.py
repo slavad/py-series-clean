@@ -1,6 +1,9 @@
 from spec.spec_helper import *
 import generator.dirty_series as ds
 
+#TODO split into files using shared contexts
+# also refactor with local share contexts
+#TODO: don't forget to spec constructor
 with description(ds.DirtySeries) as self:
     with before.all:
       self.time_grid_length = 10
@@ -17,24 +20,6 @@ with description(ds.DirtySeries) as self:
             self.amplitudes, self.sigma
         )
 
-    with description('#__reshape_one_value'):
-        with it('converts scalar to array'):
-            expect(
-                self.generator._DirtySeries__reshape_one_value(1)
-            ).to(
-                equal(np.array([[1]]))
-            )
-
-        with it('reshapes 1d array'):
-            expect(
-                np.all(
-                    self.generator._DirtySeries__reshape_one_value(
-                        np.array([1,2])
-                    ) == np.array([[1],[2]])
-                )
-            ).to(
-                equal(True)
-            )
     with description('#__check_and_reshape_arguments'):
         with before.each:
             self.action = lambda: self.generator._DirtySeries__check_and_reshape_arguments(
@@ -152,3 +137,22 @@ with description(ds.DirtySeries) as self:
 
                 with it('raises error'):
                     expect(self.action).to(raise_error(ValueError))
+
+    with description('#__reshape_one_value'):
+        with it('converts scalar to array'):
+            expect(
+                self.generator._DirtySeries__reshape_one_value(1)
+            ).to(
+                equal(np.array([[1]]))
+            )
+
+        with it('reshapes 1d array'):
+            expect(
+                np.all(
+                    self.generator._DirtySeries__reshape_one_value(
+                        np.array([1,2])
+                    ) == np.array([[1],[2]])
+                )
+            ).to(
+                equal(True)
+            )
