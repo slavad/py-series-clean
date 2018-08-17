@@ -21,12 +21,11 @@ class DirtySeries(object):
 
     def __check_and_reshape_arguments(self, frequencies, amplitudes, phases):
         """reshapes arguments and check their shape"""
-        shape_error = "both phases and shapes must be scalars or have the same shape"
         new_frequencies = self.__reshape_one_value(frequencies)
         new_amplitudes = self.__reshape_one_value(amplitudes)
         new_phases = self.__reshape_one_value(phases)
         if (new_phases.shape != new_amplitudes.shape) or (new_frequencies.shape != new_phases.shape):
-            raise ValueError("phases amplitudes and phases must be scalars or have the same shape")
+            raise ValueError("frequencies, amplitudes and phases must be scalars or must have the same shape")
         else:
             return new_frequencies, new_amplitudes, new_phases
 
