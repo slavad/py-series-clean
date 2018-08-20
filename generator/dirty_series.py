@@ -9,7 +9,7 @@ class DirtySeries(object):
         # can be both scalars or vectors, but the must be of
         # the same shape: (n,1)
         new_frequencies, new_amplitudes, new_phases = self.__check_and_reshape_arguments(frequencies, amplitudes, phases)
-        self.__circular_frequnecies = 2*np.pi*new_frequencies
+        self.__frequnecies = new_frequencies
         self.__amplitudes = new_amplitudes
         self.__phases = new_phases
         self.__sigma = sigma
@@ -44,11 +44,11 @@ class DirtySeries(object):
     def __generate_periodical_series(self, time_grid):
         """generates periodical series"""
         # broadcasting of time grid will be done automatically
-        # after we add divide it by circular_frequnecies.
+        # after we add multiply it by circular_frequnecies.
         # the new shape will be (n,m)
         # where m is the height of time_grid.reshape(-1,1)
         # and n is the length of both self.__phases, self.__amplitudes and self.__frequencies
-        current_phases = time_grid.T/self.__circular_frequnecies + self.__phases
+        current_phases = np.pi*2*self.__frequnecies*time_grid.T + self.__phases
         result = np.cos(current_phases)*self.__amplitudes
         return np.sum(result, axis=0).reshape(-1,1)
 
