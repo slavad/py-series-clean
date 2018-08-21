@@ -170,30 +170,11 @@ with description(ds.DirtySeries) as self:
         with it('time grid has correct shape'):
             expect(self.time_grid.shape).to(equal((self.time_grid_length, 1)))
 
-    with description('#__generate_periodical_series'):
-        with before.all:
-          self.time_grid_length = 10
-          self.max_time_value = 20
-          self.frequencies = np.array([1.0]) # linear frequencies!
-          self.phases = np.array([0.0])
-          self.amplitudes = np.array([20.0])
-          #TODO check with more sophisticated phases and frequencies
-          self.time_grid = np.array(
-              [
-                  0,
-                  0.25,
-                  0.5,
-                  0.75,
-                  1.0
-              ]
-          )
-          self.sigma = 1
-          self.expected_periodical_series = np.array(
-              [self.amplitudes[0], 0, -self.amplitudes[0], 0, self.amplitudes[0]]
-          ).reshape((-1,1))
-
+    with shared_context('resulting series checker'):
         with before.each:
-            self.periodical_series = np.around(self.generator._DirtySeries__generate_periodical_series(self.time_grid), 10)
+            self.periodical_series = np.around(
+                self.generator._DirtySeries__generate_periodical_series(self.time_grid), 8
+            )
 
         with description('single harmonic'):
             with it('returns correct result'):
@@ -204,3 +185,107 @@ with description(ds.DirtySeries) as self:
                 ).to(
                     equal(True)
                 )
+    with description('#__generate_periodical_series'):
+        with description('simple time grid and one harmonic'):
+            with before.all:
+              self.frequencies = np.array([2.0]) # linear frequencies!
+              self.phases = np.array([0.0])
+              self.amplitudes = np.array([20.0])
+              self.time_grid = np.array(
+                  [
+                      0,
+                      0.125,
+                      0.25,
+                      0.375,
+                      0.5,
+                      0.625,
+                      0.75,
+                      0.875,
+                      1.0
+                  ]
+              )
+              self.expected_periodical_series = np.array(
+                  [
+                      self.amplitudes[0], 0,
+                      -self.amplitudes[0], 0,
+                      self.amplitudes[0],0,
+                      -self.amplitudes[0], 0,
+                      self.amplitudes[0]
+                  ]
+              ).reshape((-1,1))
+            with included_context('resulting series checker'):
+                pass
+        with description('one harmonic, with non-zero phase'):
+          with before.all:
+            self.frequencies = np.array([1.0]) # linear frequencies!
+            self.phases = np.array([0.3])
+            self.amplitudes = np.array([20.0])
+            self.time_grid = np.array(
+                [
+                    0-self.phases[0]/(2*np.pi),
+                    0.25-self.phases[0]/(2*np.pi),
+                    0.5-self.phases[0]/(2*np.pi),
+                    0.75-self.phases[0]/(2*np.pi),
+                    1.0-self.phases[0]/(2*np.pi),
+                ]
+            )
+            self.expected_periodical_series = np.array(
+                [
+                    self.amplitudes[0], 0,
+                    -self.amplitudes[0], 0,
+                    self.amplitudes[0]
+                ]
+            ).reshape((-1,1))
+          with included_context('resulting series checker'):
+              pass
+        with description('two harmoincs, resonance phases'):
+            with before.all:
+              self.frequencies = np.array([1.0, 2.0]) # linear frequencies!
+              self.phases = np.array([0.0, np.pi])
+              self.amplitudes = np.array([20.0, 10.0])
+              self.time_grid = np.array(
+                  [
+                      0,
+                      0.25,
+                      0.5,
+                      0.75,
+                      1.0
+                  ]
+              )
+              self.expected_periodical_series = np.array(
+                  [
+                      self.amplitudes[0] - self.amplitudes[1],
+                      self.amplitudes[1],
+                      -self.amplitudes[0] - self.amplitudes[1],
+                      self.amplitudes[1],
+                      self.amplitudes[0] - self.amplitudes[1]
+                  ]
+              ).reshape((-1,1))
+            with included_context('resulting series checker'):
+                pass
+
+        with description('two harmoincs, non-resonance phases'):
+            with before.all:
+              self.frequencies = np.array([1.0, 2.0]) # linear frequencies!
+              self.phases = np.array([0.3, 0.2])
+              self.amplitudes = np.array([20.0, 10.0])
+              self.time_grid = np.array(
+                  [
+                      0,
+                      0.25,
+                      0.5,
+                      0.75,
+                      1.0
+                  ]
+              )
+              self.expected_periodical_series = np.array(
+                  [
+                      28.90739556,
+                      -15.71106991,
+                      -9.306064,
+                      -3.89026165,
+                      28.90739556
+                  ]
+              ).reshape((-1,1))
+            with included_context('resulting series checker'):
+                pass
