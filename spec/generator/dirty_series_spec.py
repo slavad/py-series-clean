@@ -2,8 +2,7 @@ from spec.spec_helper import *
 import generator.dirty_series as ds
 
 #TODO split into files using shared contexts
-# also refactor with local share contexts
-#TODO: don't forget to spec constructor
+#TODO refactor to remove duplications using before blocks
 with description(ds.DirtySeries) as self:
     with before.all:
       self.time_grid_length = 10
@@ -75,7 +74,7 @@ with description(ds.DirtySeries) as self:
                     equal(self.generator._DirtySeries__sigma)
                 )
 
-    #TODO refactor to remove duplications using before blocks
+
     with description('#generate'):
         with before.each:
             self.result = self.generator.generate()
