@@ -9,8 +9,8 @@ with description(ds.DirtySeries) as self:
       self.time_grid_length = 10
       self.max_time_value = 20
       self.frequencies = np.array([0.1, 0.2]) # linear frequencies!
-      self.phases = np.array([0.4, 0.6])
       self.amplitudes = np.array([10, 20])
+      self.phases = np.array([0.4, 0.6])
       self.sigma = 1
 
     with before.each:
@@ -19,7 +19,61 @@ with description(ds.DirtySeries) as self:
             self.frequencies, self.amplitudes,
             self.phases, self.sigma
         )
-
+    with description('#__init__'):
+        with description('incorrect argument shapes (amplitude)'):
+            with before.each:
+                amplitudes = np.array([10])
+                self.action = lambda: ds.DirtySeries(
+                    self.time_grid_length, self.max_time_value,
+                    self.frequencies, amplitudes,
+                    self.phases, self.sigma
+                )
+            with it('raises error'):
+                expect(self.action).to(raise_error(ValueError))
+        with description('correct arguments'):
+            with it('sets all values'):
+                expect(
+                    self.time_grid_length
+                ).to(
+                    equal(self.generator._DirtySeries__time_grid_length)
+                )
+                expect(
+                    self.max_time_value
+                ).to(
+                    equal(self.generator._DirtySeries__max_time_value)
+                )
+                expect(
+                    np.all(
+                        np.array(
+                            [[0.1],[0.2]]
+                        ) == self.generator._DirtySeries__frequnecies
+                    )
+                ).to(
+                    equal(True)
+                )
+                expect(
+                    np.all(
+                        np.array(
+                            [[10],[20]]
+                        ) == self.generator._DirtySeries__amplitudes
+                    )
+                ).to(
+                    equal(True)
+                )
+                expect(
+                    np.all(
+                        np.array(
+                            [[0.4],[0.6]]
+                        ) == self.generator._DirtySeries__phases
+                    )
+                ).to(
+                    equal(True)
+                )
+                expect(
+                    self.sigma
+                ).to(
+                    equal(self.generator._DirtySeries__sigma)
+                )
     with description('#__check_and_reshape_arguments'):
         with before.each:
             self.action = lambda: self.generator._DirtySeries__check_and_reshape_arguments(
@@ -194,6 +248,7 @@ with description(ds.DirtySeries) as self:
                 ).to(
                     equal(True)
                 )
+
     with description('#__generate_periodical_series'):
         with description('simple time grid and one harmonic'):
             with before.all:
@@ -298,6 +353,7 @@ with description(ds.DirtySeries) as self:
               ).reshape((-1,1))
             with included_context('resulting series checker'):
                 pass
+
     with description('#__generate_dirty_periodical_series'):
         with before.all:
           self.frequencies = np.array([1.0]) # linear frequencies!
