@@ -57,5 +57,6 @@ class DirtySeries(object):
         """adds some random noise to the series"""
         result = self.__generate_periodical_series(time_grid)
         if self.__sigma != 0:
-            result += np.random.normal(loc=0.0, scale=self.__sigma, size=time_grid.shape)
+            noise = np.random.normal(loc=0.0, scale=self.__sigma, size=time_grid.shape)
+            result += noise.reshape(-1, 1)
         return result

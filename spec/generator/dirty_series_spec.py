@@ -169,6 +169,15 @@ with description(ds.DirtySeries) as self:
 
         with it('time grid has correct shape'):
             expect(self.time_grid.shape).to(equal((self.time_grid_length, 1)))
+        with it('grid is always different'):
+            new_grid = self.generator._DirtySeries__generate_random_time_grid()
+            expect(
+                np.all(
+                    new_grid == self.time_grid
+                )
+            ).to(
+                equal(False)
+            )
 
     with shared_context('resulting series checker'):
         with before.each:
@@ -289,3 +298,75 @@ with description(ds.DirtySeries) as self:
               ).reshape((-1,1))
             with included_context('resulting series checker'):
                 pass
+    with description('#__generate_dirty_periodical_series'):
+        with before.all:
+          self.frequencies = np.array([1.0]) # linear frequencies!
+          self.phases = np.array([0.0])
+          self.amplitudes = np.array([20.0])
+          self.time_grid = np.array(
+              [
+                  0,
+                  0.25,
+                  0.5,
+                  0.75,
+                  1.0
+              ]
+          )
+          self.clean_periodical_series = np.array(
+              [
+                  self.amplitudes[0], 0,
+                  -self.amplitudes[0], 0,
+                  self.amplitudes[0]
+              ]
+          ).reshape((-1,1))
+        with description('sigma is zero'):
+            with before.each:
+                self.sigma = 0
+                self.generator = ds.DirtySeries(
+                    self.time_grid_length, self.max_time_value,
+                    self.frequencies, self.amplitudes,
+                    self.phases, self.sigma
+                )
+                self.dirty_periodical_series = np.around(
+                    self.generator._DirtySeries__generate_dirty_periodical_series(self.time_grid), 8
+                )
+            with it('does not add noise'):
+                expect(
+                    np.all(
+                        self.clean_periodical_series == self.dirty_periodical_series
+                    )
+                ).to(
+                    equal(True)
+                )
+        with description('sigma is not zero'):
+            with before.each:
+                self.sigma = 1
+                self.generator = ds.DirtySeries(
+                    self.time_grid_length, self.max_time_value,
+                    self.frequencies, self.amplitudes,
+                    self.phases, self.sigma
+                )
+                self.dirty_periodical_series = np.around(
+                    self.generator._DirtySeries__generate_dirty_periodical_series(self.time_grid), 8
+                )
+            with it('adds noise'):
+                expect(
+                    np.all(
+                        self.clean_periodical_series == self.dirty_periodical_series
+                    )
+                ).to(
+                    equal(False)
+                )
+            with it('noise is always different'):
+                new_dirty_periodical_series = np.around(
+                    self.generator._DirtySeries__generate_dirty_periodical_series(self.time_grid), 8
+                )
+                expect(
+                    np.all(
+                        new_dirty_periodical_series == self.dirty_periodical_series
+                    )
+                ).to(
+                    equal(False)
+                )
+    #TODO test that
+    # generate always generates different noise and different grid
