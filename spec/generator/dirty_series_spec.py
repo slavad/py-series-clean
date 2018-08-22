@@ -74,6 +74,57 @@ with description(ds.DirtySeries) as self:
                 ).to(
                     equal(self.generator._DirtySeries__sigma)
                 )
+
+    #TODO refactor to remove duplications using before blocks
+    with description('#generate'):
+        with before.each:
+            self.result = self.generator.generate()
+            self.time_grid = self.result[0]
+            self.dirty_periodical_series = self.result[1]
+            self.clean_periodical_series = self.generator._DirtySeries__generate_periodical_series(
+                self.time_grid
+            )
+        with description('sigma is zero'):
+            with before.all:
+                self.sigma = 0
+            with it('does not add noise'):
+                expect(
+                    np.all(
+                        self.dirty_periodical_series == self.clean_periodical_series
+                    )
+                ).to(
+                    equal(True)
+                )
+
+        with description('sigma is not zero'):
+            with before.all:
+                self.sigma = 1
+            with it('adds noise'):
+                expect(
+                    np.all(
+                        self.dirty_periodical_series == self.clean_periodical_series
+                    )
+                ).to(
+                    equal(False)
+                )
+        with it('generates result of the correct length'):
+            expect(len(self.result)).to(equal(2))
+
+        with it('generates series of desired length'):
+            expect(self.time_grid.shape).to(
+                equal((self.time_grid_length, 1))
+            )
+
+        with it('always generates different time grid'):
+            new_time_grid = self.generator.generate()[0]
+            expect(
+                np.all(
+                    self.time_grid == new_time_grid
+                )
+            ).to(
+                equal(False)
+            )
+
     with description('#__check_and_reshape_arguments'):
         with before.each:
             self.action = lambda: self.generator._DirtySeries__check_and_reshape_arguments(
@@ -424,5 +475,3 @@ with description(ds.DirtySeries) as self:
                 ).to(
                     equal(False)
                 )
-    #TODO test that
-    # generate always generates different noise and different grid
