@@ -117,7 +117,7 @@ def main():
     """entry point"""
     args = parse_args()
     time_grid_and_values = frw.read_file(args.i)
-    restoration_result = pscc.clean(time_grid_and_values, args.k, args.t, args.r, args.g)
+    restoration_result = pscc.clean(time_grid_and_values, args.k, args.t, args.r, args.g, args.u)
     save_results(restoration_result, args)
 
 main()

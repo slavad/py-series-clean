@@ -18,3 +18,16 @@ def parse_common_series_args(parser):
         default = khi_default,
         type = iv.check_positive_int
     )
+
+
+    use_aver_default = False
+    use_aver_help = 'use average distance between points on the time grid'
+    use_aver_help += ' default value is {}, if set to False then minimum distance is used'.format(khi_default)
+    parser.add_argument(
+        '-u',
+        required = False,
+        help = use_aver_help,
+        metavar ='USE_AVERAGE',
+        default = use_aver_default,
+        type = iv.str2bool
+    )
