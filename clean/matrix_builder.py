@@ -4,8 +4,7 @@ def estimate_max_freq(time_grid, use_aver):
     """if use_aver is True, then average delta T is used"""
     """otherwise minimum delta T is used"""
     """eq 146 in ref 2"""
-    reshaped_time_grid = time_grid.reshape(1,-1)
-    distance_vector = reshaped_time_grid[0][1:] - reshaped_time_grid[0][:-1]
+    distance_vector = time_grid[1:] - time_grid[:-1]
     if use_aver:
         delta = np.average(distance_vector)
     else:
