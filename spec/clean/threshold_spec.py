@@ -57,6 +57,8 @@ with description(thrs.Threshold) as self:
             ).to(
                 equal(False)
             )
+        with it('has approx zero mean value'):
+            expect(np.around(np.mean(self.random_series_array), -2)).to(equal(0.0))
     with description('use_aver is False'):
         with before.all:
             self.use_aver = False
