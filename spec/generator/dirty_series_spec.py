@@ -11,6 +11,7 @@ with description(ds.DirtySeries) as self:
       self.amplitudes = np.array([10, 20])
       self.phases = np.array([0.4, 0.6])
       self.sigma = 1
+      self.round_precision = -8
 
     with before.each:
         self.generator = ds.DirtySeries(
@@ -286,7 +287,7 @@ with description(ds.DirtySeries) as self:
     with shared_context('resulting series checker'):
         with before.each:
             self.periodical_series = np.around(
-                self.generator._DirtySeries__generate_periodical_series(self.time_grid), -8
+                self.generator._DirtySeries__generate_periodical_series(self.time_grid), self.round_precision
             )
 
         with description('single harmonic'):
@@ -457,7 +458,7 @@ with description(ds.DirtySeries) as self:
                     self.phases, self.sigma
                 )
                 self.dirty_periodical_series = np.around(
-                    self.generator._DirtySeries__generate_dirty_periodical_series(self.time_grid), -8
+                    self.generator._DirtySeries__generate_dirty_periodical_series(self.time_grid), self.round_precision
                 )
             with it('does not add noise'):
                 expect(
@@ -476,7 +477,7 @@ with description(ds.DirtySeries) as self:
                     self.phases, self.sigma
                 )
                 self.dirty_periodical_series = np.around(
-                    self.generator._DirtySeries__generate_dirty_periodical_series(self.time_grid), -8
+                    self.generator._DirtySeries__generate_dirty_periodical_series(self.time_grid), self.round_precision
                 )
             with it('adds noise'):
                 expect(
@@ -488,7 +489,7 @@ with description(ds.DirtySeries) as self:
                 )
             with it('noise is always different'):
                 new_dirty_periodical_series = np.around(
-                    self.generator._DirtySeries__generate_dirty_periodical_series(self.time_grid), -8
+                    self.generator._DirtySeries__generate_dirty_periodical_series(self.time_grid), self.round_precision
                 )
                 expect(
                     np.all(
