@@ -7,9 +7,11 @@ with description(thrs.Threshold) as self:
             np.load("./spec/fixtures/time_grid_1.pickle"),
             np.load("./spec/fixtures/series_1.pickle")
         )
-        self.sigma = 2
+        self.sigma = 2.5
         self.khi = 4
         self.number_of_random_series = 1000
+        self.time_grid = self.time_grid_and_values[0]
+        self.values = self.time_grid_and_values[1]
     with before.each:
         self.estimator = thrs.Threshold(self.time_grid_and_values, self.sigma, self.khi, self.use_aver)
     with shared_context('object values setter'):
@@ -63,19 +65,19 @@ with description(thrs.Threshold) as self:
     with shared_context('probability generator'):
         with before.each:
             random_series_array = np.load('./spec/fixtures/random_series_array_1.pickle')
-            self.time_grid = self.time_grid_and_values[0]
             self.generated_probability = self.estimator._Threshold__find_max_counts_and_relation(
-                random_series_array, self.time_grid
+                random_series_array, self.values
             )
-            self.expected_probability = 0.5529999999999999
+            self.expected_probability = 0.63
         with it('finds correct value'):
             expect(self.generated_probability).to(equal(self.expected_probability))
+
         with it('generates differnt value with other random set'):
             random_series_array = self.estimator._Threshold__generate_random_series(
                 self.number_of_random_series
             )
             new_generated_probability = self.estimator._Threshold__find_max_counts_and_relation(
-                random_series_array, self.time_grid
+                random_series_array, self.values
             )
             expect(self.generated_probability).not_to(equal(new_generated_probability))
     with description('use_aver is False'):
@@ -91,6 +93,24 @@ with description(thrs.Threshold) as self:
                 )
             with included_context('object values setter'):
                 pass
+
+        with description('#estimate'):
+            with before.all:
+                self.expected_probability_min = 0.5
+                self.expected_probability_max = 0.7
+            with before.each:
+                self.generated_probability = self.estimator.estimate(
+                    self.number_of_random_series
+                )
+            with it('fits to the range'):
+                expect(self.generated_probability).to(be_below_or_equal(self.expected_probability_max))
+                expect(self.generated_probability).to(be_above_or_equal(self.expected_probability_min))
+
+            with it('is always different'):
+                new_generated_probability = self.estimator.estimate(
+                    self.number_of_random_series
+                )
+                expect(self.generated_probability).not_to(equal(new_generated_probability))
 
         with description('#__generate_random_series'):
             with included_context('random series generator'):
