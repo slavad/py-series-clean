@@ -52,11 +52,14 @@ class DirtySeries(object):
         result = np.cos(current_phases)*self.__amplitudes
         return np.sum(result, axis=0).reshape(-1,1)
 
+    def __generate_noise(self, shape):
+        """generates noise to add to time grid"""
+        return np.random.normal(loc=0.0, scale=self.__sigma, size=shape).reshape(-1, 1)
+
     def __generate_dirty_periodical_series(self, time_grid):
         # all args should be in the same units: e.g. secs
         """adds some random noise to the series"""
         result = self.__generate_periodical_series(time_grid)
         if self.__sigma != 0:
-            noise = np.random.normal(loc=0.0, scale=self.__sigma, size=time_grid.shape)
-            result += noise.reshape(-1, 1)
+            result += self.__generate_noise(time_grid.shape)
         return result

@@ -286,7 +286,7 @@ with description(ds.DirtySeries) as self:
     with shared_context('resulting series checker'):
         with before.each:
             self.periodical_series = np.around(
-                self.generator._DirtySeries__generate_periodical_series(self.time_grid), 8
+                self.generator._DirtySeries__generate_periodical_series(self.time_grid), -8
             )
 
         with description('single harmonic'):
@@ -404,6 +404,29 @@ with description(ds.DirtySeries) as self:
             with included_context('resulting series checker'):
                 pass
 
+    with description('#__generate_noise'):
+        with before.each:
+            self.shape = (10000,1)
+            self.noise = self.generator._DirtySeries__generate_noise(
+                self.shape
+            )
+        with it('has correct shape'):
+            expect(self.noise.shape).to(equal(self.shape))
+
+        with it('is always different'):
+            new_noise = self.generator._DirtySeries__generate_noise(
+                self.shape
+            )
+            expect(
+                np.all(
+                    new_noise == self.noise
+                )
+
+            ).to(
+                equal(False)
+            )
+        with it('has approx zero mean'):
+            expect(np.around(np.mean(self.noise), -2)).to(equal(0.0))
     with description('#__generate_dirty_periodical_series'):
         with before.all:
           self.frequencies = np.array([1.0]) # linear frequencies!
@@ -434,7 +457,7 @@ with description(ds.DirtySeries) as self:
                     self.phases, self.sigma
                 )
                 self.dirty_periodical_series = np.around(
-                    self.generator._DirtySeries__generate_dirty_periodical_series(self.time_grid), 8
+                    self.generator._DirtySeries__generate_dirty_periodical_series(self.time_grid), -8
                 )
             with it('does not add noise'):
                 expect(
@@ -453,7 +476,7 @@ with description(ds.DirtySeries) as self:
                     self.phases, self.sigma
                 )
                 self.dirty_periodical_series = np.around(
-                    self.generator._DirtySeries__generate_dirty_periodical_series(self.time_grid), 8
+                    self.generator._DirtySeries__generate_dirty_periodical_series(self.time_grid), -8
                 )
             with it('adds noise'):
                 expect(
@@ -465,7 +488,7 @@ with description(ds.DirtySeries) as self:
                 )
             with it('noise is always different'):
                 new_dirty_periodical_series = np.around(
-                    self.generator._DirtySeries__generate_dirty_periodical_series(self.time_grid), 8
+                    self.generator._DirtySeries__generate_dirty_periodical_series(self.time_grid), -8
                 )
                 expect(
                     np.all(
