@@ -75,7 +75,6 @@ with description(ds.DirtySeries) as self:
                     equal(self.generator._DirtySeries__sigma)
                 )
 
-
     with description('#generate'):
         with before.each:
             self.result = self.generator.generate()
