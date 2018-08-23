@@ -60,7 +60,24 @@ with description(thrs.Threshold) as self:
         with it('has approx zero mean value'):
             random_series_array = np.load('./spec/fixtures/random_series_array_1.pickle')
             expect(np.around(np.mean(random_series_array), 2)).to(equal(0.00))
-
+    with shared_context('probability generator'):
+        with before.each:
+            random_series_array = np.load('./spec/fixtures/random_series_array_1.pickle')
+            self.time_grid = self.time_grid_and_values[0]
+            self.generated_probability = self.estimator._Threshold__find_max_counts_and_relation(
+                random_series_array, self.time_grid
+            )
+            self.expected_probability = 0.5529999999999999
+        with it('finds correct value'):
+            expect(self.generated_probability).to(equal(self.expected_probability))
+        with it('generates differnt value with other random set'):
+            random_series_array = self.estimator._Threshold__generate_random_series(
+                self.number_of_random_series
+            )
+            new_generated_probability = self.estimator._Threshold__find_max_counts_and_relation(
+                random_series_array, self.time_grid
+            )
+            expect(self.generated_probability).not_to(equal(new_generated_probability))
     with description('use_aver is False'):
         with before.all:
             self.use_aver = False
@@ -80,15 +97,8 @@ with description(thrs.Threshold) as self:
                 pass
 
         with description('#__find_max_counts_and_relation'):
-            with before.each:
-                self.random_series_array = np.load('./spec/fixtures/random_series_array_1.pickle')
-                self.time_grid = self.time_grid_and_values[0]
-                self.generated_probability = self.estimator._Threshold__find_max_counts_and_relation(
-                    self.random_series_array, self.time_grid
-                )
-            with it('finds correct value'):
-                expected_probability = 0.5529999999999999
-                expect(self.generated_probability).to(equal(expected_probability))
+            with included_context('probability generator'):
+                pass
 
     with description('use aver is True'):
         with before.all:
@@ -105,4 +115,8 @@ with description(thrs.Threshold) as self:
                 pass
         with description('#__generate_random_series'):
             with included_context('random series generator'):
+                pass
+
+        with description('#__find_max_counts_and_relation'):
+            with included_context('probability generator'):
                 pass
