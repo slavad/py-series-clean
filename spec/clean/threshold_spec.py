@@ -39,8 +39,9 @@ with description(thrs.Threshold) as self:
             self.use_aver = False
         with description('#__init__'):
             with it('sets number_of_freq_estimations'):
+                expected_num_of_freq_estimations = 35934
                 expect(
-                    35934
+                    expected_num_of_freq_estimations
                 ).to(
                     equal(self.estimator._Threshold__number_of_freq_estimations)
                 )
@@ -51,8 +52,9 @@ with description(thrs.Threshold) as self:
             self.use_aver = True
         with description('#__init__'):
             with it('sets number_of_freq_estimations'):
+                expected_num_of_freq_estimations = 198
                 expect(
-                    198
+                    expected_num_of_freq_estimations
                 ).to(
                     equal(self.estimator._Threshold__number_of_freq_estimations)
                 )

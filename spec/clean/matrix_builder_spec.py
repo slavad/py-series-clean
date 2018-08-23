@@ -7,13 +7,15 @@ with description(mb) as self:
             self.time_grid = np.array([0.0, 5.0, 6.0, 9.0, 20.0]).reshape((-1, 1))
         with description('by min distance'):
             with it('returns max freq estimated by minimum time distance'):
+                expected_max_freq = 0.5
                 expect(mb.estimate_max_freq(self.time_grid, False)).to(
-                    equal(0.5)
+                    equal(expected_max_freq)
                 )
         with description('by average distance'):
             with it('returns max freq estimated by average time distance'):
+                expected_max_freq = 0.1
                 expect(mb.estimate_max_freq(self.time_grid, True)).to(
-                    equal(0.1)
+                    equal(expected_max_freq)
                 )
     with description('#calculate_estimations_vector_size'):
         with before.all:
@@ -21,6 +23,7 @@ with description(mb) as self:
         with it('calculates correct value'):
             max_freq = 0.8
             khi = 4
+            expected_num_of_freq_estimations = 12
             expect(mb.calculate_estimations_vector_size(max_freq, self.time_grid, khi)).to(
-                equal(12)
+                equal(expected_num_of_freq_estimations)
             )
