@@ -7,7 +7,7 @@ with description(thrs.Threshold) as self:
             np.load("./spec/fixtures/time_grid_1.pickle"),
             np.load("./spec/fixtures/series_1.pickle")
         )
-        self.sigma = 1
+        self.sigma = 2
         self.khi = 4
         self.number_of_random_series = 1000
     with before.each:
@@ -58,7 +58,8 @@ with description(thrs.Threshold) as self:
                 equal(False)
             )
         with it('has approx zero mean value'):
-            expect(np.around(np.mean(self.random_series_array), 1)).to(equal(0.0))
+            random_series_array = np.load('./spec/fixtures/random_series_array_1.pickle')
+            expect(np.around(np.mean(random_series_array), 2)).to(equal(0.00))
 
     with description('use_aver is False'):
         with before.all:
@@ -79,8 +80,6 @@ with description(thrs.Threshold) as self:
                 pass
 
         with description('#__find_max_counts_and_relation'):
-            with before.all:
-                self.sigma = 2
             with before.each:
                 self.random_series_array = np.load('./spec/fixtures/random_series_array_1.pickle')
                 self.time_grid = self.time_grid_and_values[0]
@@ -88,7 +87,7 @@ with description(thrs.Threshold) as self:
                     self.random_series_array, self.time_grid
                 )
             with it('finds correct value'):
-                expected_probability = 0.528
+                expected_probability = 0.5529999999999999
                 expect(self.generated_probability).to(equal(expected_probability))
 
     with description('use aver is True'):
