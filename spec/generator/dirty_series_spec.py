@@ -11,7 +11,7 @@ with description(ds.DirtySeries) as self:
       self.amplitudes = np.array([10, 20])
       self.phases = np.array([0.4, 0.6])
       self.sigma = 1
-      self.round_precision = -8
+      self.round_precision = 8
 
     with before.each:
         self.generator = ds.DirtySeries(
