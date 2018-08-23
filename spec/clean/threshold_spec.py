@@ -12,6 +12,7 @@ with description(thrs.Threshold) as self:
         self.number_of_random_series = 1000
         self.time_grid = self.time_grid_and_values[0]
         self.values = self.time_grid_and_values[1]
+        self.max_attemtps = 10
     with before.each:
         self.estimator = thrs.Threshold(self.time_grid_and_values, self.sigma, self.khi, self.use_aver)
     with shared_context('object values setter'):
@@ -73,12 +74,17 @@ with description(thrs.Threshold) as self:
             expect(self.generated_probability).to(equal(self.expected_probability))
 
         with it('generates differnt value with other random set'):
-            random_series_array = self.estimator._Threshold__generate_random_series(
-                self.number_of_random_series
-            )
-            new_generated_probability = self.estimator._Threshold__find_max_counts_and_relation(
-                random_series_array, self.values
-            )
+            for i in range(self.max_attemtps):
+                # sometimes result is not different, let's try one more time
+                random_series_array = self.estimator._Threshold__generate_random_series(
+                    self.number_of_random_series
+                )
+                new_generated_probability = self.estimator._Threshold__find_max_counts_and_relation(
+                    random_series_array, self.values
+                )
+                result = self.generated_probability == new_generated_probability
+                if result == False:
+                    break
             expect(self.generated_probability).not_to(equal(new_generated_probability))
     with description('use_aver is False'):
         with before.all:
@@ -107,10 +113,15 @@ with description(thrs.Threshold) as self:
                 expect(self.generated_probability).to(be_above_or_equal(self.expected_probability_min))
 
             with it('is always different'):
-                new_generated_probability = self.estimator.estimate(
-                    self.number_of_random_series
-                )
-                expect(self.generated_probability).not_to(equal(new_generated_probability))
+                for i in range(self.max_attemtps):
+                    # sometimes result is not different, let's try one more time
+                    new_generated_probability = self.estimator.estimate(
+                        self.number_of_random_series
+                    )
+                    result = self.generated_probability == new_generated_probability
+                    if result == False:
+                        break
+                expect(result).to(equal(False))
 
         with description('#__generate_random_series'):
             with included_context('random series generator'):
