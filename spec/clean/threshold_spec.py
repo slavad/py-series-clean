@@ -58,7 +58,7 @@ with description(thrs.Threshold) as self:
                 equal(False)
             )
         with it('has approx zero mean value'):
-            expect(np.around(np.mean(self.random_series_array), -2)).to(equal(0.0))
+            expect(np.around(np.mean(self.random_series_array), 1)).to(equal(0.0))
 
     with description('use_aver is False'):
         with before.all:
@@ -77,6 +77,19 @@ with description(thrs.Threshold) as self:
         with description('#__generate_random_series'):
             with included_context('random series generator'):
                 pass
+
+        with description('#__find_max_counts_and_relation'):
+            with before.all:
+                self.sigma = 2
+            with before.each:
+                self.random_series_array = np.load('./spec/fixtures/random_series_array_1.pickle')
+                self.time_grid = self.time_grid_and_values[0]
+                self.generated_probability = self.estimator._Threshold__find_max_counts_and_relation(
+                    self.random_series_array, self.time_grid
+                )
+            with it('finds correct value'):
+                expected_probability = 0.528
+                expect(self.generated_probability).to(equal(expected_probability))
 
     with description('use aver is True'):
         with before.all:
