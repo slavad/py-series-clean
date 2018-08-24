@@ -48,4 +48,4 @@ with description(mb) as self:
             with it('raises error'):
                 expect(
                     lambda: mb.generate_index_vector(self.vector_size)
-                ).to(raise_error(ValueError))
+                ).to(raise_error(ValueError, "matrix_size must be odd"))

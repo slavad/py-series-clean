@@ -12,6 +12,7 @@ with description(ds.DirtySeries) as self:
       self.phases = np.array([0.4, 0.6])
       self.sigma = 1
       self.round_precision = 8
+      self.reshape_error_msg = "frequencies, amplitudes and phases must be scalars or must have the same shape"
 
     with before.each:
         self.generator = ds.DirtySeries(
@@ -29,7 +30,9 @@ with description(ds.DirtySeries) as self:
                     self.phases, self.sigma
                 )
             with it('raises error'):
-                expect(self.action).to(raise_error(ValueError))
+                expect(self.action).to(
+                    raise_error(ValueError, self.reshape_error_msg)
+                )
         with description('correct arguments'):
             with it('sets all values'):
                 expect(
@@ -213,7 +216,9 @@ with description(ds.DirtySeries) as self:
                     self.old_phase = np.array([4, 6])
 
                 with it('raises error'):
-                    expect(self.action).to(raise_error(ValueError))
+                    expect(self.action).to(
+                        raise_error(ValueError, self.reshape_error_msg)
+                    )
 
             with description('frequencies shape is different from others'):
                 with before.all:
@@ -222,7 +227,9 @@ with description(ds.DirtySeries) as self:
                     self.old_phase = np.array([4, 6])
 
                 with it('raises error'):
-                    expect(self.action).to(raise_error(ValueError))
+                    expect(self.action).to(
+                        raise_error(ValueError, self.reshape_error_msg)
+                    )
 
             with description('amplitudes shape is different from others'):
                 with before.all:
@@ -231,7 +238,9 @@ with description(ds.DirtySeries) as self:
                     self.old_phase = np.array([4, 6])
 
                 with it('raises error'):
-                    expect(self.action).to(raise_error(ValueError))
+                    expect(self.action).to(
+                        raise_error(ValueError, self.reshape_error_msg)
+                    )
 
             with description('phases amplitude shape is different from others'):
                 with before.all:
@@ -240,7 +249,9 @@ with description(ds.DirtySeries) as self:
                     self.old_phase = np.array([4, 6, 1])
 
                 with it('raises error'):
-                    expect(self.action).to(raise_error(ValueError))
+                    expect(self.action).to(
+                        raise_error(ValueError, self.reshape_error_msg)
+                    )
 
     with description('#__reshape_one_value'):
         with it('converts scalar to array'):

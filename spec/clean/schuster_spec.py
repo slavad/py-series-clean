@@ -40,7 +40,7 @@ with description(sch) as self:
             with it('raises error'):
                 expect(
                     lambda: sch.calc_schuster_counts(self.array_to_test, 'qwerty')
-                ).to(raise_error(ValueError))
+                ).to(raise_error(ValueError, "unknown method_flag"))
 
     with description('#squared_abs'):
         with it('returns correct values'):
