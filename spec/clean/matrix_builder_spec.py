@@ -17,6 +17,7 @@ with description(mb) as self:
                 expect(mb.estimate_max_freq(self.time_grid, True)).to(
                     equal(expected_max_freq)
                 )
+
     with description('#calculate_estimations_vector_size'):
         with before.all:
             self.time_grid = np.array([0.0, 3.5]).reshape((-1, 1))
@@ -49,3 +50,14 @@ with description(mb) as self:
                 expect(
                     lambda: mb.generate_index_vector(self.vector_size)
                 ).to(raise_error(ValueError, "matrix_size must be odd"))
+
+    with description('#build_ft_matrix'):
+        with description('kind == "direct"'):
+            with it('returns direct transform matrix'):
+                pass
+        with description('kind == "inverse"'):
+            with it('returns inverse transform matrix'):
+                pass
+        with description('kind == "qwerty"'):
+            with it('raises error'):
+                pass
