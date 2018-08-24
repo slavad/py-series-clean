@@ -79,5 +79,5 @@ def calculate_window_vector(time_grid, number_of_freq_estimations, max_freq):
 
 def build_super_resultion_vector(number_of_freq_estimations):
     """eq 151 in ref 2"""
-    vector_size = 2*number_of_freq_estimations + 1
+    vector_size = size_of_spectrum_vector(number_of_freq_estimations)
     return np.zeros((vector_size,1))*(0+0j)
