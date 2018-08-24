@@ -96,6 +96,7 @@ with description(mb) as self:
                     ]
                 ).reshape((-1, 1))
                 self.expected_result = np.array(
+                    # see e.g. eq 148 ref 2
                     [
                         np.sum(
                             np.exp(
@@ -130,6 +131,7 @@ with description(mb) as self:
                 ).reshape((-1, 1))
                 self.norm = self.time_grid.shape[0]/self.number_of_freq_estimations
                 self.expected_result = np.array(
+                # see e.g. eq 161 ref 2
                     [
                         np.sum(
                             np.exp(
