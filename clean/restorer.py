@@ -86,7 +86,7 @@ class Restorer(object):
 
     def __build_correlogram_or_uniform_series(self, values):
         """eq 160 and 161 ref 2"""
-        result = mb.build_ft_matrix(
+        result = mb.run_ft(
             self.uniform_time_grid, values, self.freq_vector, self.__number_of_freq_estimations, 'inverse'
         )
         return result
