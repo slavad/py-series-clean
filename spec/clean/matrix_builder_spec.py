@@ -27,3 +27,25 @@ with description(mb) as self:
             expect(mb.calculate_estimations_vector_size(max_freq, self.time_grid, khi)).to(
                 equal(expected_num_of_freq_estimations)
             )
+
+    with description('#generate_index_vector'):
+        with description('argument is odd'):
+            with before.all:
+                self.vector_size = 5
+                self.expected_vector = np.array(
+                    [-2, -1, 0, 1, 2]
+                ).reshape((-1, 1))
+            with it('generates correct vector'):
+                expect(
+                    np.all(
+                        mb.generate_index_vector(self.vector_size) == self.expected_vector
+                    )
+                ).to(equal(True))
+
+        with description('argument is event'):
+            with before.all:
+                self.vector_size = 4
+            with it('raises error'):
+                expect(
+                    lambda: mb.generate_index_vector(self.vector_size)
+                ).to(raise_error(ValueError))
