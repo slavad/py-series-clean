@@ -14,7 +14,9 @@ class Restorer(object):
             self.__index_vector = mb.generate_index_vector(
                 mb.size_of_spectrum_vector(self.__number_of_freq_estimations)
             )
-            self.freq_vector = self.__index_vector*self.__max_freq/self.__number_of_freq_estimations
+            self.freq_vector = mb.generate_freq_vector(
+                self.__index_vector, self.__max_freq, self.__number_of_freq_estimations
+            )
             self.__clean_window_vector = self.__build_clean_window_vector()
 
     def restore_ccs(self):

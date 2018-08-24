@@ -49,6 +49,9 @@ def run_ft(time_grid, values, freq_vector, number_of_freq_estimations, kind):
         exp_vector_for_mult = exp_vector.T
     result = np.matmul(exp_vector_for_mult, values)*norm
     return result
+def generate_freq_vector(index_vector, max_freq, number_of_freq_estimations):
+    """building frequency vector"""
+    return index_vector*max_freq/number_of_freq_estimations
 
 def size_of_spectrum_vector(number_of_freq_estimations):
     """size of dirty vector"""
@@ -57,7 +60,7 @@ def size_of_spectrum_vector(number_of_freq_estimations):
 def calculate_dirty_vector(time_grid, values, number_of_freq_estimations, max_freq):
     """eq 148 in ref 2"""
     index_vector = generate_index_vector(size_of_spectrum_vector(number_of_freq_estimations))
-    freq_vector = index_vector*max_freq/number_of_freq_estimations
+    freq_vector = generate_freq_vector(index_vector, max_freq, number_of_freq_estimations)
     result = run_ft(
         time_grid, values, freq_vector,number_of_freq_estimations, 'direct'
     )
@@ -70,7 +73,7 @@ def size_of_window_vector(number_of_freq_estimations):
 def calculate_window_vector(time_grid, number_of_freq_estimations, max_freq):
     """eq 148 in ref 2"""
     index_vector = generate_index_vector(size_of_window_vector(number_of_freq_estimations))
-    freq_vector = index_vector*max_freq/number_of_freq_estimations
+    freq_vector = generate_freq_vector(index_vector, max_freq, number_of_freq_estimations)
     values = np.ones((time_grid.shape[0],1))
     result = run_ft(
         time_grid, values, freq_vector,number_of_freq_estimations, 'direct'
