@@ -20,6 +20,6 @@ def calc_schuster_counts(series_array, method_flag):
 
 def squared_abs(series_array):
     """calculates periodorgram array"""
-    return np.power(
-        np.abs(series_array), 2
-    )
+    return np.abs(np.power(
+        series_array, 2
+    ))
