@@ -5,18 +5,22 @@ class equal_ndarray(Matcher):
     def __init__(self, expected_array, precision = False):
         self._precision = precision
         self._original_expected_array = expected_array
-        if self._precision:
-            self._expected_array = np.around(expected_array, self._precision)
-            self._message_success = ["arrays are equal with precision {}".format(precision)]
-            self._message_failure = ["arrays are not equal with precision {}".format(precision)]
-        else:
-            self._expected_array = expected_array
-            self._message_success = ["arrays are equal"]
-            self._message_failure = ["arrays are not equal"]
+        if type(expected_array).__name__ == 'ndarray':
+            if self._precision:
+                self._expected_array = np.around(expected_array, self._precision)
+                self._message_success = ["arrays are equal with precision {}".format(precision)]
+                self._message_failure = ["arrays are not equal with precision {}".format(precision)]
+            else:
+                self._expected_array = expected_array
+                self._message_success = ["arrays are equal"]
+                self._message_failure = ["arrays are not equal"]
 
     def _match(self, actual_array):
-        if not self._correct_class(actual_array):
-            return False, ['both expected and actuall must be ndarrays']
+        if type(self._original_expected_array).__name__ != 'ndarray':
+            return False, ['expected was not an ndarray']
+
+        if type(actual_array).__name__ != 'ndarray':
+            return False, ['actual was not an ndarray']
 
         if self._precision:
             actual_array_rounded = np.around(actual_array, self._precision)
@@ -27,10 +31,6 @@ class equal_ndarray(Matcher):
             return True, self._message_success
         else:
             return False, self._message_failure
-
-    def _correct_class(self, actual_array):
-        """checks if class is correct"""
-        return type(self._expected_array).__name__ == 'ndarray' and type(actual_array).__name__ == 'ndarray'
 
     def _same_shape(self, actual_array_rounded):
         """check if both expected and actual have the same shape"""
