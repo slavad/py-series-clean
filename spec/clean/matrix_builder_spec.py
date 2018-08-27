@@ -5,9 +5,9 @@ with description(mb) as self:
     with shared_context('compare actual and expected with precision'):
         with it('returns correct vector'):
             expect(
-                self.actual_result
+                self.expected_result
             ).to(
-                equal_ndarray(self.expected_result, self.precision)
+                equal_ndarray(self.actual_result, self.precision)
             )
 
     with before.all:
