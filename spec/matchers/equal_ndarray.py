@@ -40,18 +40,24 @@ class equal_ndarray(Matcher):
         """checks if arrays are all equal"""
         return np.all(actual_array_rounded == self._expected_array)
 
+
+    def __repr__(self):
+        """Returns a string with the description of the matcher."""
+        if self._precision:
+            descr = "equal with precision {precision!r}".format(precision = self._precision)
+        else:
+            descr = "equal"
+        return descr
+
     def _failure_message_general(self, subject, reasons, negated):
         """custom failure message"""
-        if self._precision:
-            what = "equal with precision {precision!r}".format(precision = self._precision)
-        else:
-            what = "equal"
+
         if negated:
             to_or_not_to = 'not to'
         else:
             to_or_not_to = 'to'
-        message = '\nexpected: {subject!r} {to_or_not_to} {what} to {expected_array!r}'.format(
-            subject=subject, what = what, to_or_not_to = to_or_not_to, expected_array=self._original_expected_array)
+        message = '\nexpected: {subject!r}\n {to_or_not_to} {matcher!r} to \n{expected_array!r}'.format(
+            subject=subject, matcher = self, to_or_not_to = to_or_not_to, expected_array=self._original_expected_array)
 
         if reasons:
             message += '\n     but: {0}'.format('\n          '.join(reasons))
