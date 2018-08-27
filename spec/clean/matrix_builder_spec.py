@@ -3,7 +3,7 @@ import clean.matrix_builder as mb
 
 with description(mb) as self:
     with shared_context('compare actual and expected with precision'):
-        with it('returns correct value'):
+        with it('returns correct vector'):
             expect(
                 np.all(
                     np.around(self.actual_result, self.precision) == np.around(self.expected_result, self.precision)
@@ -382,3 +382,23 @@ with description(mb) as self:
 
             with included_context('compare actual and expected with precision'):
                 pass
+
+        with description('#build_super_resultion_vector'):
+            with before.all:
+                self.vector_size = mb.size_of_spectrum_vector(self.number_of_freq_estimations)
+                self.expected_result = np.array([
+                    0+0j,
+                    0+0j,
+                    0+0j,
+                    0+0j,
+                    0+0j,
+                    0+0j,
+                    0+0j
+                ]).reshape((-1, 1))
+            with it('returns correct vector'):
+                actual_result = mb.build_super_resultion_vector(self.number_of_freq_estimations)
+                expect(
+                    np.all(
+                        actual_result == self.expected_result
+                    )
+                ).to(equal(True))
