@@ -438,7 +438,7 @@ with description(ds.DirtySeries) as self:
             )
         with it('has approx zero mean'):
             noise = np.load('./spec/fixtures/noise_1.pickle')
-            expect(np.around(np.mean(noise), 2)).to(equal(0.0))
+            expect(np.mean(noise)).to(equal_with_precision(0.0, 2))
     with description('#__generate_dirty_periodical_series'):
         with before.all:
           self.frequencies = np.array([1.0]) # linear frequencies!
