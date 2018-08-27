@@ -19,7 +19,7 @@ class equal_with_precision(Matcher):
 
         rounded_actual_number = round(original_actual_number, self._precision)
 
-        if self._original_expected_number == rounded_actual_number:
+        if self._rounded_expected_number == rounded_actual_number:
             return True, self._message_success
         else:
             return False, self._message_failure
