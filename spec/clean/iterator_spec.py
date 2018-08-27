@@ -6,10 +6,7 @@ import clean.schuster as sch
 with description(itr.Iterator) as self:
     with before.all:
         #TODO test also with noise only
-        #TODO refactor equal_ndarray
-        # rename equal_ndarray to equal_numbers?
-        # make it work not only with arrays but with numbers?
-        # or write separate matcher with precision?
+        #TODO refactor all with equal_ndarray and equal_with_precision
         self.time_grid_and_values = (
             np.load("./spec/fixtures/time_grid_1.pickle"),
             np.load("./spec/fixtures/series_1.pickle")
