@@ -49,9 +49,9 @@ with description(itr.Iterator) as self:
                 equal(self.iterator._Iterator__number_of_freq_estimations)
             )
             expect(
-                np.all(self.time_grid == self.iterator._Iterator__time_grid)
+                self.time_grid
             ).to(
-                equal(True)
+                equal_ndarray(self.iterator._Iterator__time_grid)
             )
             expect(
                 np.all(self.values == self.iterator._Iterator__values)

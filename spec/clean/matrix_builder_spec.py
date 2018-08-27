@@ -5,10 +5,10 @@ with description(mb) as self:
     with shared_context('compare actual and expected with precision'):
         with it('returns correct vector'):
             expect(
-                np.all(
-                    np.around(self.actual_result, self.precision) == np.around(self.expected_result, self.precision)
-                )
-            ).to(equal(True))
+                self.actual_result
+            ).to(
+                equal_ndarray(self.expected_result, self.precision)
+            )
 
     with before.all:
         self.precision = 7
