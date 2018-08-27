@@ -44,7 +44,7 @@ class equal_ndarray(Matcher):
     def __repr__(self):
         """Returns a string with the description of the matcher."""
         if self._precision:
-            descr = "equal with precision {precision!r}".format(precision = self._precision)
+            descr = "equal with precision {precision}".format(precision = self._precision)
         else:
             descr = "equal"
         return descr
@@ -56,7 +56,7 @@ class equal_ndarray(Matcher):
             to_or_not_to = 'not to'
         else:
             to_or_not_to = 'to'
-        message = '\nexpected: {subject!r}\n {to_or_not_to} {matcher!r} to \n{original_expected_array!r}'.format(
+        message = '\nexpected:\n{subject!r}\n{to_or_not_to} {matcher} to\n{original_expected_array!r}'.format(
             subject=subject, matcher = self, to_or_not_to = to_or_not_to, original_expected_array=self._original_expected_array)
 
         if reasons:

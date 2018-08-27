@@ -26,7 +26,7 @@ class equal_with_precision(Matcher):
 
     def __repr__(self):
         """Returns a string with the description of the matcher."""
-        descr = "equal with precision {precision!r}".format(precision = self._precision)
+        descr = "equal with precision {precision}".format(precision = self._precision)
         return descr
 
     def _failure_message_general(self, subject, reasons, negated):
@@ -35,7 +35,7 @@ class equal_with_precision(Matcher):
             to_or_not_to = 'not to'
         else:
             to_or_not_to = 'to'
-        message = '\nexpected: {subject!r} {to_or_not_to} {matcher!r} to {original_expected_number!r}'.format(
+        message = '\nexpected: {subject} {to_or_not_to} {matcher} to {original_expected_number}'.format(
             subject=subject, matcher = self, to_or_not_to = to_or_not_to, original_expected_number=self._original_expected_number)
 
         if reasons:

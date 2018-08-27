@@ -7,6 +7,7 @@ with description(itr.Iterator) as self:
     with before.all:
         #TODO test also with noise only
         #TODO refactor all with equal_ndarray and equal_with_precision
+        #TODO split matchers to a separate package
         self.time_grid_and_values = (
             np.load("./spec/fixtures/time_grid_1.pickle"),
             np.load("./spec/fixtures/series_1.pickle")
