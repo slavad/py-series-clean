@@ -2,6 +2,14 @@ from spec.spec_helper import *
 import clean.matrix_builder as mb
 
 with description(mb) as self:
+    with shared_context('compare actual and expected with precision'):
+        with it('returns correct value'):
+            expect(
+                np.all(
+                    np.around(self.actual_result, self.precision) == np.around(self.expected_result, self.precision)
+                )
+            ).to(equal(True))
+
     with before.all:
         self.precision = 7
     with description('#estimate_max_freq'):
@@ -68,20 +76,15 @@ with description(mb) as self:
 
             with before.each:
                 #it's ok to round here, since the results are not exactly the same
-                self.expected_result = np.around(self.expected_result*self.norm, self.precision)
-            with it('returns correct transform matrix'):
-                result = mb.run_ft(
+                self.expected_result = self.expected_result*self.norm
+                self.actual_result = mb.run_ft(
                     self.time_grid, self.values,
                     self.freq_vector, self.number_of_freq_estimations,
                     self.kind
                 )
-                #see above
-                result = np.around(result, self.precision)
-                expect(
-                    np.all(
-                        result == self.expected_result
-                    )
-                ).to(equal(True))
+
+            with included_context('compare actual and expected with precision'):
+                pass
 
         with description('kind == "direct"'):
             with before.each:
@@ -278,22 +281,15 @@ with description(mb) as self:
                             )*self.values
                         )
                     ]
-                ).reshape((-1, 1))
-                #it's ok to round here, since the results are not exactly the same
-                self.expected_result = np.around(self.expected_result*self.norm, self.precision)
-
-            with it('returns correct value'):
-                result = np.around(mb.calculate_dirty_vector(
+                ).reshape((-1, 1))*self.norm
+                self.actual_result = mb.calculate_dirty_vector(
                     self.time_grid,
                     self.values,
                     self.number_of_freq_estimations,
                     self.max_freq
-                ), self.precision)
-                expect(
-                    np.all(
-                        result == self.expected_result
-                    )
-                ).to(equal(True))
+                )
+            with included_context('compare actual and expected with precision'):
+                pass
 
         with description('#calculate_window_vector'):
             with before.each:
@@ -377,18 +373,12 @@ with description(mb) as self:
                             )
                         )
                     ]
-                ).reshape((-1, 1))
-                #it's ok to round here, since the results are not exactly the same
-                self.expected_result = np.around(self.expected_result*self.norm, self.precision)
-
-            with it('returns correct value'):
-                result = np.around(mb.calculate_window_vector(
+                ).reshape((-1, 1))*self.norm
+                self.actual_result = mb.calculate_window_vector(
                     self.time_grid,
                     self.number_of_freq_estimations,
                     self.max_freq
-                ), self.precision)
-                expect(
-                    np.all(
-                        result == self.expected_result
-                    )
-                ).to(equal(True))
+                )
+
+            with included_context('compare actual and expected with precision'):
+                pass
