@@ -1,4 +1,5 @@
 from helpers.common_imports import *
+
 def estimate_max_freq(time_grid, use_aver):
     """estimates maximum frequency that can be found"""
     """if use_aver is True, then average delta T is used"""
@@ -49,6 +50,7 @@ def run_ft(time_grid, values, freq_vector, number_of_freq_estimations, kind):
         exp_vector_for_mult = exp_vector.T
     result = np.matmul(exp_vector_for_mult, values)*norm
     return result
+
 def generate_freq_vector(index_vector, max_freq, number_of_freq_estimations):
     """building frequency vector"""
     return index_vector*max_freq/number_of_freq_estimations

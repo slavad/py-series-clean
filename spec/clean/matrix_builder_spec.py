@@ -2,6 +2,8 @@ from spec.spec_helper import *
 import clean.matrix_builder as mb
 
 with description(mb) as self:
+    with before.all:
+        self.precision = 7
     with description('#estimate_max_freq'):
         with before.all:
             self.time_grid = np.array(
@@ -66,7 +68,7 @@ with description(mb) as self:
 
             with before.each:
                 #it's ok to round here, since the results are not exactly the same
-                self.expected_result = np.round(self.expected_result*self.norm, 7)
+                self.expected_result = np.around(self.expected_result*self.norm, self.precision)
             with it('returns correct transform matrix'):
                 result = mb.run_ft(
                     self.time_grid, self.values,
@@ -74,7 +76,7 @@ with description(mb) as self:
                     self.kind
                 )
                 #see above
-                result = np.round(result, 7)
+                result = np.around(result, self.precision)
                 expect(
                     np.all(
                         result == self.expected_result
@@ -181,3 +183,212 @@ with description(mb) as self:
                 expect(
                     self.action
                 ).to(raise_error(ValueError, "unknown kind"))
+
+    with description('#generate_freq_vector'):
+        with before.all:
+            self.index_vector = np.array([-1.0, 0.0, 1.0])
+            self.max_freq = 2.0
+            self.number_of_freq_estimations = 3
+            self.expected_result = self.index_vector*self.max_freq/self.number_of_freq_estimations
+        with it('generates correct value'):
+            expect(
+                np.all(
+                    self.expected_result == mb.generate_freq_vector(
+                        self.index_vector, self.max_freq, self.number_of_freq_estimations
+                    )
+                )
+            ).to(equal(True))
+
+    with description('#size_of_spectrum_vector'):
+        with before.all:
+            self.number_of_freq_estimations = 3
+            self.expected_result = 2*self.number_of_freq_estimations + 1
+        with it('returns correct value'):
+            expect(self.expected_result).to(
+                equal(mb.size_of_spectrum_vector(self.number_of_freq_estimations))
+            )
+    with description('#size_of_window_vector'):
+        with before.all:
+            self.number_of_freq_estimations = 3
+            self.expected_result = 4*self.number_of_freq_estimations + 1
+        with it('returns correct value'):
+            expect(self.expected_result).to(
+                equal(mb.size_of_window_vector(self.number_of_freq_estimations))
+            )
+
+    with description('vector generators'):
+        with before.all:
+            self.time_grid = np.array(
+                [0.0, 0.5, 0.6, 0.9, 2.0]
+            ).reshape((-1, 1))
+            self.max_freq = 2
+            self.number_of_freq_estimations = 3
+            self.coeff = -1j*2*np.pi
+            self.norm = 1.0/self.time_grid.shape[0]
+
+        with description('#calculate_dirty_vector'):
+            with before.each:
+                self.values = np.array(
+                    [-1.0, 0.9, -4.5, 1.1, 0.2]
+                ).reshape((-1, 1))
+
+                self.index_vector = mb.generate_index_vector(
+                    mb.size_of_spectrum_vector(self.number_of_freq_estimations)
+                )
+                self.freq_vector = mb.generate_freq_vector(
+                    self.index_vector,
+                    self.max_freq,
+                    self.number_of_freq_estimations
+                )
+                self.expected_result = np.array(
+                    [
+                        np.sum(
+                            np.exp(
+                                self.coeff*self.freq_vector[0][0]*self.time_grid
+                            )*self.values
+                        ),
+                        np.sum(
+                            np.exp(
+                                self.coeff*self.freq_vector[1][0]*self.time_grid
+                            )*self.values
+                        ),
+                        np.sum(
+                            np.exp(
+                                self.coeff*self.freq_vector[2][0]*self.time_grid
+                            )*self.values
+                        ),
+                        np.sum(
+                            np.exp(
+                                self.coeff*self.freq_vector[3][0]*self.time_grid
+                            )*self.values
+                        ),
+                        np.sum(
+                            np.exp(
+                                self.coeff*self.freq_vector[4][0]*self.time_grid
+                            )*self.values
+                        ),
+                        np.sum(
+                            np.exp(
+                                self.coeff*self.freq_vector[5][0]*self.time_grid
+                            )*self.values
+                        ),
+                        np.sum(
+                            np.exp(
+                                self.coeff*self.freq_vector[6][0]*self.time_grid
+                            )*self.values
+                        )
+                    ]
+                ).reshape((-1, 1))
+                #it's ok to round here, since the results are not exactly the same
+                self.expected_result = np.around(self.expected_result*self.norm, self.precision)
+
+            with it('returns correct value'):
+                result = np.around(mb.calculate_dirty_vector(
+                    self.time_grid,
+                    self.values,
+                    self.number_of_freq_estimations,
+                    self.max_freq
+                ), self.precision)
+                expect(
+                    np.all(
+                        result == self.expected_result
+                    )
+                ).to(equal(True))
+
+        with description('#calculate_window_vector'):
+            with before.each:
+                self.values = np.array(
+                    [-1.0, 0.9, -4.5, 1.1, 0.2]
+                ).reshape((-1, 1))
+
+                self.index_vector = mb.generate_index_vector(
+                    mb.size_of_window_vector(self.number_of_freq_estimations)
+                )
+                self.freq_vector = mb.generate_freq_vector(
+                    self.index_vector,
+                    self.max_freq,
+                    self.number_of_freq_estimations
+                )
+                self.expected_result = np.array(
+                    [
+                        np.sum(
+                            np.exp(
+                                self.coeff*self.freq_vector[0][0]*self.time_grid
+                            )
+                        ),
+                        np.sum(
+                            np.exp(
+                                self.coeff*self.freq_vector[1][0]*self.time_grid
+                            )
+                        ),
+                        np.sum(
+                            np.exp(
+                                self.coeff*self.freq_vector[2][0]*self.time_grid
+                            )
+                        ),
+                        np.sum(
+                            np.exp(
+                                self.coeff*self.freq_vector[3][0]*self.time_grid
+                            )
+                        ),
+                        np.sum(
+                            np.exp(
+                                self.coeff*self.freq_vector[4][0]*self.time_grid
+                            )
+                        ),
+                        np.sum(
+                            np.exp(
+                                self.coeff*self.freq_vector[5][0]*self.time_grid
+                            )
+                        ),
+                        np.sum(
+                            np.exp(
+                                self.coeff*self.freq_vector[6][0]*self.time_grid
+                            )
+                        ),
+                        np.sum(
+                            np.exp(
+                                self.coeff*self.freq_vector[7][0]*self.time_grid
+                            )
+                        ),
+                        np.sum(
+                            np.exp(
+                                self.coeff*self.freq_vector[8][0]*self.time_grid
+                            )
+                        ),
+                        np.sum(
+                            np.exp(
+                                self.coeff*self.freq_vector[9][0]*self.time_grid
+                            )
+                        ),
+                        np.sum(
+                            np.exp(
+                                self.coeff*self.freq_vector[10][0]*self.time_grid
+                            )
+                        ),
+                        np.sum(
+                            np.exp(
+                                self.coeff*self.freq_vector[11][0]*self.time_grid
+                            )
+                        ),
+                        np.sum(
+                            np.exp(
+                                self.coeff*self.freq_vector[12][0]*self.time_grid
+                            )
+                        )
+                    ]
+                ).reshape((-1, 1))
+                #it's ok to round here, since the results are not exactly the same
+                self.expected_result = np.around(self.expected_result*self.norm, self.precision)
+
+            with it('returns correct value'):
+                result = np.around(mb.calculate_window_vector(
+                    self.time_grid,
+                    self.number_of_freq_estimations,
+                    self.max_freq
+                ), self.precision)
+                expect(
+                    np.all(
+                        result == self.expected_result
+                    )
+                ).to(equal(True))
