@@ -51,7 +51,6 @@ class equal_ndarray(Matcher):
 
     def _failure_message_general(self, subject, reasons, negated):
         """custom failure message"""
-
         if negated:
             to_or_not_to = 'not to'
         else:
