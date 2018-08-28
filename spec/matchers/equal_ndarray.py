@@ -37,7 +37,7 @@ class equal_ndarray(Matcher):
 
     def __repr__(self):
         """Returns a string with the description of the matcher."""
-        if self._precision:
+        if self._precision != None:
             descr = "equal with precision {precision}".format(precision = self._precision)
         else:
             descr = "equal"

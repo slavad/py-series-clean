@@ -176,6 +176,7 @@ with description(equal_ndarray) as self:
                 ).to(
                     equal(self.expected_message_failure_precision)
                 )
+
     with description('#_match'):
         with before.each:
             self.actual_result = self.matcher._match(self.actual)
@@ -291,3 +292,37 @@ with description(equal_ndarray) as self:
                     ).to(
                         equal((False, ['arrays are not equal with precision 2']))
                     )
+
+    with description('#__repr__'):
+        with description('precision is None'):
+            with before.all:
+                self.expected = np.array([1.33,2.44,3.56])
+                self.precision = None
+            with it('returns correct value'):
+                expect(
+                    self.matcher.__repr__()
+                ).to(
+                    equal('equal')
+                )
+        with description('precision is default'):
+            with before.each:
+                self.matcher = equal_ndarray(self.expected)
+            with before.all:
+                self.expected = np.array([1.33,2.44,3.56])
+                self.precision = None
+            with it('returns correct value'):
+                expect(
+                    self.matcher.__repr__()
+                ).to(
+                    equal('equal')
+                )
+        with description('precision is not None'):
+            with before.all:
+                self.expected = np.array([1.33,2.44,3.56])
+                self.precision = 2
+            with it('returns correct value'):
+                expect(
+                    self.matcher.__repr__()
+                ).to(
+                    equal('equal with precision 2')
+                )
