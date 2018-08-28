@@ -1,6 +1,5 @@
 from expects.matchers import Matcher
 import numpy as np
-import pdb
 
 class equal_ndarray(Matcher):
 
@@ -31,18 +30,10 @@ class equal_ndarray(Matcher):
             rounded_actual_array = np.around(original_actual_array, self._precision)
         else:
             rounded_actual_array = original_actual_array
-        if self._same_shape(rounded_actual_array) and self._all_equal(rounded_actual_array):
+        if np.all(rounded_actual_array == self._rounded_expected_array):
             return True, self._message_success
         else:
             return False, self._message_failure
-
-    def _same_shape(self, rounded_actual_array):
-        """check if both expected and actual have the same shape"""
-        return rounded_actual_array.shape == self._rounded_expected_array.shape
-
-    def _all_equal(self, rounded_actual_array):
-        """checks if arrays are all equal"""
-        return np.all(rounded_actual_array == self._rounded_expected_array)
 
     def __repr__(self):
         """Returns a string with the description of the matcher."""
