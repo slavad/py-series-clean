@@ -326,3 +326,34 @@ with description(equal_ndarray) as self:
                 ).to(
                     equal('equal with precision 2')
                 )
+    with description('failure message methods'):
+        with description('#_failure_message_general'):
+            with before.all:
+                self.subject = 'subject'
+                self.reasons = ['one', 'two']
+                self.negated_expected_message = "\nexpected:\n'subject'\nnot to equal to\narray([1.33, 2.44, 3.56])\n     but: one\n          two"
+                self.expected_message = "\nexpected:\n'subject'\nto equal to\narray([1.33, 2.44, 3.56])\n     but: one\n          two"
+            with before.each:
+                self.message = self.matcher._failure_message_general(self.subject, self.reasons, self.negated)
+            with description('precision is None'):
+                with before.all:
+                    self.expected = np.array([1.33,2.44,3.56])
+                    self.precision = None
+                with description('is not negated'):
+                    with before.all:
+                        self.negated = False
+                    with it('returns expected message'):
+                        expect(
+                            self.message
+                        ).to(
+                            equal(self.expected_message)
+                        )
+                with description('is negated'):
+                    with before.all:
+                        self.negated = True
+                    with it('returns expected message'):
+                        expect(
+                            self.message
+                        ).to(
+                            equal(self.negated_expected_message)
+                        )
