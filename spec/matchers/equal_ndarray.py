@@ -5,8 +5,8 @@ class equal_ndarray(Matcher):
     def __init__(self, original_expected_array, precision = False):
         self._precision = precision
         self._original_expected_array = original_expected_array
-        if type(original_expected_array).__name__ == 'ndarray':
-            if self._precision:
+        if isinstance(original_expected_array, np.ndarray):
+            if self._precision and isinstance(self._precision, int):
                 self._rounded_expected_array = np.around(original_expected_array, self._precision)
                 self._message_success = ["arrays are equal with precision {}".format(precision)]
                 self._message_failure = ["arrays are not equal with precision {}".format(precision)]
@@ -16,10 +16,13 @@ class equal_ndarray(Matcher):
                 self._message_failure = ["arrays are not equal"]
 
     def _match(self, original_actual_array):
-        if type(self._original_expected_array).__name__ != 'ndarray':
+        if self._precision and not isinstance(self._precision, int):
+            return False, ['precision was not an integer']
+
+        if not isinstance(self._original_expected_array, np.ndarray):
             return False, ['expected was not an ndarray']
 
-        if type(original_actual_array).__name__ != 'ndarray':
+        if not isinstance(original_actual_array, np.ndarray):
             return False, ['actual was not an ndarray']
 
         if self._precision:

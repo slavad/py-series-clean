@@ -5,12 +5,15 @@ class equal_with_precision(Matcher):
     def __init__(self, original_expected_number, precision):
         self._precision = precision
         self._original_expected_number = original_expected_number
-        if isinstance(original_expected_number, numbers.Number):
+        if isinstance(self._original_expected_number, numbers.Number) and isinstance(self._precision, int):
             self._rounded_expected_number = round(original_expected_number, self._precision)
             self._message_success = ["numbers are equal with precision {}".format(precision)]
             self._message_failure = ["numbers are not equal with precision {}".format(precision)]
 
     def _match(self, original_actual_number):
+        if not isinstance(self._precision, int):
+            return False, ['precision was not an integer']
+
         if not isinstance(self._original_expected_number, numbers.Number):
             return False, ['expected was not a number']
 
