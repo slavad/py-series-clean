@@ -3,6 +3,7 @@ from spec.spec_helper import *
 with description(equal_with_precision) as self:
     with before.each:
         self.matcher = equal_with_precision(self.expected, self.precision)
+
     with description('#__init__'):
         with before.all:
             self.expected = 1.333
@@ -84,6 +85,19 @@ with description(equal_with_precision) as self:
                 expect(self.result).to(
                     equal(
                         (True, ['numbers are equal with precision 2'])
+                    )
+                )
+
+        with description('actual and expected are equal within zero precision'):
+            with before.all:
+                self.expected = 1.03
+                self.precision = 0
+                self.actual = 1.04
+
+            with it('returns True and a message'):
+                expect(self.result).to(
+                    equal(
+                        (True, ['numbers are equal with precision 0'])
                     )
                 )
 

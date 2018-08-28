@@ -1,22 +1,25 @@
 from expects.matchers import Matcher
 import numpy as np
+import pdb
 
 class equal_ndarray(Matcher):
-    def __init__(self, original_expected_array, precision = False):
+
+    def __init__(self, original_expected_array, precision = None):
         self._precision = precision
         self._original_expected_array = original_expected_array
         if isinstance(original_expected_array, np.ndarray):
-            if self._precision and isinstance(self._precision, int):
-                self._rounded_expected_array = np.around(original_expected_array, self._precision)
-                self._message_success = ["arrays are equal with precision {}".format(precision)]
-                self._message_failure = ["arrays are not equal with precision {}".format(precision)]
-            else:
+            if self._precision == None:
                 self._rounded_expected_array = original_expected_array
                 self._message_success = ["arrays are equal"]
                 self._message_failure = ["arrays are not equal"]
+            elif isinstance(self._precision, int):
+                self._rounded_expected_array = np.around(original_expected_array, self._precision)
+                self._message_success = ["arrays are equal with precision {}".format(precision)]
+                self._message_failure = ["arrays are not equal with precision {}".format(precision)]
 
     def _match(self, original_actual_array):
-        if self._precision and not isinstance(self._precision, int):
+        # isinstance(bool, int) is true!
+        if self._precision != None and not isinstance(self._precision, int):
             return False, ['precision was not an integer']
 
         if not isinstance(self._original_expected_array, np.ndarray):
