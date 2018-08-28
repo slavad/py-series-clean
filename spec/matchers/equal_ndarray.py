@@ -18,7 +18,6 @@ class equal_ndarray(Matcher):
                 self._message_failure = ["arrays are not equal with precision {}".format(precision)]
 
     def _match(self, original_actual_array):
-        # isinstance(bool, int) is true!
         if self._precision != None and not isinstance(self._precision, int):
             return False, ['precision was not an integer']
 
@@ -32,7 +31,6 @@ class equal_ndarray(Matcher):
             rounded_actual_array = np.around(original_actual_array, self._precision)
         else:
             rounded_actual_array = original_actual_array
-
         if self._same_shape(rounded_actual_array) and self._all_equal(rounded_actual_array):
             return True, self._message_success
         else:
@@ -45,7 +43,6 @@ class equal_ndarray(Matcher):
     def _all_equal(self, rounded_actual_array):
         """checks if arrays are all equal"""
         return np.all(rounded_actual_array == self._rounded_expected_array)
-
 
     def __repr__(self):
         """Returns a string with the description of the matcher."""
