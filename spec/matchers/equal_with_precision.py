@@ -1,14 +1,11 @@
 from expects.matchers import Matcher
 import numbers
+import pdb
 
 class equal_with_precision(Matcher):
     def __init__(self, original_expected_number, precision):
         self._precision = precision
         self._original_expected_number = original_expected_number
-        if isinstance(self._original_expected_number, numbers.Number) and isinstance(self._precision, int):
-            self._rounded_expected_number = round(original_expected_number, self._precision)
-            self._message_success = ["numbers are equal with precision {}".format(precision)]
-            self._message_failure = ["numbers are not equal with precision {}".format(precision)]
 
     def _match(self, original_actual_number):
         if not isinstance(self._precision, int):
@@ -20,12 +17,10 @@ class equal_with_precision(Matcher):
         if  not isinstance(original_actual_number, numbers.Number):
             return False, ['actual was not a number']
 
-        rounded_actual_number = round(original_actual_number, self._precision)
-
-        if self._rounded_expected_number == rounded_actual_number:
-            return True, self._message_success
+        if round(self._original_expected_number, self._precision) == round(original_actual_number, self._precision):
+            return True, ["numbers are equal with precision {}".format(self._precision)]
         else:
-            return False, self._message_failure
+            return False, ["numbers are not equal with precision {}".format(self._precision)]
 
     def __repr__(self):
         """Returns a string with the description of the matcher."""
