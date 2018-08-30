@@ -54,9 +54,9 @@ with description(itr.Iterator) as self:
                 equal_ndarray(self.iterator._Iterator__time_grid)
             )
             expect(
-                np.all(self.values == self.iterator._Iterator__values)
+                self.values
             ).to(
-                equal(True)
+                equal_ndarray(self.iterator._Iterator__values)
             )
             expect(
                 self.max_freq
@@ -64,9 +64,9 @@ with description(itr.Iterator) as self:
                 equal(self.iterator._Iterator__max_freq)
             )
             expect(
-                np.all(self.dirty_vector == self.iterator._Iterator__dirty_vector)
+                self.dirty_vector
             ).to(
-                equal(True)
+                equal_ndarray(self.iterator._Iterator__dirty_vector)
             )
             expect(
                 sch.calc_schuster_counts(self.dirty_vector[self.number_of_freq_estimations:], method_flag='average')[0]*self.treshold
@@ -74,9 +74,9 @@ with description(itr.Iterator) as self:
                 equal(self.iterator._Iterator__normalized_detection_treshold)
             )
             expect(
-                np.all(self.window_vector == self.iterator._Iterator__window_vector)
+                self.window_vector
             ).to(
-                equal(True)
+                equal_ndarray(self.iterator._Iterator__window_vector)
             )
 
     with description('#iterator'):

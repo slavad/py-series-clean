@@ -52,9 +52,7 @@ with description(sch) as self:
                 ]
             ).reshape((-1,1))
             expect(
-                np.all(
-                    #it's ok if we round it to the 2nd number after the decimal point
-                    #since the expected_result precision is the same
-                    np.around(sch.squared_abs(self.array_to_test), 2) == expected_result
-                )
-            ).to(equal(True))
+                #it's ok if we round it to the 2nd number after the decimal point
+                #since the expected_result precision is the same
+                sch.squared_abs(self.array_to_test)
+            ).to(equal_ndarray(expected_result, precision=2))

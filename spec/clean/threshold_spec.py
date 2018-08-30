@@ -18,20 +18,15 @@ with description(thrs.Threshold) as self:
     with shared_context('object values setter'):
         with it('sets all values'):
             expect(
-                np.all(
-                    self.time_grid_and_values[0] == self.estimator._Threshold__time_grid
-                )
+                self.time_grid_and_values[0]
 
             ).to(
-                equal(True)
+                equal_ndarray(self.estimator._Threshold__time_grid)
             )
             expect(
-                np.all(
-                    self.time_grid_and_values[1] == self.estimator._Threshold__values
-                )
-
+                self.time_grid_and_values[1]
             ).to(
-                equal(True)
+                equal_ndarray(self.estimator._Threshold__values)
             )
             expect(
                 self.sigma
@@ -53,16 +48,14 @@ with description(thrs.Threshold) as self:
                 self.number_of_random_series
             )
             expect(
-                np.all(
-                    new_random_series_array == self.random_series_array
-                )
-
-            ).to(
-                equal(False)
+                new_random_series_array
+            ).not_to(
+                equal_ndarray(self.random_series_array)
             )
         with it('has approx zero mean value'):
             random_series_array = np.load('./spec/fixtures/random_series_array_1.pickle')
-            expect(np.around(np.mean(random_series_array), 2)).to(equal(0.00))
+            equal_with_precision
+            expect(np.mean(random_series_array)).to(equal_with_precision(0.00, precision = 2))
     with shared_context('probability generator'):
         with before.each:
             random_series_array = np.load('./spec/fixtures/random_series_array_1.pickle')

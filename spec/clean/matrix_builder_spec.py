@@ -50,10 +50,8 @@ with description(mb) as self:
                 ).reshape((-1, 1))
             with it('generates correct vector'):
                 expect(
-                    np.all(
-                        mb.generate_index_vector(self.vector_size) == self.expected_vector
-                    )
-                ).to(equal(True))
+                    mb.generate_index_vector(self.vector_size)
+                ).to(equal_ndarray(self.expected_vector))
 
         with description('argument is event'):
             with before.all:
@@ -195,12 +193,14 @@ with description(mb) as self:
             self.expected_result = self.index_vector*self.max_freq/self.number_of_freq_estimations
         with it('generates correct value'):
             expect(
-                np.all(
-                    self.expected_result == mb.generate_freq_vector(
+                self.expected_result
+            ).to(
+                equal_ndarray(
+                    mb.generate_freq_vector(
                         self.index_vector, self.max_freq, self.number_of_freq_estimations
                     )
                 )
-            ).to(equal(True))
+            )
 
     with description('#size_of_spectrum_vector'):
         with before.all:
@@ -398,7 +398,5 @@ with description(mb) as self:
             with it('returns correct vector'):
                 actual_result = mb.build_super_resultion_vector(self.number_of_freq_estimations)
                 expect(
-                    np.all(
-                        actual_result == self.expected_result
-                    )
-                ).to(equal(True))
+                    actual_result
+                ).to(equal_ndarray(self.expected_result))

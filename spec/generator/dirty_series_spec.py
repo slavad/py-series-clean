@@ -46,31 +46,25 @@ with description(ds.DirtySeries) as self:
                     equal(self.generator._DirtySeries__max_time_value)
                 )
                 expect(
-                    np.all(
-                        np.array(
-                            [[0.1],[0.2]]
-                        ) == self.generator._DirtySeries__frequnecies
+                    np.array(
+                        [[0.1],[0.2]]
                     )
                 ).to(
-                    equal(True)
+                    equal_ndarray(self.generator._DirtySeries__frequnecies)
                 )
                 expect(
-                    np.all(
-                        np.array(
-                            [[10],[20]]
-                        ) == self.generator._DirtySeries__amplitudes
+                    np.array(
+                        [[10],[20]]
                     )
                 ).to(
-                    equal(True)
+                    equal_ndarray(self.generator._DirtySeries__amplitudes)
                 )
                 expect(
-                    np.all(
-                        np.array(
-                            [[0.4],[0.6]]
-                        ) == self.generator._DirtySeries__phases
+                    np.array(
+                        [[0.4],[0.6]]
                     )
                 ).to(
-                    equal(True)
+                    equal_ndarray(self.generator._DirtySeries__phases)
                 )
                 expect(
                     self.sigma
@@ -91,11 +85,9 @@ with description(ds.DirtySeries) as self:
                 self.sigma = 0
             with it('does not add noise'):
                 expect(
-                    np.all(
-                        self.dirty_periodical_series == self.clean_periodical_series
-                    )
+                    self.dirty_periodical_series
                 ).to(
-                    equal(True)
+                    equal_ndarray(self.clean_periodical_series)
                 )
 
         with description('sigma is not zero'):
@@ -103,11 +95,9 @@ with description(ds.DirtySeries) as self:
                 self.sigma = 1
             with it('adds noise'):
                 expect(
-                    np.all(
-                        self.dirty_periodical_series == self.clean_periodical_series
-                    )
-                ).to(
-                    equal(False)
+                    self.dirty_periodical_series
+                ).not_to(
+                    equal_ndarray(self.clean_periodical_series)
                 )
         with it('generates result of the correct length'):
             expect(len(self.result)).to(equal(2))
@@ -120,11 +110,9 @@ with description(ds.DirtySeries) as self:
         with it('always generates different time grid'):
             new_time_grid = self.generator.generate()[0]
             expect(
-                np.all(
-                    self.time_grid == new_time_grid
-                )
-            ).to(
-                equal(False)
+                self.time_grid
+            ).not_to(
+                equal_ndarray(new_time_grid)
             )
 
     with description('#__check_and_reshape_arguments'):
@@ -164,25 +152,19 @@ with description(ds.DirtySeries) as self:
                 with it('returns reshaped matrices'):
                     freq, amp, phase = self.action()
                     expect(
-                        np.all(
-                            freq == np.array([[3],[2]])
-                        )
+                        freq
                     ).to(
-                        equal(True)
+                        equal_ndarray(np.array([[3],[2]]))
                     )
                     expect(
-                        np.all(
-                            amp == np.array([[0.4],[0.6]])
-                        )
+                        amp
                     ).to(
-                        equal(True)
+                        equal_ndarray(np.array([[0.4],[0.6]]))
                     )
                     expect(
-                        np.all(
-                            phase == np.array([[4],[6]])
-                        )
+                        phase
                     ).to(
-                        equal(True)
+                        equal_ndarray(np.array([[4],[6]]))
                     )
             with description('one scalar, other are vectors of size 1'):
                 with it('returns matrices'):
@@ -263,13 +245,11 @@ with description(ds.DirtySeries) as self:
 
         with it('reshapes 1d array'):
             expect(
-                np.all(
-                    self.generator._DirtySeries__reshape_one_value(
-                        np.array([1,2])
-                    ) == np.array([[1],[2]])
+                self.generator._DirtySeries__reshape_one_value(
+                    np.array([1,2])
                 )
             ).to(
-                equal(True)
+                equal_ndarray(np.array([[1],[2]]))
             )
 
     with description('#__generate_random_time_grid'):
@@ -287,27 +267,21 @@ with description(ds.DirtySeries) as self:
         with it('grid is always different'):
             new_grid = self.generator._DirtySeries__generate_random_time_grid()
             expect(
-                np.all(
-                    new_grid == self.time_grid
-                )
-            ).to(
-                equal(False)
+                new_grid
+            ).not_to(
+                equal_ndarray(self.time_grid)
             )
 
     with shared_context('resulting series checker'):
         with before.each:
-            self.periodical_series = np.around(
-                self.generator._DirtySeries__generate_periodical_series(self.time_grid), self.round_precision
-            )
+            self.periodical_series = self.generator._DirtySeries__generate_periodical_series(self.time_grid)
 
         with description('single harmonic'):
             with it('returns correct result'):
                 expect(
-                    np.all(
-                        self.periodical_series == self.expected_periodical_series
-                    )
+                    self.periodical_series
                 ).to(
-                    equal(True)
+                    equal_ndarray(self.expected_periodical_series, self.round_precision)
                 )
 
     with description('#__generate_periodical_series'):
@@ -429,12 +403,9 @@ with description(ds.DirtySeries) as self:
                 self.shape
             )
             expect(
-                np.all(
-                    new_noise == self.noise
-                )
-
-            ).to(
-                equal(False)
+                new_noise
+            ).not_to(
+                equal_ndarray(self.noise)
             )
         with it('has approx zero mean'):
             noise = np.load('./spec/fixtures/noise_1.pickle')
@@ -468,16 +439,12 @@ with description(ds.DirtySeries) as self:
                     self.frequencies, self.amplitudes,
                     self.phases, self.sigma
                 )
-                self.dirty_periodical_series = np.around(
-                    self.generator._DirtySeries__generate_dirty_periodical_series(self.time_grid), self.round_precision
-                )
+                self.dirty_periodical_series = self.generator._DirtySeries__generate_dirty_periodical_series(self.time_grid)
             with it('does not add noise'):
                 expect(
-                    np.all(
-                        self.clean_periodical_series == self.dirty_periodical_series
-                    )
+                    self.clean_periodical_series
                 ).to(
-                    equal(True)
+                    equal_ndarray(self.dirty_periodical_series, self.round_precision)
                 )
         with description('sigma is not zero'):
             with before.each:
@@ -487,25 +454,17 @@ with description(ds.DirtySeries) as self:
                     self.frequencies, self.amplitudes,
                     self.phases, self.sigma
                 )
-                self.dirty_periodical_series = np.around(
-                    self.generator._DirtySeries__generate_dirty_periodical_series(self.time_grid), self.round_precision
-                )
+                self.dirty_periodical_series = self.generator._DirtySeries__generate_dirty_periodical_series(self.time_grid)
             with it('adds noise'):
                 expect(
-                    np.all(
-                        self.clean_periodical_series == self.dirty_periodical_series
-                    )
-                ).to(
-                    equal(False)
+                    self.clean_periodical_series
+                ).not_to(
+                    equal_ndarray(self.dirty_periodical_series)
                 )
             with it('noise is always different'):
-                new_dirty_periodical_series = np.around(
-                    self.generator._DirtySeries__generate_dirty_periodical_series(self.time_grid), self.round_precision
-                )
+                new_dirty_periodical_series = self.generator._DirtySeries__generate_dirty_periodical_series(self.time_grid)
                 expect(
-                    np.all(
-                        new_dirty_periodical_series == self.dirty_periodical_series
-                    )
-                ).to(
-                    equal(False)
+                    new_dirty_periodical_series
+                ).not_to(
+                    equal_ndarray(self.dirty_periodical_series)
                 )
