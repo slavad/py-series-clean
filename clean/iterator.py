@@ -47,9 +47,11 @@ class Iterator(object):
 
     def ___extract_data_from_dirty_spec(self, dirty_vector, max_count_index, complex_amplitude):
         """eq 155 ref 2"""
-        #TODO: check if vector shifts are ok here and above and below
+        # min_index corresponds to -m-th index in eq 155 ref 2 for W
         min_index = self.__number_of_freq_estimations
-        max_index = self.__number_of_freq_estimations + 2*self.__number_of_freq_estimations + 1
+        # +1 since last value is not included, when the subarray is extracted
+        # max_index corresponds to m-th index in eq 155 ref 2 for W
+        max_index = 3*self.__number_of_freq_estimations + 1
         window_vector_left_shift = self.__window_vector[
             min_index - max_count_index:max_index - max_count_index
         ]
@@ -62,7 +64,7 @@ class Iterator(object):
 
     def __add_data_to_super_resultion_vector(self, super_resultion_vector, max_count_index, complex_amplitude):
         """eq 156 ref 2"""
-        #TODO: check if vector shifts are ok here and above and below
+        #self.__number_of_freq_estimations index corresponds the 0th index in eq 156 ref 2 for vector C
         vector_to_add = mb.build_super_resultion_vector(self.__number_of_freq_estimations)
         vector_to_add[self.__number_of_freq_estimations + max_count_index] = self.__harmonic_share*complex_amplitude
         vector_to_add[self.__number_of_freq_estimations - max_count_index] = self.__harmonic_share*np.conj(complex_amplitude)
