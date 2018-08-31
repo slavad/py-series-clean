@@ -84,13 +84,19 @@ class Iterator(object):
         max_count_index, max_count_value = self.__get_max_count_index_and_value(old_dirty_vector)
         if sch.squared_abs(max_count_value) >= self.__normalized_detection_treshold:
             # eq 154 ref 2
-            complex_amplitude = self.__calculate_complex_amplitude(old_dirty_vector, max_count_index, max_count_value)
+            complex_amplitude = self.__calculate_complex_amplitude(
+                old_dirty_vector,
+                max_count_index,
+                max_count_value
+            )
             dirty_vector = self.___extract_data_from_dirty_spec(
                 old_dirty_vector,
-                max_count_index, complex_amplitude
+                max_count_index,
+                complex_amplitude
             )
             super_resultion_vector = self.__add_data_to_super_resultion_vector(
-                old_super_resultion_vector,max_count_index,
+                old_super_resultion_vector,
+                max_count_index,
                 complex_amplitude
             )
             return dirty_vector, super_resultion_vector
