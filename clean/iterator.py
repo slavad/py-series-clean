@@ -75,7 +75,9 @@ class Iterator(object):
         dirty_subvector_wo_zero = old_dirty_vector[self.__number_of_freq_estimations+1:]
         # we need to add 1 to the index, because our dirty_vector index has different indexing:
         # from -number_of_freq_estimations to number_of_freq_estimations
-        max_count_index = sch.calc_schuster_counts(dirty_subvector_wo_zero, method_flag='argmax')[0] + 1
+        max_count_index = sch.calc_schuster_counts(
+            dirty_subvector_wo_zero, method_flag='argmax'
+        )[0] + 1
         max_count_value = dirty_subvector_wo_zero[max_count_index - 1][0]
         return max_count_index, max_count_value
 
