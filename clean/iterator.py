@@ -37,9 +37,8 @@ class Iterator(object):
                 current_step += 1
         return super_resultion_vector, current_step
 
-    def __calculate_complex_amplitude(self, dirty_vector, max_count_index):
+    def __calculate_complex_amplitude(self, dirty_vector, max_count_index, max_count_value):
         """eq 154 ref 2"""
-        max_count_value = dirty_vector[self.__number_of_freq_estimations:][max_count_index][0]
         window_value = self.__window_vector[2*self.__number_of_freq_estimations:][2*max_count_index][0]
         nominator = max_count_value + np.conj(max_count_value)*window_value
         denominator = 1 - sch.squared_abs(window_value)
@@ -71,16 +70,21 @@ class Iterator(object):
         result = vector_to_add + super_resultion_vector
         return result
 
-    def __one_step(self, old_super_resultion_vector, old_dirty_vector):
-        """one step of the iteration process"""
+    def __get_max_count_index_and_value(self, old_dirty_vector):
+        """gets max count index and value"""
         dirty_subvector_wo_zero = old_dirty_vector[self.__number_of_freq_estimations+1:]
         # we need to add 1 to the index, because our dirty_vector index has different indexing:
         # from -number_of_freq_estimations to number_of_freq_estimations
         max_count_index = sch.calc_schuster_counts(dirty_subvector_wo_zero, method_flag='argmax')[0] + 1
         max_count_value = dirty_subvector_wo_zero[max_count_index - 1][0]
+        return max_count_index, max_count_value
+
+    def __one_step(self, old_super_resultion_vector, old_dirty_vector):
+        """one step of the iteration process"""
+        max_count_index, max_count_value = self.__get_max_count_index_and_value(old_dirty_vector)
         if sch.squared_abs(max_count_value) >= self.__normalized_detection_treshold:
             # eq 154 ref 2
-            complex_amplitude = self.__calculate_complex_amplitude(old_dirty_vector, max_count_index)
+            complex_amplitude = self.__calculate_complex_amplitude(old_dirty_vector, max_count_index, max_count_value)
             dirty_vector = self.___extract_data_from_dirty_spec(
                 old_dirty_vector,
                 max_count_index, complex_amplitude

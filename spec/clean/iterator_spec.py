@@ -83,15 +83,26 @@ with description(itr.Iterator) as self:
     with description('#__calculate_complex_amplitude'):
         with before.all:
             self.max_count_index = 12
-            max_count_value = self.dirty_vector[self.number_of_freq_estimations:][self.max_count_index][0]
+            self.max_count_value = self.dirty_vector[
+                self.number_of_freq_estimations:
+            ][self.max_count_index][0]
             window_value = self.window_vector[2*self.number_of_freq_estimations:][2*self.max_count_index][0]
-            nominator = max_count_value + np.conj(max_count_value)*window_value
+            nominator = self.max_count_value + np.conj(self.max_count_value)*window_value
             denominator = 1 - np.abs(np.power(window_value, 2))
             self.expected_value = nominator/denominator
 
         with it('retruns correct value'):
             expect(
-                self.iterator._Iterator__calculate_complex_amplitude(self.dirty_vector, self.max_count_index)
+                self.iterator._Iterator__calculate_complex_amplitude(
+                    self.dirty_vector, self.max_count_index, self.max_count_value
+                )
             ).to(
                 equal(self.expected_value)
             )
+
+    with description('#__get_max_count_index_and_value'):
+        #TODO:
+        # usecase
+        # max value of dirty_vector is at zero index or negative index
+        # this method should return max count at positive indexes
+        pass
