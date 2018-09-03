@@ -40,9 +40,14 @@ with description(equal_ndarray) as self:
                     equal(self.precision)
                 )
                 expect(
-                    np.all(self.matcher._original_expected_array == self.expected)
+                    # converts from numpy.bool_ to bool
+                    bool(
+                        np.all(
+                            self.matcher._original_expected_array == self.expected
+                        )
+                    )
                 ).to(
-                    equal(True)
+                    be_true
                 )
                 expect(self.matcher).not_to(have_property('_rounded_expected_array'))
                 expect(self.matcher).not_to(have_property('_message_success'))
@@ -56,16 +61,24 @@ with description(equal_ndarray) as self:
                     equal(self.precision)
                 )
                 expect(
-                    np.all(self.matcher._original_expected_array == self.expected)
-                ).to(
-                    equal(True)
-                )
-                expect(
-                    np.all(
-                        self.matcher._rounded_expected_array == self.expected
+                    # converts from numpy.bool_ to bool
+                    bool(
+                        np.all(
+                            self.matcher._original_expected_array == self.expected
+                        )
                     )
                 ).to(
-                    equal(True)
+                    be_true
+                )
+                expect(
+                    # converts from numpy.bool_ to bool
+                    bool(
+                        np.all(
+                            self.matcher._rounded_expected_array == self.expected
+                        )
+                    )
+                ).to(
+                    be_true
                 )
 
                 expect(
@@ -106,11 +119,14 @@ with description(equal_ndarray) as self:
                     equal(self.precision)
                 )
                 expect(
-                    np.all(
-                        self.matcher._rounded_expected_array == np.array([1.0,2.0,4.0])
+                    # converts from numpy.bool_ to bool
+                    bool(
+                        np.all(
+                            self.matcher._rounded_expected_array == np.array([1.0,2.0,4.0])
+                        )
                     )
                 ).to(
-                    equal(True)
+                    be_true
                 )
 
                 expect(
@@ -154,16 +170,24 @@ with description(equal_ndarray) as self:
                     equal(self.precision)
                 )
                 expect(
-                    np.all(self.matcher._original_expected_array == self.expected)
-                ).to(
-                    equal(True)
-                )
-                expect(
-                    np.all(
-                        self.matcher._rounded_expected_array == np.array([1.33,2.44,3.56])
+                    # converts from numpy.bool_ to bool
+                    bool(
+                        np.all(
+                            self.matcher._original_expected_array == self.expected
+                        )
                     )
                 ).to(
-                    equal(True)
+                    be_true
+                )
+                expect(
+                    # converts from numpy.bool_ to bool
+                    bool(
+                        np.all(
+                            self.matcher._rounded_expected_array == np.array([1.33,2.44,3.56])
+                        )
+                    )
+                ).to(
+                    be_true
                 )
 
                 expect(

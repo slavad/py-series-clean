@@ -114,7 +114,7 @@ with description(thrs.Threshold) as self:
                     result = self.generated_probability == new_generated_probability
                     if result == False:
                         break
-                expect(result).to(equal(False))
+                expect(result).to(be_false)
 
         with description('#__generate_random_series'):
             with included_context('random series generator'):

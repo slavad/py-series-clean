@@ -6,7 +6,6 @@ import clean.schuster as sch
 with description(itr.Iterator) as self:
     with before.all:
         #TODO test also with noise only
-        #TODO refactor all with equal_ndarray and equal_with_precision
         self.time_grid_and_values = (
             np.load("./spec/fixtures/time_grid_1.pickle"),
             np.load("./spec/fixtures/series_1.pickle")
@@ -118,7 +117,9 @@ with description(itr.Iterator) as self:
 
     with description('#___extract_data_from_dirty_vector'):
         with before.all:
-            self.expected_vector =  np.load("./spec/fixtures/dirty_vector_with_extracted_data.pickle")
+            self.expected_vector =  np.load(
+                "./spec/fixtures/dirty_vector_with_extracted_data.pickle"
+            )
             self.initial_vector = self.dirty_vector
         with before.each:
             self.actual_vector = self.iterator._Iterator__extract_data_from_dirty_vector(
@@ -130,7 +131,9 @@ with description(itr.Iterator) as self:
 
     with description('#__add_data_to_super_resultion_vector'):
         with before.all:
-            self.expected_vector =  np.load("./spec/fixtures/super_resol_vector_with_added.pickle")
+            self.expected_vector =  np.load(
+                "./spec/fixtures/super_resol_vector_with_added.pickle"
+            )
             self.initial_vector = self.super_resultion_vector
 
         with before.each:
@@ -228,10 +231,52 @@ with description(itr.Iterator) as self:
                 expect(self.global_max_count_index).to(equal(self.actual_max_count_index))
 
     with description('__one_step'):
+        with before.all:
+            self.old_super_resultion_vector = mb.build_super_resultion_vector(
+                self.number_of_freq_estimations
+            )
         with description('dirty_vector contains signal'):
-            with it('returns correct results'):
-                pass
+            with before.all:
+                self.expected_super_resultion_vector_with_added_data =  np.load(
+                    "./spec/fixtures/super_resol_vector_with_added.pickle"
+                )
+                self.expected_dirty_vector_with_extracted_data =  np.load(
+                    "./spec/fixtures/dirty_vector_with_extracted_data.pickle"
+                )
+                self.old_dirty_vector = self.dirty_vector
+            with before.each:
+                (
+                    self.actual_dirty_vector_with_extracted_data,
+                    self.actual_super_resultion_vector_with_added_data
+                ) = self.iterator._Iterator__one_step(
+                    self.old_super_resultion_vector, self.old_dirty_vector
+                )
+            with description('super resolution vector'):
+                with before.each:
+                    self.initial_vector = self.old_super_resultion_vector
+                    self.actual_vector = self.actual_super_resultion_vector_with_added_data
+                    self.expected_vector = self.expected_super_resultion_vector_with_added_data
+
+                with included_context('array comparer'):
+                    pass
+
+            with description('dirty vector'):
+                with before.each:
+                    self.initial_vector = self.old_dirty_vector
+                    self.actual_vector = self.actual_dirty_vector_with_extracted_data
+                    self.expected_vector = self.expected_dirty_vector_with_extracted_data
+
+                with included_context('array comparer'):
+                    pass
 
         with description('dirty vector does not contain signal'):
+            with before.all:
+                self.old_dirty_vector = np.load(
+                    "./spec/fixtures/old_dirty_vector_no_signal.pickle"
+                )
+            with before.each:
+                self.result = self.iterator._Iterator__one_step(
+                    self.old_super_resultion_vector, self.old_dirty_vector
+                )
             with it('returns False'):
-                pass
+                expect(self.result).to(be_none)
