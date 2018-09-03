@@ -278,5 +278,5 @@ with description(itr.Iterator) as self:
                 self.result = self.iterator._Iterator__one_step(
                     self.old_super_resultion_vector, self.old_dirty_vector
                 )
-            with it('returns False'):
+            with it('returns None'):
                 expect(self.result).to(be_none)
