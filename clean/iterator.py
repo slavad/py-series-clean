@@ -44,7 +44,7 @@ class Iterator(object):
         denominator = 1 - sch.squared_abs(window_value)
         return nominator/denominator
 
-    def ___extract_data_from_dirty_spec(self, dirty_vector, max_count_index, complex_amplitude):
+    def __extract_data_from_dirty_vector(self, dirty_vector, max_count_index, complex_amplitude):
         """eq 155 ref 2"""
         # min_index corresponds to -m-th index in eq 155 ref 2 for W
         min_index = self.__number_of_freq_estimations
@@ -91,7 +91,7 @@ class Iterator(object):
                 max_count_index,
                 max_count_value
             )
-            dirty_vector = self.___extract_data_from_dirty_spec(
+            dirty_vector = self.__extract_data_from_dirty_vector(
                 old_dirty_vector,
                 max_count_index,
                 complex_amplitude
