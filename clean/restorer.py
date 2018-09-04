@@ -19,6 +19,8 @@ class Restorer(object):
             )
             self.__clean_window_vector = self.__build_clean_window_vector()
 
+    #TODO: replace the following methods
+    # with one method that returns all needed values as a dictionary
     def restore_ccs(self):
         """restores clean spectrum, algorithm steps 18 to 21 ref 2"""
         # if nothing was detected:

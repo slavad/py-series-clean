@@ -94,7 +94,7 @@ def save_summary(args, iterations):
     if iterations == 0:
         print('No harmonical components found', file=file)
     if iterations == args.r:
-        print('Iterations did not converge, iterations where stopped because they reached maximum number of iterations', file=file)
+        print('Iterations did not converge, iterations where stopped because they reached the maximum number of iterations', file=file)
     print('Input params:', file=file)
     print('khi: {}:'.format(args.k), file=file)
     print('treshold: {}:'.format(args.t), file=file)

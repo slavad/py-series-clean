@@ -5,7 +5,6 @@ import clean.schuster as sch
 
 with description(itr.Iterator) as self:
     with before.all:
-        #TODO test also with noise only
         self.time_grid_and_values = (
             np.load("./spec/fixtures/time_grid_1.pickle"),
             np.load("./spec/fixtures/series_1.pickle")
@@ -88,6 +87,18 @@ with description(itr.Iterator) as self:
                 equal_ndarray(self.iterator._Iterator__window_vector)
             )
 
+    with description('iterate'):
+        # TODO: modify functions that return arrays
+        # return dictionary values!
+        with description('noise only in dirty_vector'):
+            pass
+
+        with description('signal with noise in dirty_vector'):
+            pass
+
+        with description('signal without noise in dirty_vector'):
+            pass
+
     with description('#__calculate_complex_amplitude'):
         with before.all:
             self.expected_value = self.complex_amplitude
@@ -115,7 +126,7 @@ with description(itr.Iterator) as self:
                 self.actual_vector.shape
             ).to(equal(self.initial_vector.shape))
 
-    with description('#___extract_data_from_dirty_vector'):
+    with description('#__extract_data_from_dirty_vector'):
         with before.all:
             self.expected_vector =  np.load(
                 "./spec/fixtures/dirty_vector_with_extracted_data.pickle"
