@@ -33,9 +33,14 @@ class Iterator(object):
             if not result:
                 break
             else:
-                dirty_vector, super_resultion_vector = result
+                dirty_vector = result['dirty_vector']
+                super_resultion_vector = result['super_resultion_vector']
                 current_step += 1
-        return super_resultion_vector, current_step
+        result = {
+            'super_resultion_vector': super_resultion_vector,
+            'iterations': current_step
+        }
+        return result
 
     def __calculate_complex_amplitude(self, dirty_vector, max_count_index, max_count_value):
         """eq 154 ref 2"""
@@ -79,28 +84,36 @@ class Iterator(object):
             dirty_subvector_wo_zero, method_flag='argmax'
         )[0] + 1
         max_count_value = dirty_subvector_wo_zero[max_count_index - 1][0]
-        return max_count_index, max_count_value
+        result = {
+            'index': max_count_index,
+            'value': max_count_value
+        }
+        return result
 
     def __one_step(self, old_super_resultion_vector, old_dirty_vector):
         """one step of the iteration process"""
-        max_count_index, max_count_value = self.__get_max_count_index_and_value(old_dirty_vector)
-        if sch.squared_abs(max_count_value) >= self.__normalized_detection_treshold:
+        max_count_index_and_value = self.__get_max_count_index_and_value(old_dirty_vector)
+        if sch.squared_abs(max_count_index_and_value['value']) >= self.__normalized_detection_treshold:
             # eq 154 ref 2
             complex_amplitude = self.__calculate_complex_amplitude(
                 old_dirty_vector,
-                max_count_index,
-                max_count_value
+                max_count_index_and_value['index'],
+                max_count_index_and_value['value']
             )
             dirty_vector = self.__extract_data_from_dirty_vector(
                 old_dirty_vector,
-                max_count_index,
+                max_count_index_and_value['index'],
                 complex_amplitude
             )
             super_resultion_vector = self.__add_data_to_super_resultion_vector(
                 old_super_resultion_vector,
-                max_count_index,
+                max_count_index_and_value['index'],
                 complex_amplitude
             )
-            return dirty_vector, super_resultion_vector
+            result = {
+                'dirty_vector': dirty_vector,
+                'super_resultion_vector': super_resultion_vector
+            }
+            return result
         else:
             return None

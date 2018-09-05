@@ -16,16 +16,12 @@ def clean(time_grid, values, khi, treshold, max_iterations, harmonic_share, use_
         time_grid, values, max_freq
     )
 
-    super_resultion_vector, iterations = iterator.iterate(max_iterations)
+    iterations_result = iterator.iterate(max_iterations)
     restorer = rst.Restorer(
-        super_resultion_vector, iterations,
+        iterations_result['super_resultion_vector'], iterations_result['iterations'],
         number_of_freq_estimations, time_grid, max_freq
     )
-    if iterations != 0:
-       uniform_time_grid = restorer.uniform_time_grid
-       freq_vector = restorer.freq_vector
-       freqs, amplitudes, phases = restorer.restore_fap()
-       clean_spectrum, correlogram, uniform_series = restorer.restore_ccs()
-       return iterations, uniform_time_grid, clean_spectrum, correlogram, uniform_series, freq_vector, freqs, amplitudes, phases
-    else:
-        return None
+
+    restoration_result = restorer.restore()
+
+    return restoration_result

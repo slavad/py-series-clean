@@ -10,43 +10,64 @@ class Restorer(object):
             self.__super_resultion_vector = super_resultion_vector
             self.__number_of_freq_estimations = number_of_freq_estimations
             self.__max_freq = max_freq
-            self.uniform_time_grid = self.__build_uniform_time_grid(time_grid)
+            self.__uniform_time_grid = self.__build_uniform_time_grid(time_grid)
             self.__index_vector = mb.generate_index_vector(
                 mb.size_of_spectrum_vector(self.__number_of_freq_estimations)
             )
-            self.freq_vector = mb.generate_freq_vector(
+            self.__freq_vector = mb.generate_freq_vector(
                 self.__index_vector, self.__max_freq, self.__number_of_freq_estimations
             )
             self.__clean_window_vector = self.__build_clean_window_vector()
 
-    #TODO: replace the following methods
-    # with one method that returns all needed values as a dictionary
-    def restore_ccs(self):
-        """restores clean spectrum, algorithm steps 18 to 21 ref 2"""
+
+    def restore(self):
+        """restores spectrum and series"""
         # if nothing was detected:
         if self.__iterations == 0:
             return None
         else:
-            clean_spectrum = self.__build_clean_spectrum()
-            correlogram = self.__build_correlogram(clean_spectrum)
-            uniform_series = self.__build_uniform_series(clean_spectrum)
-            return clean_spectrum, correlogram, uniform_series
+            ccs_restoration_result = self.__restore_ccs()
+            fap_restoration_result = self.__restore_fap()
+            result = {
+                'freq_vector': self.__freq_vector,
+                'uniform_time_grid': self.__uniform_time_grid,
+                'iterations': self.__iterations
+            }
 
-    def restore_fap(self):
+            result.update(ccs_restoration_result)
+            result.update(fap_restoration_result)
+
+            return result
+
+    def __restore_ccs(self):
+        """restores clean spectrum, algorithm steps 18 to 21 ref 2"""
+        clean_spectrum = self.__build_clean_spectrum()
+        correlogram = self.__build_correlogram(clean_spectrum)
+        uniform_series = self.__build_uniform_series(clean_spectrum)
+        result = {
+            'clean_spectrum': clean_spectrum,
+            'correlogram': correlogram,
+            'uniform_series': uniform_series
+        }
+        return result
+
+    def __restore_fap(self):
         """req 143 and 144 ref 2"""
-        if self.__iterations == 0:
-            return None
-        else:
-            non_zeroes = np.extract(np.abs(self.__super_resultion_vector) != 0, self.__super_resultion_vector)
-            freqs = np.extract(np.abs(self.__super_resultion_vector) != 0, self.freq_vector)
-            amplitudes = 2*np.abs(non_zeroes)
-            phases = np.arctan2(np.imag(non_zeroes),np.real(non_zeroes))
-            return freqs.reshape(-1,1), amplitudes.reshape(-1,1), phases.reshape(-1,1)
+        non_zeroes = np.extract(np.abs(self.__super_resultion_vector) != 0, self.__super_resultion_vector)
+        freqs = np.extract(np.abs(self.__super_resultion_vector) != 0, self.__freq_vector)
+        amplitudes = 2*np.abs(non_zeroes)
+        phases = np.arctan2(np.imag(non_zeroes),np.real(non_zeroes))
+        result = {
+            'frequencies': freqs.reshape(-1,1),
+            'amplitudes': amplitudes.reshape(-1,1),
+            'phases': phases.reshape(-1,1)
+        }
+        return result
 
     def __build_clean_window_vector(self):
         """eq 157 ref 2"""
         clean_window_vector = mb.calculate_window_vector(
-            self.uniform_time_grid, self.__number_of_freq_estimations, self.__max_freq
+            self.__uniform_time_grid, self.__number_of_freq_estimations, self.__max_freq
         )
         return clean_window_vector
 
@@ -91,6 +112,6 @@ class Restorer(object):
     def __build_correlogram_or_uniform_series(self, values):
         """eq 160 and 161 ref 2"""
         result = mb.run_ft(
-            self.uniform_time_grid, values, self.freq_vector, self.__number_of_freq_estimations, 'inverse'
+            self.__uniform_time_grid, values, self.__freq_vector, self.__number_of_freq_estimations, 'inverse'
         )
         return result

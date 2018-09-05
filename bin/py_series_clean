@@ -79,19 +79,19 @@ def parse_args():
 def save_results(restoration_result, args):
     """saves restoration results"""
     if restoration_result:
-        iterations, uniform_time_grid, clean_spectrum, correlogram, uniform_series, freq_vector,freqs,amplitudes, phases = restoration_result
-        frw.save_series(uniform_time_grid, correlogram, args.c, 'complex')
-        frw.save_series(uniform_time_grid, uniform_series, args.s, 'complex')
-        frw.save_series(freq_vector, clean_spectrum, args.p, 'complex')
-        frw.save_harmonics(freqs, amplitudes, phases, args.a)
+        iterations = restoration_result['iterations']
+        frw.save_series(restoration_result['uniform_time_grid'], restoration_result['correlogram'], args.c, 'complex')
+        frw.save_series(restoration_result['uniform_time_grid'], restoration_result['uniform_series'], args.s, 'complex')
+        frw.save_series(restoration_result['freq_vector'], restoration_result['clean_spectrum'], args.p, 'complex')
+        frw.save_harmonics(restoration_result['frequencies'], restoration_result['amplitudes'], restoration_result['phases'], args.a)
     else:
-        iterations = 0
+        iterations = None
     save_summary(args, iterations)
 
 def save_summary(args, iterations):
     """writes summary to the output file"""
     file = open(args.o, "w")
-    if iterations == 0:
+    if not iterations:
         print('No harmonical components found', file=file)
     if iterations == args.r:
         print('Iterations did not converge, iterations where stopped because they reached the maximum number of iterations', file=file)
@@ -107,8 +107,8 @@ def save_summary(args, iterations):
     print('harmonics file: {}:'.format(args.a), file=file)
     print('summary file: {}:'.format(args.o), file=file)
     print('Output:', file=file)
-    if iterations == 0:
-        print('None')
+    if not iterations:
+        print('None', file=file)
     else:
         print('number of iterations: {}'.format(iterations), file=file)
     file.close()

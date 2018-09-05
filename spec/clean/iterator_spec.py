@@ -161,9 +161,11 @@ with description(itr.Iterator) as self:
             self.expected_max_count_index = 1
 
         with before.each:
-            self.actual_max_count_index, self.actual_max_count_value = self.iterator._Iterator__get_max_count_index_and_value(
+            index_and_max_count_value = self.iterator._Iterator__get_max_count_index_and_value(
                 self.old_dirty_vector
             )
+            self.actual_max_count_index = index_and_max_count_value['index']
+            self.actual_max_count_value = index_and_max_count_value['value']
             self.index_shift = 3
             self.expected_max_count_value = self.old_dirty_vector[self.expected_max_count_index + self.index_shift][0]
 
@@ -256,12 +258,11 @@ with description(itr.Iterator) as self:
                 )
                 self.old_dirty_vector = self.dirty_vector
             with before.each:
-                (
-                    self.actual_dirty_vector_with_extracted_data,
-                    self.actual_super_resultion_vector_with_added_data
-                ) = self.iterator._Iterator__one_step(
+                one_step_result = self.iterator._Iterator__one_step(
                     self.old_super_resultion_vector, self.old_dirty_vector
                 )
+                self.actual_dirty_vector_with_extracted_data = one_step_result['dirty_vector']
+                self.actual_super_resultion_vector_with_added_data = one_step_result['super_resultion_vector']
             with description('super resolution vector'):
                 with before.each:
                     self.initial_vector = self.old_super_resultion_vector
