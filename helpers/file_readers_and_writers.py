@@ -16,29 +16,29 @@ def read_file(file_path):
     }
     return result
 
-def save_series(series, file_path, flag):
+def save_series(time_grid, values, file_path, flag):
     """save series to the file """
-    length = series[0].shape[0]
+    length = time_grid.shape[0]
     file = open(file_path, "w")
     for i in range(0, length):
         # time and value
         if flag == 'real':
-            string = '%e %e' % (series[0][i][0], np.real(series[1][i][0]))
+            string = '%e %e' % (time_grid[i][0], np.real(values[i][0]))
         elif flag == 'complex':
-            string = '%e %e %ei' % (series[0][i][0], np.real(series[1][i][0]), np.imag(series[1][i][0]))
+            string = '%e %e %ei' % (time_grid[i][0], np.real(values[i][0]), np.imag(values[i][0]))
         elif flag == 'abs':
-            string = '%e %e' % (series[0][i][0], np.abs(series[1][i][0]))
+            string = '%e %e' % (time_grid[i][0], np.abs(values[i][0]))
         else:
             raise ValueError("unknown flag")
         print(string, file=file)
     file.close
 
-def save_harmonics(harmonics, file_path):
+def save_harmonics(freqs, amplitudes, phases, file_path):
     """save harmonics to the file """
-    length = harmonics[0].shape[0]
+    length = freqs.shape[0]
     file = open(file_path, "w")
     for i in range(0, length):
         # linear freq, amplitude, phase
-        string = '%e %e %e' % (harmonics[0][i][0], harmonics[1][i][0], harmonics[2][i][0])
+        string = '%e %e %e' % (freqs[i][0], amplitudes[i][0], phases[i][0])
         print(string, file=file)
     file.close

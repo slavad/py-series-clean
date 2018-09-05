@@ -79,7 +79,7 @@ def generate_series(args):
 def main():
     """entry point"""
     args = parse_args()
-    series = generate_series(args)
-    frw.save_series(series, args.o, 'real')
+    time_grid_and_values = generate_series(args)
+    frw.save_series(time_grid_and_values['time_grid'], time_grid_and_values['values'], args.o, 'real')
 
 main()

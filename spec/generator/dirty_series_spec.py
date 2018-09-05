@@ -75,8 +75,8 @@ with description(ds.DirtySeries) as self:
     with description('#generate'):
         with before.each:
             self.result = self.generator.generate()
-            self.time_grid = self.result[0]
-            self.dirty_periodical_series = self.result[1]
+            self.time_grid = self.result['time_grid']
+            self.dirty_periodical_series = self.result['values']
             self.clean_periodical_series = self.generator._DirtySeries__generate_periodical_series(
                 self.time_grid
             )
@@ -108,7 +108,7 @@ with description(ds.DirtySeries) as self:
             )
 
         with it('always generates different time grid'):
-            new_time_grid = self.generator.generate()[0]
+            new_time_grid = self.generator.generate()['time_grid']
             expect(
                 self.time_grid
             ).not_to(

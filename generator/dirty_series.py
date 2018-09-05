@@ -16,8 +16,12 @@ class DirtySeries(object):
 
     def generate(self):
         time_grid = self.__generate_random_time_grid()
-        series = self.__generate_dirty_periodical_series(time_grid)
-        return time_grid, series
+        values = self.__generate_dirty_periodical_series(time_grid)
+        reslut = {
+            'time_grid': time_grid,
+            'values': values
+        }
+        return reslut
 
     def __check_and_reshape_arguments(self, frequencies, amplitudes, phases):
         """reshapes arguments and check their shape"""

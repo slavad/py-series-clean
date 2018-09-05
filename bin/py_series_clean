@@ -80,10 +80,10 @@ def save_results(restoration_result, args):
     """saves restoration results"""
     if restoration_result:
         iterations, uniform_time_grid, clean_spectrum, correlogram, uniform_series, freq_vector,freqs,amplitudes, phases = restoration_result
-        frw.save_series([uniform_time_grid, correlogram], args.c, 'complex')
-        frw.save_series([uniform_time_grid, uniform_series], args.s, 'complex')
-        frw.save_series([freq_vector, clean_spectrum], args.p, 'complex')
-        frw.save_harmonics([freqs, amplitudes, phases], args.a)
+        frw.save_series(uniform_time_grid, correlogram, args.c, 'complex')
+        frw.save_series(uniform_time_grid, uniform_series, args.s, 'complex')
+        frw.save_series(freq_vector, clean_spectrum, args.p, 'complex')
+        frw.save_harmonics(freqs, amplitudes, phases, args.a)
     else:
         iterations = 0
     save_summary(args, iterations)
