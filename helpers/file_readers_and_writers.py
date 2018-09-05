@@ -10,7 +10,11 @@ def read_file(file_path):
             time_grid.append(result[0])
             values.append(result[1])
             line = file.readline()
-    return np.array(time_grid).reshape(-1,1), np.array(values).reshape(-1,1)
+    result = {
+        'time_grid': np.array(time_grid).reshape(-1,1),
+        'values': np.array(values).reshape(-1,1)
+    }
+    return result
 
 def save_series(series, file_path, flag):
     """save series to the file """

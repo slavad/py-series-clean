@@ -5,10 +5,10 @@ import clean.schuster as sch
 class Threshold(object):
     """estimate treshold for the given params"""
 
-    def __init__(self, time_grid_and_values, sigma, khi, use_aver):
+    def __init__(self, time_grid, values, sigma, khi, use_aver):
         """estimate treshold for the given params"""
-        self.__time_grid = time_grid_and_values[0]
-        self.__values = time_grid_and_values[1]
+        self.__time_grid = time_grid
+        self.__values = values
         self.__sigma = sigma
         max_freq = mb.estimate_max_freq(self.__time_grid, use_aver)
         self.__number_of_freq_estimations = mb.calculate_estimations_vector_size(

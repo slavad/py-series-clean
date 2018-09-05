@@ -8,10 +8,10 @@ class DirtySeries(object):
         # all args should be in the same units: e.g. secs
         # can be both scalars or vectors, but the must be of
         # the same shape: (n,1)
-        new_frequencies, new_amplitudes, new_phases = self.__check_and_reshape_arguments(frequencies, amplitudes, phases)
-        self.__frequnecies = new_frequencies
-        self.__amplitudes = new_amplitudes
-        self.__phases = new_phases
+        reshaping_result = self.__check_and_reshape_arguments(frequencies, amplitudes, phases)
+        self.__frequnecies = reshaping_result['frequencies']
+        self.__amplitudes = reshaping_result['amplitudes']
+        self.__phases = reshaping_result['phases']
         self.__sigma = sigma
 
     def generate(self):
@@ -27,7 +27,12 @@ class DirtySeries(object):
         if (new_phases.shape != new_amplitudes.shape) or (new_frequencies.shape != new_phases.shape):
             raise ValueError("frequencies, amplitudes and phases must be scalars or must have the same shape")
         else:
-            return new_frequencies, new_amplitudes, new_phases
+            result = {
+                'frequencies': new_frequencies,
+                'amplitudes': new_amplitudes,
+                'phases': new_phases
+            }
+            return result
 
     def __reshape_one_value(self, value):
         """converting to vectors if needed and reshaping"""

@@ -3,10 +3,8 @@ import clean.matrix_builder as mb
 import clean.iterator as itr
 import clean.restorer as rst
 
-def clean(time_grid_and_values, khi, treshold, max_iterations, harmonic_share, use_aver):
+def clean(time_grid, values, khi, treshold, max_iterations, harmonic_share, use_aver):
     """do clean"""
-    time_grid = time_grid_and_values[0]
-    values = time_grid_and_values[1]
     max_freq = mb.estimate_max_freq(time_grid, use_aver)
     number_of_freq_estimations = mb.calculate_estimations_vector_size(
         max_freq, time_grid, khi

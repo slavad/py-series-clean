@@ -3,28 +3,24 @@ import clean.threshold as thrs
 
 with description(thrs.Threshold) as self:
     with before.all:
-        self.time_grid_and_values = (
-            np.load("./spec/fixtures/time_grid_1.pickle"),
-            np.load("./spec/fixtures/series_1.pickle")
-        )
         self.sigma = 2.5
         self.khi = 4
         self.number_of_random_series = 1000
-        self.time_grid = self.time_grid_and_values[0]
-        self.values = self.time_grid_and_values[1]
+        self.time_grid = np.load("./spec/fixtures/time_grid_1.pickle")
+        self.values = np.load("./spec/fixtures/series_1.pickle")
         self.max_attemtps = 10
     with before.each:
-        self.estimator = thrs.Threshold(self.time_grid_and_values, self.sigma, self.khi, self.use_aver)
+        self.estimator = thrs.Threshold(self.time_grid, self.values, self.sigma, self.khi, self.use_aver)
     with shared_context('object values setter'):
         with it('sets all values'):
             expect(
-                self.time_grid_and_values[0]
+                self.time_grid
 
             ).to(
                 equal_ndarray(self.estimator._Threshold__time_grid)
             )
             expect(
-                self.time_grid_and_values[1]
+                self.values
             ).to(
                 equal_ndarray(self.estimator._Threshold__values)
             )
@@ -39,7 +35,7 @@ with description(thrs.Threshold) as self:
                 self.number_of_random_series
             )
         with it('generates array with correct shape'):
-            expected_shape = (self.time_grid_and_values[0].shape[0], self.number_of_random_series)
+            expected_shape = (self.time_grid.shape[0], self.number_of_random_series)
             expect(self.random_series_array.shape).to(
                 equal(expected_shape)
             )

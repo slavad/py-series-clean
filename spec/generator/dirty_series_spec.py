@@ -127,19 +127,19 @@ with description(ds.DirtySeries) as self:
                     self.old_amp = 2
                     self.old_phase = 3
                 with it('returns matrices'):
-                    freq, amp, phase = self.action()
+                    reshaping_result = self.action()
                     expect(
-                        freq
+                        reshaping_result['frequencies']
                     ).to(
                         equal(np.array([[1]]))
                     )
                     expect(
-                        amp
+                        reshaping_result['amplitudes']
                     ).to(
                         equal(np.array([[2]]))
                     )
                     expect(
-                        phase
+                        reshaping_result['phases']
                     ).to(
                         equal(np.array([[3]]))
                     )
@@ -150,45 +150,44 @@ with description(ds.DirtySeries) as self:
                     self.old_amp = np.array([0.4, 0.6])
                     self.old_phase = np.array([4, 6])
                 with it('returns reshaped matrices'):
-                    freq, amp, phase = self.action()
+                    reshaping_result = self.action()
                     expect(
-                        freq
+                        reshaping_result['frequencies']
                     ).to(
                         equal_ndarray(np.array([[3],[2]]))
                     )
                     expect(
-                        amp
+                        reshaping_result['amplitudes']
                     ).to(
                         equal_ndarray(np.array([[0.4],[0.6]]))
                     )
                     expect(
-                        phase
+                        reshaping_result['phases']
                     ).to(
                         equal_ndarray(np.array([[4],[6]]))
                     )
             with description('one scalar, other are vectors of size 1'):
+                with before.all:
+                    self.old_freq = 1
+                    self.old_amp = np.array([2])
+                    self.old_phase = np.array([3])
                 with it('returns matrices'):
-                    with before.all:
-                        self.old_freq = 1
-                        self.old_amp = np.array([2])
-                        self.old_phase = np.array([3])
-                    with it('returns matrices'):
-                        freq, amp, phase = self.action()
-                        expect(
-                            freq
-                        ).to(
-                            equal(np.array([[1]]))
-                        )
-                        expect(
-                            amp
-                        ).to(
-                            equal(np.array([[2]]))
-                        )
-                        expect(
-                            phase
-                        ).to(
-                            equal(np.array([[3]]))
-                        )
+                    reshaping_result = self.action()
+                    expect(
+                        reshaping_result['frequencies']
+                    ).to(
+                        equal(np.array([[1]]))
+                    )
+                    expect(
+                        reshaping_result['amplitudes']
+                    ).to(
+                        equal(np.array([[2]]))
+                    )
+                    expect(
+                        reshaping_result['phases']
+                    ).to(
+                        equal(np.array([[3]]))
+                    )
 
         with description('inputs are not valid'):
             with description('one scalar, other are vectors of size > 2'):
