@@ -5,14 +5,11 @@ import clean.schuster as sch
 
 with description(itr.Iterator) as self:
     with before.all:
-        self.time_grid_and_values = (
-            np.load("./spec/fixtures/time_grid_1.pickle"),
-            np.load("./spec/fixtures/series_1.pickle")
-        )
-        self.time_grid = self.time_grid_and_values[0]
-        self.values = self.time_grid_and_values[1]
+        self.time_grid = np.load("./spec/fixtures/time_grid_1.pickle")
+        self.values = np.load("./spec/fixtures/series_1.pickle")
         self.khi = 4
-        self.use_aver = False # TODO: test with true later
+        self.use_aver = False
+        # use_aver = False only changes max_freq value, so no need to test with it here
         self.max_freq = mb.estimate_max_freq(self.time_grid, self.use_aver)
         self.number_of_freq_estimations = mb.calculate_estimations_vector_size(
             self.max_freq, self.time_grid, self.khi
@@ -88,16 +85,86 @@ with description(itr.Iterator) as self:
             )
 
     with description('iterate'):
-        # TODO: modify functions that return arrays
-        # return dictionary values!
+        with shared_context('max value checker'):
+            with it('super_resultion_vector contains non-zero values'):
+                expect(self.max_value_abs).to(
+                    be_above(0.0)
+                )
+
+        with shared_context('iterations result checker'):
+            with it('contains correct key list'):
+                expect(
+                    set(self.actual_iteration_result.keys())
+                ).to(equal(self.expected_key_list))
+
+            with it('contains correct iterations count'):
+                expect(
+                    self.actual_iteration_result['iterations']
+                ).to(equal(self.expected_iterations))
+
+            with it('returns correct super_resultion_vector value'):
+                expect(
+                    self.actual_iteration_result['super_resultion_vector']
+                ).to(equal_ndarray(self.expected_super_resultion_vector))
+
+        with before.all:
+            self.values = np.load("./spec/fixtures/series_1.pickle")
+            self.expected_key_list = {'super_resultion_vector', 'iterations'}
+
+        with before.each:
+            self.actual_iteration_result = self.iterator.iterate(self.max_iterations)
+            self.max_value_abs = np.max(
+                np.abs(self.actual_iteration_result['super_resultion_vector'])
+            )
+
         with description('noise only in dirty_vector'):
-            pass
+            with before.all:
+                self.max_iterations = 10
+                self.expected_iterations = 4
+                self.expected_super_resultion_vector = np.load('./spec/fixtures/super_resultion_vector_with_result_1.pickle')
 
-        with description('signal with noise in dirty_vector'):
-            pass
+            with included_context('max value checker'):
+                pass
 
-        with description('signal without noise in dirty_vector'):
-            pass
+            with included_context('iterations result checker'):
+                pass
+
+
+        with description('itereations do not converge, because max_iterations is too small'):
+            with before.all:
+                self.max_iterations = 3
+                self.expected_iterations = 3
+                self.expected_super_resultion_vector_converged = np.load('./spec/fixtures/super_resultion_vector_with_result_1.pickle')
+                self.expected_super_resultion_vector = np.load('./spec/fixtures/super_resultion_vector_with_result_2.pickle')
+
+            with included_context('max value checker'):
+                pass
+
+            with included_context('iterations result checker'):
+                pass
+
+            with it('converged vector is not equal to expected_super_resultion_vector'):
+                expect(
+                    self.actual_iteration_result['super_resultion_vector']
+                ).not_to(equal_ndarray(self.expected_super_resultion_vector_converged))
+
+        with description('signal with noise only in dirty_vector'):
+            with before.all:
+                self.values = np.random.normal(loc=0.0, scale=1, size=100).reshape(-1, 1)
+                self.max_iterations = 10
+                self.expected_iterations = 0
+                # self.expected_super_resultion_vector = np.load('./spec/fixtures/super_resultion_vector_with_result_3.pickle')
+
+            # with it('super_resultion_vector contains zero values'):
+            #     expect(self.max_value_abs).to(
+            #         equal(0.0)
+            #     )
+            #
+            # with included_context('iterations result checker'):
+            #     pass
+        #
+        # with description('signal without noise in dirty_vector'):
+        #     pass
 
     with description('#__calculate_complex_amplitude'):
         with before.all:
