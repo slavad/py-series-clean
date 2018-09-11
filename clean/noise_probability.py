@@ -2,11 +2,11 @@ from helpers.common_imports import *
 import clean.matrix_builder as mb
 import clean.schuster as sch
 
-class Threshold(object):
-    """estimate treshold for the given params"""
+class NoiseProbability(object):
+    """estimate noise probability for the given params"""
 
     def __init__(self, time_grid, values, sigma, khi, use_aver):
-        """estimate treshold for the given params"""
+        """estimate noise probability for the given params"""
         self.__time_grid = time_grid
         self.__values = values
         self.__sigma = sigma
@@ -16,12 +16,12 @@ class Threshold(object):
         )
 
     def estimate(self, number_of_random_series):
-        """estimates the treshold"""
+        """estimates the noise probability"""
         random_series = self.__generate_random_series(number_of_random_series)
-        threshold = self.__find_max_counts_and_relation(
+        probability = self.__find_probability(
             random_series, self.__values
         )
-        return threshold
+        return probability
 
     def __generate_random_series(self, number_of_random_series):
         """generates an array of random normal values (time_grid_len,number_of_series)"""
@@ -29,7 +29,7 @@ class Threshold(object):
         result = np.random.normal(loc=0.0, scale=self.__sigma, size=(time_grid_len, number_of_random_series))
         return result
 
-    def __find_max_counts_and_relation(self, random_series, values):
+    def __find_probability(self, random_series, values):
         """
             Finds the number of maximun counts in the
             Schuster periodorgrams for the random series
@@ -46,5 +46,4 @@ class Threshold(object):
         count_of_items = ids_list[0].shape[0]
         # the probabilty that the examined series contain noise only:
         relation = count_of_items/number_of_random_series
-        # the probabilty that the examined series contain also signal:
-        return 1 - relation
+        return relation

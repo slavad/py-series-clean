@@ -8,13 +8,13 @@ import helpers.input_validators as iv
 import helpers.constants as constants
 from helpers.common_imports import *
 
-ADDITIONAL_HELP = 'iterations stop if the number of maximum iterations is exceeded or the series do not contain signal at the given treshold'
+ADDITIONAL_HELP = 'iterations stop if the number of maximum iterations is exceeded or the series do not contain signal at the given noise probabilty'
 
 def check_share(value):
     """checks value that should be 0<x<=1"""
     number = iv.check_positive_float(value)
-    if number <= 0 or number > 1:
-        raise argparse.ArgumentTypeError("value must be > 0 and <= 1, but your's is %s" % value)
+    if number < 0 or number > 1:
+        raise argparse.ArgumentTypeError("value must be >= 0 and <= 1, but your's is %s" % value)
     return number
 
 def parse_args():
@@ -22,10 +22,10 @@ def parse_args():
     parser = argparse.ArgumentParser(description=descr)
     ap.parse_common_series_args(parser)
     parser.add_argument(
-        '-t',
+        '-q',
         required = True,
-        help = 'detection treshold (aka X_q), see eq 48 and 152 in ref 2, can be esitmated using estimate_treshold script {}'.format(ADDITIONAL_HELP),
-        metavar ='TRESHOLD',
+        help = 'detection noise probabilty (aka q), see eq 105 and 152 in ref 2, can be esitmated using estimate_noise_probability script {}'.format(ADDITIONAL_HELP),
+        metavar ='NOISE_PROBABILITY',
         type = check_share
     )
     parser.add_argument(
@@ -97,7 +97,7 @@ def save_summary(args, iterations):
         print('Iterations did not converge, iterations where stopped because they reached the maximum number of iterations', file=file)
     print('Input params:', file=file)
     print('khi: {}:'.format(args.k), file=file)
-    print('treshold: {}:'.format(args.t), file=file)
+    print('noise probability: {}:'.format(args.q), file=file)
     print('max iterations: {}:'.format(args.r), file=file)
     print('harmonic share: {}:'.format(args.g), file=file)
     print('dirty series file: {}:'.format(args.i), file=file)
@@ -117,7 +117,7 @@ def main():
     """entry point"""
     args = parse_args()
     time_grid_and_values = frw.read_file(args.i)
-    restoration_result = pscc.clean(time_grid_and_values['time_grid'], time_grid_and_values['values'], args.k, args.t, args.r, args.g, args.u)
+    restoration_result = pscc.clean(time_grid_and_values['time_grid'], time_grid_and_values['values'], args.k, args.q, args.r, args.g, args.u)
     save_results(restoration_result, args)
 
 main()

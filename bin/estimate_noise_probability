@@ -2,7 +2,7 @@
 
 import argparse
 from helpers.common_imports import *
-import clean.threshold as thrs
+import clean.noise_probability as noise_prob
 import helpers.input_validators as iv
 import helpers.argument_parsers as ap
 import helpers.file_readers_and_writers as frw
@@ -10,7 +10,7 @@ import helpers.file_readers_and_writers as frw
 HELP_FOR_SERIES_LENGTH = "RANDOM_SERIES_LENGTH must be >> lenght of the input time series"
 
 def parse_args():
-    descr = 'Estimates treshold (X_q) used in eq 152 ref 2'
+    descr = 'Estimates noise probability (q) used in eq 105 ref 2'
     parser = argparse.ArgumentParser(description=descr)
     ap.parse_common_series_args(parser)
     parser.add_argument(
@@ -36,7 +36,7 @@ def parse_args():
     args = parser.parse_args()
     return args
 
-def write_result(args, threshold):
+def write_result(args, noise_probability):
     """writes results to the output file"""
     file = open(args.o, "w")
     print('Input params:', file=file)
@@ -46,7 +46,7 @@ def write_result(args, threshold):
     print('khi scaling factor: %i:' % args.k, file=file)
     print('sigma: %e:' % args.s, file=file)
     print('Output:', file=file)
-    print('treshold (aka X_q in eq 152 ref 2): %e:' % threshold, file=file)
+    print('noise probability (aka q in eq 105 ref 2): %e' % noise_probability, file=file)
     file.close
 
 def main():
@@ -56,9 +56,9 @@ def main():
     time_grid_and_values = frw.read_file(args.i)
     if time_grid_and_values['time_grid'].shape[1] >= args.r:
         raise ValueError(HELP_FOR_SERIES_LENGTH)
-    estimator = thrs.Threshold(time_grid_and_values['time_grid'], time_grid_and_values['values'], args.s, args.k, args.u)
-    threshold = estimator.estimate(args.r)
-    write_result(args, threshold)
+    estimator = noise_prob.NoiseProbability(time_grid_and_values['time_grid'], time_grid_and_values['values'], args.s, args.k, args.u)
+    noise_probability = estimator.estimate(args.r)
+    write_result(args, noise_probability)
     print('done'.format(args.o))
     print('output is written to {}'.format(args.o))
 main()

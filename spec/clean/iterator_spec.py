@@ -14,7 +14,7 @@ with description(itr.Iterator) as self:
         self.number_of_freq_estimations = mb.calculate_estimations_vector_size(
             self.max_freq, self.time_grid, self.khi
         )
-        self.treshold = 0.8
+        self.noise_probability = 0.2
         self.harmonic_share = 0.5
 
         self.dirty_vector = mb.calculate_dirty_vector(
@@ -36,7 +36,7 @@ with description(itr.Iterator) as self:
 
     with before.each:
         self.iterator = itr.Iterator(
-            self.treshold,
+            self.noise_probability,
             self.harmonic_share, self.number_of_freq_estimations,
             self.time_grid, self.values, self.max_freq
         )
@@ -74,9 +74,9 @@ with description(itr.Iterator) as self:
                 equal_ndarray(self.iterator._Iterator__dirty_vector)
             )
             expect(
-                sch.calc_schuster_counts(self.dirty_vector[self.number_of_freq_estimations:], method_flag='average')[0]*self.treshold
+                sch.calc_schuster_counts(self.dirty_vector[self.number_of_freq_estimations:], method_flag='average')[0]*(1.0 - self.noise_probability)
             ).to(
-                equal(self.iterator._Iterator__normalized_detection_treshold)
+                equal(self.iterator._Iterator__normalized_detection_threshold)
             )
             expect(
                 self.window_vector
@@ -151,6 +151,7 @@ with description(itr.Iterator) as self:
         with description('signal with noise only in dirty_vector'):
             with before.all:
                 self.values = np.random.normal(loc=0.0, scale=1, size=100).reshape(-1, 1)
+                self.noise_probability = 0
                 self.max_iterations = 10
                 self.expected_iterations = 0
                 # self.expected_super_resultion_vector = np.load('./spec/fixtures/super_resultion_vector_with_result_3.pickle')

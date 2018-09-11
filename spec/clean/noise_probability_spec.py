@@ -1,7 +1,7 @@
 from spec.spec_helper import *
-import clean.threshold as thrs
+import clean.noise_probability as noise_prob
 
-with description(thrs.Threshold) as self:
+with description(noise_prob.NoiseProbability) as self:
     with before.all:
         self.sigma = 2.5
         self.khi = 4
@@ -10,28 +10,28 @@ with description(thrs.Threshold) as self:
         self.values = np.load("./spec/fixtures/series_1.pickle")
         self.max_attemtps = 10
     with before.each:
-        self.estimator = thrs.Threshold(self.time_grid, self.values, self.sigma, self.khi, self.use_aver)
+        self.estimator = noise_prob.NoiseProbability(self.time_grid, self.values, self.sigma, self.khi, self.use_aver)
     with shared_context('object values setter'):
         with it('sets all values'):
             expect(
                 self.time_grid
 
             ).to(
-                equal_ndarray(self.estimator._Threshold__time_grid)
+                equal_ndarray(self.estimator._NoiseProbability__time_grid)
             )
             expect(
                 self.values
             ).to(
-                equal_ndarray(self.estimator._Threshold__values)
+                equal_ndarray(self.estimator._NoiseProbability__values)
             )
             expect(
                 self.sigma
             ).to(
-                equal(self.estimator._Threshold__sigma)
+                equal(self.estimator._NoiseProbability__sigma)
             )
     with shared_context('random series generator'):
         with before.each:
-            self.random_series_array = self.estimator._Threshold__generate_random_series(
+            self.random_series_array = self.estimator._NoiseProbability__generate_random_series(
                 self.number_of_random_series
             )
         with it('generates array with correct shape'):
@@ -40,7 +40,7 @@ with description(thrs.Threshold) as self:
                 equal(expected_shape)
             )
         with it('series are always different'):
-            new_random_series_array = self.estimator._Threshold__generate_random_series(
+            new_random_series_array = self.estimator._NoiseProbability__generate_random_series(
                 self.number_of_random_series
             )
             expect(
@@ -55,20 +55,20 @@ with description(thrs.Threshold) as self:
     with shared_context('probability generator'):
         with before.each:
             random_series_array = np.load('./spec/fixtures/random_series_array_1.pickle')
-            self.generated_probability = self.estimator._Threshold__find_max_counts_and_relation(
+            self.generated_probability = self.estimator._NoiseProbability__find_probability(
                 random_series_array, self.values
             )
-            self.expected_probability = 0.63
+            self.expected_probability = 0.37
         with it('finds correct value'):
             expect(self.generated_probability).to(equal(self.expected_probability))
 
         with it('generates differnt value with other random set'):
             for i in range(self.max_attemtps):
                 # sometimes result is not different, let's try one more time
-                random_series_array = self.estimator._Threshold__generate_random_series(
+                random_series_array = self.estimator._NoiseProbability__generate_random_series(
                     self.number_of_random_series
                 )
-                new_generated_probability = self.estimator._Threshold__find_max_counts_and_relation(
+                new_generated_probability = self.estimator._NoiseProbability__find_probability(
                     random_series_array, self.values
                 )
                 result = self.generated_probability == new_generated_probability
@@ -84,15 +84,15 @@ with description(thrs.Threshold) as self:
                 expect(
                     expected_num_of_freq_estimations
                 ).to(
-                    equal(self.estimator._Threshold__number_of_freq_estimations)
+                    equal(self.estimator._NoiseProbability__number_of_freq_estimations)
                 )
             with included_context('object values setter'):
                 pass
 
         with description('#estimate'):
             with before.all:
-                self.expected_probability_min = 0.5
-                self.expected_probability_max = 0.7
+                self.expected_probability_min = 0.3
+                self.expected_probability_max = 0.5
             with before.each:
                 self.generated_probability = self.estimator.estimate(
                     self.number_of_random_series
@@ -116,7 +116,7 @@ with description(thrs.Threshold) as self:
             with included_context('random series generator'):
                 pass
 
-        with description('#__find_max_counts_and_relation'):
+        with description('#__find_probability'):
             with included_context('probability generator'):
                 pass
 
@@ -129,7 +129,7 @@ with description(thrs.Threshold) as self:
                 expect(
                     expected_num_of_freq_estimations
                 ).to(
-                    equal(self.estimator._Threshold__number_of_freq_estimations)
+                    equal(self.estimator._NoiseProbability__number_of_freq_estimations)
                 )
             with included_context('object values setter'):
                 pass
@@ -137,6 +137,6 @@ with description(thrs.Threshold) as self:
             with included_context('random series generator'):
                 pass
 
-        with description('#__find_max_counts_and_relation'):
+        with description('#__find_probability'):
             with included_context('probability generator'):
                 pass
