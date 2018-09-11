@@ -3,7 +3,7 @@ import clean.matrix_builder as mb
 import clean.iterator as itr
 import clean.restorer as rst
 
-def clean(time_grid, values, khi, noise_probability, max_iterations, harmonic_share, use_aver):
+def clean(time_grid, values, khi, false_alarm_probability, max_iterations, harmonic_share, use_aver):
     """do clean"""
     max_freq = mb.estimate_max_freq(time_grid, use_aver)
     number_of_freq_estimations = mb.calculate_estimations_vector_size(
@@ -11,7 +11,7 @@ def clean(time_grid, values, khi, noise_probability, max_iterations, harmonic_sh
     )
 
     iterator = itr.Iterator(
-        noise_probability,
+        false_alarm_probability,
         harmonic_share, number_of_freq_estimations,
         time_grid, values, max_freq
     )

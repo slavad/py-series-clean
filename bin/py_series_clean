@@ -8,7 +8,7 @@ import helpers.input_validators as iv
 import helpers.constants as constants
 from helpers.common_imports import *
 
-ADDITIONAL_HELP = 'iterations stop if the number of maximum iterations is exceeded or the series do not contain signal at the given noise probabilty'
+ADDITIONAL_HELP = 'iterations stop if the number of maximum iterations is exceeded or the series do not contain signal at the given false alarm probability'
 
 def check_share(value):
     """checks value that should be 0<x<=1"""
@@ -24,7 +24,7 @@ def parse_args():
     parser.add_argument(
         '-q',
         required = True,
-        help = 'detection noise probabilty (aka q), see eq 105 and 152 in ref 2, can be esitmated using estimate_noise_probability script {}'.format(ADDITIONAL_HELP),
+        help = 'false alarm probability (aka q), see eq 105 and 152 in ref 2, can be esitmated using estimate_false_alarm_probability script {}'.format(ADDITIONAL_HELP),
         metavar ='NOISE_PROBABILITY',
         type = check_share
     )
@@ -97,7 +97,7 @@ def save_summary(args, iterations):
         print('Iterations did not converge, iterations where stopped because they reached the maximum number of iterations', file=file)
     print('Input params:', file=file)
     print('khi: {}:'.format(args.k), file=file)
-    print('noise probability: {}:'.format(args.q), file=file)
+    print('false alarm probability: {}:'.format(args.q), file=file)
     print('max iterations: {}:'.format(args.r), file=file)
     print('harmonic share: {}:'.format(args.g), file=file)
     print('dirty series file: {}:'.format(args.i), file=file)

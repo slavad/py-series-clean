@@ -1,7 +1,7 @@
 from spec.spec_helper import *
-import clean.noise_probability as noise_prob
+import clean.false_alarm_probability as fab
 
-with description(noise_prob.NoiseProbability) as self:
+with description(fab.FalseAlarmProbability) as self:
     with before.all:
         self.sigma = 2.5
         self.khi = 4
@@ -10,28 +10,28 @@ with description(noise_prob.NoiseProbability) as self:
         self.values = np.load("./spec/fixtures/series_1.pickle")
         self.max_attemtps = 10
     with before.each:
-        self.estimator = noise_prob.NoiseProbability(self.time_grid, self.values, self.sigma, self.khi, self.use_aver)
+        self.estimator = fab.FalseAlarmProbability(self.time_grid, self.values, self.sigma, self.khi, self.use_aver)
     with shared_context('object values setter'):
         with it('sets all values'):
             expect(
                 self.time_grid
 
             ).to(
-                equal_ndarray(self.estimator._NoiseProbability__time_grid)
+                equal_ndarray(self.estimator._FalseAlarmProbability__time_grid)
             )
             expect(
                 self.values
             ).to(
-                equal_ndarray(self.estimator._NoiseProbability__values)
+                equal_ndarray(self.estimator._FalseAlarmProbability__values)
             )
             expect(
                 self.sigma
             ).to(
-                equal(self.estimator._NoiseProbability__sigma)
+                equal(self.estimator._FalseAlarmProbability__sigma)
             )
     with shared_context('random series generator'):
         with before.each:
-            self.random_series_array = self.estimator._NoiseProbability__generate_random_series(
+            self.random_series_array = self.estimator._FalseAlarmProbability__generate_random_series(
                 self.number_of_random_series
             )
         with it('generates array with correct shape'):
@@ -40,7 +40,7 @@ with description(noise_prob.NoiseProbability) as self:
                 equal(expected_shape)
             )
         with it('series are always different'):
-            new_random_series_array = self.estimator._NoiseProbability__generate_random_series(
+            new_random_series_array = self.estimator._FalseAlarmProbability__generate_random_series(
                 self.number_of_random_series
             )
             expect(
@@ -55,7 +55,7 @@ with description(noise_prob.NoiseProbability) as self:
     with shared_context('probability generator'):
         with before.each:
             random_series_array = np.load('./spec/fixtures/random_series_array_1.pickle')
-            self.generated_probability = self.estimator._NoiseProbability__find_probability(
+            self.generated_probability = self.estimator._FalseAlarmProbability__find_probability(
                 random_series_array, self.values
             )
             self.expected_probability = 0.37
@@ -65,10 +65,10 @@ with description(noise_prob.NoiseProbability) as self:
         with it('generates differnt value with other random set'):
             for i in range(self.max_attemtps):
                 # sometimes result is not different, let's try one more time
-                random_series_array = self.estimator._NoiseProbability__generate_random_series(
+                random_series_array = self.estimator._FalseAlarmProbability__generate_random_series(
                     self.number_of_random_series
                 )
-                new_generated_probability = self.estimator._NoiseProbability__find_probability(
+                new_generated_probability = self.estimator._FalseAlarmProbability__find_probability(
                     random_series_array, self.values
                 )
                 result = self.generated_probability == new_generated_probability
@@ -84,7 +84,7 @@ with description(noise_prob.NoiseProbability) as self:
                 expect(
                     expected_num_of_freq_estimations
                 ).to(
-                    equal(self.estimator._NoiseProbability__number_of_freq_estimations)
+                    equal(self.estimator._FalseAlarmProbability__number_of_freq_estimations)
                 )
             with included_context('object values setter'):
                 pass
@@ -129,7 +129,7 @@ with description(noise_prob.NoiseProbability) as self:
                 expect(
                     expected_num_of_freq_estimations
                 ).to(
-                    equal(self.estimator._NoiseProbability__number_of_freq_estimations)
+                    equal(self.estimator._FalseAlarmProbability__number_of_freq_estimations)
                 )
             with included_context('object values setter'):
                 pass

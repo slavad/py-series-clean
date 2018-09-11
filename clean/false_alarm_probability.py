@@ -2,11 +2,11 @@ from helpers.common_imports import *
 import clean.matrix_builder as mb
 import clean.schuster as sch
 
-class NoiseProbability(object):
-    """estimate noise probability for the given params"""
+class FalseAlarmProbability(object):
+    """estimate false alarm probability for the given params"""
 
     def __init__(self, time_grid, values, sigma, khi, use_aver):
-        """estimate noise probability for the given params"""
+        """estimate false alarm probability for the given params"""
         self.__time_grid = time_grid
         self.__values = values
         self.__sigma = sigma
@@ -16,7 +16,7 @@ class NoiseProbability(object):
         )
 
     def estimate(self, number_of_random_series):
-        """estimates the noise probability"""
+        """estimates the false alarm probability"""
         random_series = self.__generate_random_series(number_of_random_series)
         probability = self.__find_probability(
             random_series, self.__values
