@@ -25,7 +25,7 @@ def parse_args():
         '-q',
         required = True,
         help = 'false alarm probability (aka q), see eq 105 and 152 in ref 2, can be esitmated using estimate_false_alarm_probability script {}'.format(ADDITIONAL_HELP),
-        metavar ='NOISE_PROBABILITY',
+        metavar ='FALSE_ALARM_PROBABILITY',
         type = check_share
     )
     parser.add_argument(
