@@ -17,6 +17,8 @@ class Iterator(object):
         dirty_subvector = self.__dirty_vector[number_of_freq_estimations:]
         schuster_count = sch.calc_schuster_counts(dirty_subvector, method_flag='average')[0]
         # eq 152 in ref 2
+        # false_alarm_probability == q
+        #FIXME: q != X_q, but in the following expression it is:
         self.__normalized_detection_threshold = schuster_count*(1.0 - false_alarm_probability)
         self.__window_vector = mb.calculate_window_vector(
             self.__time_grid, self.__number_of_freq_estimations, self.__max_freq
