@@ -26,7 +26,6 @@ setup(
        'numpy>=1.14.0<1.15.0'
     ],
     scripts=[
-        'bin/estimate_false_alarm_probability',
         'bin/generate_test_series',
         'bin/py_series_clean'
     ],

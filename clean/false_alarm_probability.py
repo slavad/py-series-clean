@@ -30,6 +30,8 @@ class FalseAlarmProbability(object):
         return result
 
     def __find_probability(self, random_series, values):
+        #FIXME: q is unput and D_q is output, but here all is vise versa!
+        # we input q and get D_q as output. Get rid of estimate_false_alarm_probability bin
         """
             Finds the number of maximun counts in the
             Schuster periodorgrams for the random series
