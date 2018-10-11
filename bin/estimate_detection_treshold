@@ -2,7 +2,7 @@
 
 import argparse
 from helpers.common_imports import *
-import clean.false_alarm_probability as fap
+import clean.detection_treshold as dtr
 import helpers.input_validators as iv
 import helpers.argument_parsers as ap
 import helpers.file_readers_and_writers as frw
@@ -64,7 +64,7 @@ def main():
     time_grid_and_values = frw.read_file(args.i)
     if time_grid_and_values['time_grid'].shape[1] >= args.r:
         raise ValueError(HELP_FOR_SERIES_LENGTH)
-    estimator = fap.FalseAlarmProbability(time_grid_and_values['time_grid'], args.s, args.k, args.u)
+    estimator = dtr.DetectionTreshold(time_grid_and_values['time_grid'], args.s, args.k, args.u)
     detection_treshold = estimator.estimate(args.r, args.q)
     write_result(args, detection_treshold)
     print('done'.format(args.o))

@@ -1,7 +1,7 @@
 from spec.spec_helper import *
-import clean.false_alarm_probability as fap
+import clean.detection_treshold as dtr
 
-with description(fap.FalseAlarmProbability) as self:
+with description(dtr.DetectionTreshold) as self:
     with before.all:
         self.sigma = 2.5
         self.khi = 4
@@ -10,23 +10,23 @@ with description(fap.FalseAlarmProbability) as self:
         self.false_alarm_probability = 0.80
         self.max_attemtps = 10
     with before.each:
-        self.estimator = fap.FalseAlarmProbability(self.time_grid, self.sigma, self.khi, self.use_aver)
+        self.estimator = dtr.DetectionTreshold(self.time_grid, self.sigma, self.khi, self.use_aver)
     with shared_context('object values setter'):
         with it('sets all values'):
             expect(
                 self.time_grid
 
             ).to(
-                equal_ndarray(self.estimator._FalseAlarmProbability__time_grid)
+                equal_ndarray(self.estimator._DetectionTreshold__time_grid)
             )
             expect(
                 self.sigma
             ).to(
-                equal(self.estimator._FalseAlarmProbability__sigma)
+                equal(self.estimator._DetectionTreshold__sigma)
             )
     with shared_context('random series generator'):
         with before.each:
-            self.random_series_array = self.estimator._FalseAlarmProbability__generate_random_series(
+            self.random_series_array = self.estimator._DetectionTreshold__generate_random_series(
                 self.number_of_random_series
             )
         with it('generates array with correct shape'):
@@ -35,7 +35,7 @@ with description(fap.FalseAlarmProbability) as self:
                 equal(expected_shape)
             )
         with it('series are always different'):
-            new_random_series_array = self.estimator._FalseAlarmProbability__generate_random_series(
+            new_random_series_array = self.estimator._DetectionTreshold__generate_random_series(
                 self.number_of_random_series
             )
             expect(
@@ -50,7 +50,7 @@ with description(fap.FalseAlarmProbability) as self:
     with shared_context('detection_treshold generator'):
         with before.each:
             random_series_array = np.load('./spec/fixtures/random_series_array_1.pickle')
-            self.generated_detection_treshold = self.estimator._FalseAlarmProbability__find_detection_treshold(
+            self.generated_detection_treshold = self.estimator._DetectionTreshold__find_detection_treshold(
                 random_series_array, self.false_alarm_probability
             )
             self.expected_detection_treshold = 58.46936430041756
@@ -60,10 +60,10 @@ with description(fap.FalseAlarmProbability) as self:
         with it('generates differnt value with other random set'):
             for i in range(self.max_attemtps):
                 # sometimes result is not different, let's try one more time
-                random_series_array = self.estimator._FalseAlarmProbability__generate_random_series(
+                random_series_array = self.estimator._DetectionTreshold__generate_random_series(
                     self.number_of_random_series
                 )
-                new_generated_detection_treshold = self.estimator._FalseAlarmProbability__find_detection_treshold(
+                new_generated_detection_treshold = self.estimator._DetectionTreshold__find_detection_treshold(
                     random_series_array, self.false_alarm_probability
                 )
                 result = self.generated_detection_treshold == new_generated_detection_treshold
@@ -79,7 +79,7 @@ with description(fap.FalseAlarmProbability) as self:
                 expect(
                     expected_num_of_freq_estimations
                 ).to(
-                    equal(self.estimator._FalseAlarmProbability__number_of_freq_estimations)
+                    equal(self.estimator._DetectionTreshold__number_of_freq_estimations)
                 )
             with included_context('object values setter'):
                 pass
@@ -124,7 +124,7 @@ with description(fap.FalseAlarmProbability) as self:
                 expect(
                     expected_num_of_freq_estimations
                 ).to(
-                    equal(self.estimator._FalseAlarmProbability__number_of_freq_estimations)
+                    equal(self.estimator._DetectionTreshold__number_of_freq_estimations)
                 )
             with included_context('object values setter'):
                 pass

@@ -1,6 +1,6 @@
 import helpers.input_validators as iv
 def parse_common_series_args(parser):
-    """these args are common for estimate_false_alarm_probability and clean"""
+    """these args are common for estimate_detection_treshold and clean"""
     parser.add_argument(
         '-i',
         required = True,

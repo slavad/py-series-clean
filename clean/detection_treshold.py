@@ -2,7 +2,7 @@ from helpers.common_imports import *
 import clean.matrix_builder as mb
 import clean.schuster as sch
 
-class FalseAlarmProbability(object):
+class DetectionTreshold(object):
     """estimate false alarm probability for the given params"""
 
     def __init__(self, time_grid, sigma, khi, use_aver):
