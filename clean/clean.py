@@ -9,7 +9,11 @@ def clean(time_grid, values, khi, false_alarm_probability, max_iterations, harmo
     number_of_freq_estimations = mb.calculate_estimations_vector_size(
         max_freq, time_grid, khi
     )
-
+    # TODO: refactor detection_treshold.py to accept the same args as
+    # iterator.iterate: max_freq and number_of_freq_estimations should be caclulated separtely,
+    # not inside detection_treshold.py
+    # maybe refactor the current method to a class with two methods: clean and estimate treshold
+    # max_freq and number_of_freq_estimations will be calculated in the __init__ method of this class
     iterator = itr.Iterator(
         false_alarm_probability,
         harmonic_share, number_of_freq_estimations,
