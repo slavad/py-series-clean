@@ -5,14 +5,11 @@ import clean.schuster as sch
 class DetectionTreshold(object):
     """estimate false alarm probability for the given params"""
 
-    def __init__(self, time_grid, sigma, khi, use_aver):
+    def __init__(self, time_grid, sigma, number_of_freq_estimations):
         """estimate false alarm probability for the given params"""
         self.__time_grid = time_grid
         self.__sigma = sigma
-        max_freq = mb.estimate_max_freq(self.__time_grid, use_aver)
-        self.__number_of_freq_estimations = mb.calculate_estimations_vector_size(
-            max_freq, self.__time_grid, khi
-        )
+        self.__number_of_freq_estimations = number_of_freq_estimations
 
     def estimate(self, number_of_random_series, false_alarm_probability):
         """estimates the false alarm probability"""
@@ -46,6 +43,8 @@ class DetectionTreshold(object):
             np.ceil(
                 false_alarm_probability*number_of_random_series
             )
-        ) - 1 # indexes start with zero, but in the case when false_alarm_probability = 0, we will get first element of the array, which makes no sense
+        ) - 1
+        # indexes start with zero, but in the case when false_alarm_probability = 0,
+        # we will get first element of the array, which makes no sense
         desired_count =  max_counts_random[desired_count_index]
         return desired_count

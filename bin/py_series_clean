@@ -69,14 +69,14 @@ def parse_args():
     args = parser.parse_args()
     return args
 
-def save_results(restoration_result, args):
+def save_results(cleaning_result, args):
     """saves restoration results"""
-    if restoration_result:
-        iterations = restoration_result['iterations']
-        frw.save_series(restoration_result['uniform_time_grid'], restoration_result['correlogram'], args.c, 'complex')
-        frw.save_series(restoration_result['uniform_time_grid'], restoration_result['uniform_series'], args.s, 'complex')
-        frw.save_series(restoration_result['freq_vector'], restoration_result['clean_spectrum'], args.p, 'complex')
-        frw.save_harmonics(restoration_result['frequencies'], restoration_result['amplitudes'], restoration_result['phases'], args.a)
+    if cleaning_result:
+        iterations = cleaning_result['iterations']
+        frw.save_series(cleaning_result['uniform_time_grid'], cleaning_result['correlogram'], args.c, 'complex')
+        frw.save_series(cleaning_result['uniform_time_grid'], cleaning_result['uniform_series'], args.s, 'complex')
+        frw.save_series(cleaning_result['freq_vector'], cleaning_result['clean_spectrum'], args.p, 'complex')
+        frw.save_harmonics(cleaning_result['frequencies'], cleaning_result['amplitudes'], cleaning_result['phases'], args.a)
     else:
         iterations = None
     save_summary(args, iterations)
@@ -111,7 +111,7 @@ def main():
     args = parse_args()
     time_grid_and_values = frw.read_file(args.i)
     wrapper = wrp.Wrapper(time_grid_and_values['time_grid'], args.k, args.u)
-    restoration_result = wrapper.clean(time_grid_and_values['values'], args.t, args.r, args.g)
-    save_results(restoration_result, args)
+    cleaning_result = wrapper.clean(time_grid_and_values['values'], args.t, args.r, args.g)
+    save_results(cleaning_result, args)
 
 main()

@@ -2,6 +2,8 @@ from helpers.common_imports import *
 import clean.matrix_builder as mb
 import clean.iterator as itr
 import clean.restorer as rst
+import clean.detection_treshold as dtr
+
 class Wrapper(object):
     """
         wraps Iterator, Restorer and DetectionTreshold classes
@@ -14,10 +16,10 @@ class Wrapper(object):
             self.__max_freq, self.__time_grid, khi
         )
 
-    def clean(self, values, false_alarm_probability, max_iterations, harmonic_share):
-        """do clean"""
+    def clean(self, values, detection_treshold, max_iterations, harmonic_share):
+        """restores clean time series and spectrum from durty one"""
         iterator = itr.Iterator(
-            false_alarm_probability,
+            detection_treshold,
             harmonic_share, self.__number_of_freq_estimations,
             self.__time_grid, values, self.__max_freq
         )
@@ -31,3 +33,9 @@ class Wrapper(object):
         restoration_result = restorer.restore()
 
         return restoration_result
+
+    def estimate_detection_treshold(self, sigma, number_of_random_series, false_alarm_probability):
+        """estimates detection treshold for a given time series"""
+        estimator = dtr.DetectionTreshold(self.__time_grid, sigma, self.__time_grid)
+        detection_treshold = estimator.estimate(number_of_random_series, false_alarm_probability)
+        return detection_treshold
