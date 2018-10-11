@@ -22,10 +22,10 @@ def parse_args():
     parser = argparse.ArgumentParser(description=descr)
     ap.parse_common_series_args(parser)
     parser.add_argument(
-        '-q',
+        '-t',
         required = True,
-        help = 'false alarm probability (aka q), see eq 105 and 152 in ref 2, can be esitmated using estimate_false_alarm_probability script {}'.format(ADDITIONAL_HELP),
-        metavar ='FALSE_ALARM_PROBABILITY',
+        help = 'detection treshold D_q eq 152 ref 2, can be esitmated using estimate_detection_treshold script {}'.format(ADDITIONAL_HELP),
+        metavar ='DETECTION_TRESHOLD',
         type = check_share
     )
     parser.add_argument(
@@ -117,7 +117,7 @@ def main():
     """entry point"""
     args = parse_args()
     time_grid_and_values = frw.read_file(args.i)
-    restoration_result = pscc.clean(time_grid_and_values['time_grid'], time_grid_and_values['values'], args.k, args.q, args.r, args.g, args.u)
+    restoration_result = pscc.clean(time_grid_and_values['time_grid'], time_grid_and_values['values'], args.k, args.t, args.r, args.g, args.u)
     save_results(restoration_result, args)
 
 main()

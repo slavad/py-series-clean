@@ -4,7 +4,7 @@ import clean.matrix_builder as mb
 
 class Iterator(object):
     """iterates over the dirty spectrum and extracts clean one"""
-    def __init__(self, false_alarm_probability, harmonic_share, number_of_freq_estimations, time_grid, values, max_freq):
+    def __init__(self, detection_threshold, harmonic_share, number_of_freq_estimations, time_grid, values, max_freq):
         self.__harmonic_share = harmonic_share
         self.__number_of_freq_estimations = number_of_freq_estimations
         self.__time_grid = time_grid
@@ -17,9 +17,7 @@ class Iterator(object):
         dirty_subvector = self.__dirty_vector[number_of_freq_estimations:]
         schuster_count = sch.calc_schuster_counts(dirty_subvector, method_flag='average')[0]
         # eq 152 in ref 2
-        #FIXME: we should use  D_q aka __normalized_detection_threshold calculated by false_alarm_probabilty.py by given q,
-        # but here we use q aka false_alarm_probability as X_q, which is wrong
-        self.__normalized_detection_threshold = schuster_count*(1.0 - false_alarm_probability)
+        self.__detection_threshold = schuster_count*(1.0 - detection_threshold)
         self.__window_vector = mb.calculate_window_vector(
             self.__time_grid, self.__number_of_freq_estimations, self.__max_freq
         )
@@ -95,7 +93,7 @@ class Iterator(object):
     def __one_step(self, old_super_resultion_vector, old_dirty_vector):
         """one step of the iteration process"""
         max_count_index_and_value = self.__get_max_count_index_and_value(old_dirty_vector)
-        if sch.squared_abs(max_count_index_and_value['value']) >= self.__normalized_detection_threshold:
+        if sch.squared_abs(max_count_index_and_value['value']) >= self.__detection_threshold:
             # eq 154 ref 2
             complex_amplitude = self.__calculate_complex_amplitude(
                 old_dirty_vector,

@@ -76,7 +76,7 @@ with description(itr.Iterator) as self:
             expect(
                 sch.calc_schuster_counts(self.dirty_vector[self.number_of_freq_estimations:], method_flag='average')[0]*(1.0 - self.false_alarm_probability)
             ).to(
-                equal(self.iterator._Iterator__normalized_detection_threshold)
+                equal(self.iterator._Iterator__detection_threshold)
             )
             expect(
                 self.window_vector
