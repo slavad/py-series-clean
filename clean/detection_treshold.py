@@ -1,15 +1,13 @@
 from helpers.common_imports import *
-import clean.matrix_builder as mb
 import clean.schuster as sch
 
 class DetectionTreshold(object):
     """estimate false alarm probability for the given params"""
 
-    def __init__(self, time_grid, sigma, number_of_freq_estimations):
+    def __init__(self, time_grid, sigma):
         """estimate false alarm probability for the given params"""
         self.__time_grid = time_grid
         self.__sigma = sigma
-        self.__number_of_freq_estimations = number_of_freq_estimations
 
     def estimate(self, number_of_random_series, false_alarm_probability):
         """estimates the false alarm probability"""

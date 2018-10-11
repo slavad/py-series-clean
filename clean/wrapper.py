@@ -36,6 +36,6 @@ class Wrapper(object):
 
     def estimate_detection_treshold(self, sigma, number_of_random_series, false_alarm_probability):
         """estimates detection treshold for a given time series"""
-        estimator = dtr.DetectionTreshold(self.__time_grid, sigma, self.__time_grid)
+        estimator = dtr.DetectionTreshold(self.__time_grid, sigma)
         detection_treshold = estimator.estimate(number_of_random_series, false_alarm_probability)
         return detection_treshold
