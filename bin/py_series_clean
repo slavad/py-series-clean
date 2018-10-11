@@ -90,7 +90,7 @@ def save_summary(args, iterations):
         print('Iterations did not converge, iterations where stopped because they reached the maximum number of iterations', file=file)
     print('Input params:', file=file)
     print('khi: {}:'.format(args.k), file=file)
-    print('false alarm probability: {}:'.format(args.q), file=file)
+    print('detection treshold: {}:'.format(args.g), file=file)
     print('max iterations: {}:'.format(args.r), file=file)
     print('harmonic share: {}:'.format(args.g), file=file)
     print('dirty series file: {}:'.format(args.i), file=file)
