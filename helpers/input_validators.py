@@ -1,5 +1,12 @@
 import argparse
 
+def check_inclusion_in_unity(value):
+    """checks value that should be 0<x<=1"""
+    number = check_positive_float(value)
+    if number <= 0 or number > 1:
+        raise argparse.ArgumentTypeError("value must be > 0 and <= 1, but your's is %s" % value)
+    return number
+
 def check_positive_int(value):
     """parse and validate int argument value"""
     return check_positive(value, int)

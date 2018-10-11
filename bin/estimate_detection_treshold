@@ -1,0 +1,72 @@
+#!/usr/bin/env python
+
+import argparse
+from helpers.common_imports import *
+import clean.false_alarm_probability as fap
+import helpers.input_validators as iv
+import helpers.argument_parsers as ap
+import helpers.file_readers_and_writers as frw
+
+HELP_FOR_SERIES_LENGTH = "RANDOM_SERIES_LENGTH must be >> lenght of the input time series"
+
+def parse_args():
+    descr = 'Estimates detection treshold D_q from eq 152 ref 2'
+    parser = argparse.ArgumentParser(description=descr)
+    ap.parse_common_series_args(parser)
+    parser.add_argument(
+        '-r',
+        required = True,
+        help='number of random time series sets generated\n {}'.format(HELP_FOR_SERIES_LENGTH),
+        metavar='RANDOM_SERIES_SETS',
+        type = iv.check_positive_int
+    )
+    parser.add_argument(
+        '-s',
+        required = True,
+        help='sigma for the normal distribution used to generate random series',
+        metavar='SIGMA',
+        type = iv.check_positive_float
+    )
+    parser.add_argument(
+        '-o',
+        required = True,
+        help='output file location"',
+        metavar='OUTPUT'
+    )
+    parser.add_argument(
+        '-q',
+        required = True,
+        help = 'false alarm probabilty (aka q) used to estimate D_q in eq 152 ref 2',
+        metavar ='FALSE_ALARM_PROBABILITY',
+        type = iv.check_inclusion_in_unity
+    )
+    args = parser.parse_args()
+    return args
+
+def write_result(args, detection_treshold):
+    """writes results to the output file"""
+    file = open(args.o, "w")
+    print('Input params:', file=file)
+    print('input file: {}:'.format(args.i), file=file)
+    print('sigma: %e:' % args.s, file=file)
+    print('number of random series sets: %i:' % args.r, file=file)
+    print('khi scaling factor: %i:' % args.k, file=file)
+    print('sigma: %e:' % args.s, file=file)
+    print('false alarm probabilty: %e:' % args.q, file=file)
+    print('Output:', file=file)
+    print('detection treshold (aka q in eq 152 ref 2): %e' % detection_treshold, file=file)
+    file.close
+
+def main():
+    """entry point"""
+    print('started')
+    args = parse_args()
+    time_grid_and_values = frw.read_file(args.i)
+    if time_grid_and_values['time_grid'].shape[1] >= args.r:
+        raise ValueError(HELP_FOR_SERIES_LENGTH)
+    estimator = fap.FalseAlarmProbability(time_grid_and_values['time_grid'], args.s, args.k, args.u)
+    detection_treshold = estimator.estimate(args.r, args.q)
+    write_result(args, detection_treshold)
+    print('done'.format(args.o))
+    print('output is written to {}'.format(args.o))
+main()

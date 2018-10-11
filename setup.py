@@ -27,7 +27,8 @@ setup(
     ],
     scripts=[
         'bin/generate_test_series',
-        'bin/py_series_clean'
+        'bin/py_series_clean',
+        'bin/estimate_detection_treshold'
     ],
     #TODO: remove deprecated dependency_links
     dependency_links = [

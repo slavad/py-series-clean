@@ -10,13 +10,6 @@ from helpers.common_imports import *
 
 ADDITIONAL_HELP = 'iterations stop if the number of maximum iterations is exceeded or the series do not contain signal at the given false alarm probability'
 
-def check_share(value):
-    """checks value that should be 0<x<=1"""
-    number = iv.check_positive_float(value)
-    if number < 0 or number > 1:
-        raise argparse.ArgumentTypeError("value must be >= 0 and <= 1, but your's is %s" % value)
-    return number
-
 def parse_args():
     descr = 'Reads and analyzes file with time series'
     parser = argparse.ArgumentParser(description=descr)
@@ -26,7 +19,7 @@ def parse_args():
         required = True,
         help = 'detection treshold D_q eq 152 ref 2, can be esitmated using estimate_detection_treshold script {}'.format(ADDITIONAL_HELP),
         metavar ='DETECTION_TRESHOLD',
-        type = check_share
+        type = iv.check_positive_float
     )
     parser.add_argument(
         '-r',
@@ -41,7 +34,7 @@ def parse_args():
         required = True,
         help = 'share of the harmonic in the dirty spectrum, eq 156 ref 2 ',
         metavar ='HARONIC_SHARE',
-        type = check_share
+        type = iv.check_inclusion_in_unity
     )
     parser.add_argument(
         '-c',
