@@ -2,7 +2,6 @@ from helpers.common_imports import *
 import clean.matrix_builder as mb
 import clean.iterator as itr
 import clean.restorer as rst
-import clean.detection_treshold as dtr
 
 class Wrapper(object):
     """
@@ -33,8 +32,3 @@ class Wrapper(object):
 
         return restoration_result
 
-    def estimate_detection_treshold(self, sigma, number_of_random_series, false_alarm_probability):
-        """estimates detection treshold for a given time series"""
-        estimator = dtr.DetectionTreshold(self.__time_grid, sigma)
-        detection_treshold = estimator.estimate(number_of_random_series, false_alarm_probability)
-        return detection_treshold
