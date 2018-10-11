@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 import argparse
-import clean.clean as pscc
+import clean.wrapper as wrp
 import helpers.file_readers_and_writers as frw
 import helpers.argument_parsers as ap
 import helpers.input_validators as iv
@@ -110,7 +110,8 @@ def main():
     """entry point"""
     args = parse_args()
     time_grid_and_values = frw.read_file(args.i)
-    restoration_result = pscc.clean(time_grid_and_values['time_grid'], time_grid_and_values['values'], args.k, args.t, args.r, args.g, args.u)
+    wrapper = wrp.Wrapper(time_grid_and_values['time_grid'], args.k, args.u)
+    restoration_result = wrapper.clean(time_grid_and_values['values'], args.t, args.r, args.g)
     save_results(restoration_result, args)
 
 main()
