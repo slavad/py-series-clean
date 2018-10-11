@@ -1,16 +1,16 @@
 from spec.spec_helper import *
-import clean.false_alarm_probability as fab
+import clean.false_alarm_probability as fap
 
-with description(fab.FalseAlarmProbability) as self:
+with description(fap.FalseAlarmProbability) as self:
     with before.all:
         self.sigma = 2.5
         self.khi = 4
         self.number_of_random_series = 1000
         self.time_grid = np.load("./spec/fixtures/time_grid_1.pickle")
-        self.values = np.load("./spec/fixtures/series_1.pickle")
+        self.false_alarm_probability = 0.80
         self.max_attemtps = 10
     with before.each:
-        self.estimator = fab.FalseAlarmProbability(self.time_grid, self.values, self.sigma, self.khi, self.use_aver)
+        self.estimator = fap.FalseAlarmProbability(self.time_grid, self.sigma, self.khi, self.use_aver)
     with shared_context('object values setter'):
         with it('sets all values'):
             expect(
@@ -18,11 +18,6 @@ with description(fab.FalseAlarmProbability) as self:
 
             ).to(
                 equal_ndarray(self.estimator._FalseAlarmProbability__time_grid)
-            )
-            expect(
-                self.values
-            ).to(
-                equal_ndarray(self.estimator._FalseAlarmProbability__values)
             )
             expect(
                 self.sigma
@@ -52,15 +47,15 @@ with description(fab.FalseAlarmProbability) as self:
             random_series_array = np.load('./spec/fixtures/random_series_array_1.pickle')
             equal_with_precision
             expect(np.mean(random_series_array)).to(equal_with_precision(0.00, precision = 2))
-    with shared_context('probability generator'):
+    with shared_context('normalized_detection_treshold generator'):
         with before.each:
             random_series_array = np.load('./spec/fixtures/random_series_array_1.pickle')
-            self.generated_probability = self.estimator._FalseAlarmProbability__find_probability(
-                random_series_array, self.values
+            self.generated_normalized_detection_treshold = self.estimator._FalseAlarmProbability__find_normalized_detection_treshold(
+                random_series_array, self.false_alarm_probability
             )
-            self.expected_probability = 0.37
+            self.expected_normalized_detection_treshold = 58.46936430041756
         with it('finds correct value'):
-            expect(self.generated_probability).to(equal(self.expected_probability))
+            expect(self.generated_normalized_detection_treshold).to(equal(self.expected_normalized_detection_treshold))
 
         with it('generates differnt value with other random set'):
             for i in range(self.max_attemtps):
@@ -68,13 +63,13 @@ with description(fab.FalseAlarmProbability) as self:
                 random_series_array = self.estimator._FalseAlarmProbability__generate_random_series(
                     self.number_of_random_series
                 )
-                new_generated_probability = self.estimator._FalseAlarmProbability__find_probability(
-                    random_series_array, self.values
+                new_generated_normalized_detection_treshold = self.estimator._FalseAlarmProbability__find_normalized_detection_treshold(
+                    random_series_array, self.false_alarm_probability
                 )
-                result = self.generated_probability == new_generated_probability
+                result = self.generated_normalized_detection_treshold == new_generated_normalized_detection_treshold
                 if result == False:
                     break
-            expect(self.generated_probability).not_to(equal(new_generated_probability))
+            expect(self.generated_normalized_detection_treshold).not_to(equal(new_generated_normalized_detection_treshold))
     with description('use_aver is False'):
         with before.all:
             self.use_aver = False
@@ -91,33 +86,33 @@ with description(fab.FalseAlarmProbability) as self:
 
         with description('#estimate'):
             with before.all:
-                self.expected_probability_min = 0.3
-                self.expected_probability_max = 0.5
+                self.expected_normalized_detection_treshold_min = 55.0
+                self.expected_normalized_detection_treshold_max = 60.0
             with before.each:
-                self.generated_probability = self.estimator.estimate(
-                    self.number_of_random_series
+                self.generated_normalized_detection_treshold = self.estimator.estimate(
+                    self.number_of_random_series, self.false_alarm_probability
                 )
             with it('fits to the range'):
-                expect(self.generated_probability).to(be_below_or_equal(self.expected_probability_max))
-                expect(self.generated_probability).to(be_above_or_equal(self.expected_probability_min))
+                expect(self.generated_normalized_detection_treshold).to(be_below_or_equal(self.expected_normalized_detection_treshold_max))
+                expect(self.generated_normalized_detection_treshold).to(be_above_or_equal(self.expected_normalized_detection_treshold_min))
 
             with it('is always different'):
                 for i in range(self.max_attemtps):
                     # sometimes result is not different, let's try one more time
-                    new_generated_probability = self.estimator.estimate(
-                        self.number_of_random_series
+                    new_generated_normalized_detection_treshold = self.estimator.estimate(
+                        self.number_of_random_series, self.false_alarm_probability
                     )
-                    result = self.generated_probability == new_generated_probability
+                    result = self.generated_normalized_detection_treshold == new_generated_normalized_detection_treshold
                     if result == False:
                         break
-                expect(result).to(be_false)
+                expect(result).to(equal(False))
 
         with description('#__generate_random_series'):
             with included_context('random series generator'):
                 pass
 
-        with description('#__find_probability'):
-            with included_context('probability generator'):
+        with description('#__find_normalized_detection_treshold'):
+            with included_context('normalized_detection_treshold generator'):
                 pass
 
     with description('use aver is True'):
@@ -137,6 +132,6 @@ with description(fab.FalseAlarmProbability) as self:
             with included_context('random series generator'):
                 pass
 
-        with description('#__find_probability'):
-            with included_context('probability generator'):
+        with description('#__find_normalized_detection_treshold'):
+            with included_context('normalized_detection_treshold generator'):
                 pass

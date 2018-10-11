@@ -5,23 +5,24 @@ import clean.schuster as sch
 class FalseAlarmProbability(object):
     """estimate false alarm probability for the given params"""
 
-    def __init__(self, time_grid, values, sigma, khi, use_aver):
+    def __init__(self, time_grid, sigma, khi, use_aver):
         """estimate false alarm probability for the given params"""
         self.__time_grid = time_grid
-        self.__values = values
         self.__sigma = sigma
         max_freq = mb.estimate_max_freq(self.__time_grid, use_aver)
         self.__number_of_freq_estimations = mb.calculate_estimations_vector_size(
             max_freq, self.__time_grid, khi
         )
 
-    def estimate(self, number_of_random_series):
+    def estimate(self, number_of_random_series, false_alarm_probability):
         """estimates the false alarm probability"""
+        if false_alarm_probability <= 0 or false_alarm_probability > 1:
+            raise ValueError('false_alarm_probability should be > 0 and < 1')
         random_series = self.__generate_random_series(number_of_random_series)
-        probability = self.__find_probability(
-            random_series, self.__values
+        normalized_detection_treshold = self.__find_normalized_detection_treshold(
+            random_series, false_alarm_probability
         )
-        return probability
+        return normalized_detection_treshold
 
     def __generate_random_series(self, number_of_random_series):
         """generates an array of random normal values (time_grid_len,number_of_series)"""
@@ -29,23 +30,22 @@ class FalseAlarmProbability(object):
         result = np.random.normal(loc=0.0, scale=self.__sigma, size=(time_grid_len, number_of_random_series))
         return result
 
-    def __find_probability(self, random_series, values):
-        #FIXME: q is unput and D_q is output, but here all is vise versa!
-        # we input q and get D_q as output. Get rid of estimate_false_alarm_probability bin
+    def __find_normalized_detection_treshold(self, random_series, false_alarm_probability):
         """
-            Finds the number of maximun counts in the
-            Schuster periodorgrams for the random series
-            that are > than the average
-            count in the Schuster periodorgram for the examined observation,
-            then calculates the relation of the number above
-            to the total number of the random series.
+            Finds value D_q in eq 152 ref 2.
+            1. It calculates a bunch of random series for the same time grid as examined series has
+            2. It calcluates Schuster periodogram counts for the random series and time series (D^k_max)
+            3. Finds D_q for which N/L <= false_alarm_probability, here L is total number of random series
+            and N is number of random series for which D^k_max >= D_q
         """
         number_of_random_series = random_series.shape[1]
-        max_counts_random = sch.calc_schuster_counts(random_series, method_flag='max')
-        average_count_series = sch.calc_schuster_counts(values, method_flag='average')[0]
-        # extract ids that fit to our condition
-        ids_list = np.where(max_counts_random >= average_count_series)
-        count_of_items = ids_list[0].shape[0]
-        # the probabilty that the examined series contain noise only:
-        relation = count_of_items/number_of_random_series
-        return relation
+        max_counts_random = np.sort(
+            sch.calc_schuster_counts(random_series, method_flag='max')
+        )
+        desired_count_index = int(
+            np.ceil(
+                false_alarm_probability*number_of_random_series
+            )
+        ) - 1 # indexes start with zero, but in the case when false_alarm_probability = 0, we will get first element of the array, which makes no sense
+        desired_count =  max_counts_random[desired_count_index]
+        return desired_count
