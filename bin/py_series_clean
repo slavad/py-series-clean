@@ -66,6 +66,28 @@ def parse_args():
         help='summary output file location',
         metavar='SUMMARY_FILE'
     )
+    khi_default = 4
+    khi_help = 'scale coefficient for the size of the dirty spectrum, see eq 147 in ref 2,'
+    khi_help += ' default value is {}'.format(khi_default)
+    parser.add_argument(
+        '-k',
+        required = False,
+        help = khi_help,
+        metavar ='KHI',
+        default = khi_default,
+        type = iv.check_positive_int
+    )
+    use_aver_default = False
+    use_aver_help = 'use average distance between points on the time grid'
+    use_aver_help += ' default value is {}, if set to False then minimum distance is used'.format(khi_default)
+    parser.add_argument(
+        '-u',
+        required = False,
+        help = use_aver_help,
+        metavar ='USE_AVERAGE',
+        default = use_aver_default,
+        type = iv.str2bool
+    )
     args = parser.parse_args()
     return args
 
@@ -110,8 +132,8 @@ def main():
     """entry point"""
     args = parse_args()
     time_grid_and_values = frw.read_file(args.i)
-    wrapper = wrp.Wrapper(time_grid_and_values['time_grid'], args.k, args.u)
-    cleaning_result = wrapper.clean(time_grid_and_values['values'], args.t, args.r, args.g)
+    wrapper = wrp.Wrapper(time_grid_and_values['time_grid'])
+    cleaning_result = wrapper.clean(time_grid_and_values['values'], args.t, args.r, args.g, args.k, args.u)
     save_results(cleaning_result, args)
 
 main()

@@ -50,7 +50,6 @@ def write_result(args, detection_treshold):
     print('input file: {}:'.format(args.i), file=file)
     print('sigma: %e:' % args.s, file=file)
     print('number of random series sets: %i:' % args.r, file=file)
-    print('khi scaling factor: %i:' % args.k, file=file)
     print('sigma: %e:' % args.s, file=file)
     print('false alarm probabilty: %e:' % args.q, file=file)
     print('Output:', file=file)
@@ -64,7 +63,7 @@ def main():
     time_grid_and_values = frw.read_file(args.i)
     if time_grid_and_values['time_grid'].shape[1] >= args.r:
         raise ValueError(HELP_FOR_SERIES_LENGTH)
-    wrapper = wrp.Wrapper(time_grid_and_values['time_grid'], args.k, args.u)
+    wrapper = wrp.Wrapper(time_grid_and_values['time_grid'])
     detection_treshold = wrapper.estimate_detection_treshold(args.s ,args.r, args.q)
     write_result(args, detection_treshold)
     print('done'.format(args.o))
