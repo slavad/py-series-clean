@@ -1,23 +1,5 @@
 from helpers.common_imports import *
 
-def estimate_max_freq(time_grid, use_aver):
-    """estimates maximum frequency that can be found"""
-    """if use_aver is True, then average delta T is used"""
-    """otherwise minimum delta T is used"""
-    """eq 146 in ref 2"""
-    reshaped_time_grid = time_grid.reshape(1,-1)
-    distance_vector = reshaped_time_grid[0][1:] - reshaped_time_grid[0][:-1]
-    if use_aver:
-        delta = np.average(distance_vector)
-    else:
-        delta = distance_vector.min()
-    return 1/(2*delta)
-
-def calculate_estimations_vector_size(max_freq, time_grid, khi):
-    """eq 147 in ref 2"""
-    result = khi*max_freq*(time_grid[-1][0] - time_grid[0][0])
-    return int(np.ceil(result))
-
 def generate_index_vector(vector_size):
     """generates index vector: from -max_index to max_index"""
     if vector_size % 2 == 0:

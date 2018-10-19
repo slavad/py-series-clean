@@ -8,12 +8,8 @@ with description(itr.Iterator) as self:
         self.time_grid = np.load("./spec/fixtures/time_grid_1.pickle")
         self.values = np.load("./spec/fixtures/series_1.pickle")
         self.khi = 4
-        self.use_aver = False
-        # use_aver = False only changes max_freq value, so no need to test with it here
-        self.max_freq = mb.estimate_max_freq(self.time_grid, self.use_aver)
-        self.number_of_freq_estimations = mb.calculate_estimations_vector_size(
-            self.max_freq, self.time_grid, self.khi
-        )
+        self.max_freq = 928.6049396317791 # precalculated value
+        self.number_of_freq_estimations = 35934 # precalculated value
         self.false_alarm_probability = 0.2
         self.harmonic_share = 0.5
 
