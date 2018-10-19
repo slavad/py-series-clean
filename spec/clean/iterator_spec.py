@@ -26,6 +26,7 @@ with description(itr.Iterator) as self:
         )
 
         self.max_count_index = 12
+        self.round_precision = 10
         self.max_count_value = self.dirty_vector[
             self.number_of_freq_estimations:
         ][self.max_count_index][0]
@@ -105,7 +106,7 @@ with description(itr.Iterator) as self:
             with it('returns correct super_resultion_vector value'):
                 expect(
                     self.actual_iteration_result['super_resultion_vector']
-                ).to(equal_ndarray(self.expected_super_resultion_vector))
+                ).to(equal_ndarray(self.expected_super_resultion_vector, self.round_precision))
 
         with before.all:
             self.values = np.load("./spec/fixtures/series_1.pickle")
@@ -177,18 +178,18 @@ with description(itr.Iterator) as self:
                     self.dirty_vector, self.max_count_index, self.max_count_value
                 )
             ).to(
-                equal_with_precision(self.expected_value, 12)
+                equal_with_precision(self.expected_value, self.round_precision)
             )
 
     with shared_context('array comparer'):
         with it('has different value, but the same shape'):
             expect(
                 self.actual_vector
-            ).to(equal_ndarray(self.expected_vector))
+            ).to(equal_ndarray(self.expected_vector, self.round_precision))
 
             expect(
                 self.actual_vector
-            ).not_to(equal_ndarray(self.initial_vector))
+            ).not_to(equal_ndarray(self.initial_vector, self.round_precision))
 
             expect(
                 self.actual_vector.shape
