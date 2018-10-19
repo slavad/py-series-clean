@@ -154,7 +154,7 @@ with description(itr.Iterator) as self:
                 self.false_alarm_probability = 0
                 self.max_iterations = 10
                 self.expected_iterations = 0
-                # self.expected_super_resultion_vector = np.load('./spec/fixtures/super_resultion_vector_with_result_3.pickle')
+                #self.expected_super_resultion_vector = np.load('./spec/fixtures/super_resultion_vector_with_result_3.pickle')
 
             # with it('super_resultion_vector contains zero values'):
             #     expect(self.max_value_abs).to(
@@ -177,7 +177,7 @@ with description(itr.Iterator) as self:
                     self.dirty_vector, self.max_count_index, self.max_count_value
                 )
             ).to(
-                equal(self.expected_value)
+                equal_with_precision(self.expected_value, 12)
             )
 
     with shared_context('array comparer'):

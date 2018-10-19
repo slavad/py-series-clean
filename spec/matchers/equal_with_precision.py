@@ -1,6 +1,6 @@
 from expects.matchers import Matcher
 import numbers
-import pdb
+import numpy as np
 
 class equal_with_precision(Matcher):
     def __init__(self, original_expected_number, precision):
@@ -17,7 +17,7 @@ class equal_with_precision(Matcher):
         if  not isinstance(original_actual_number, numbers.Number):
             return False, ['actual was not a number']
 
-        if round(self._original_expected_number, self._precision) == round(original_actual_number, self._precision):
+        if np.round(self._original_expected_number, self._precision) == np.round(original_actual_number, self._precision):
             return True, ["numbers are equal with precision {}".format(self._precision)]
         else:
             return False, ["numbers are not equal with precision {}".format(self._precision)]

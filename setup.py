@@ -36,8 +36,9 @@ setup(
     ],
     extras_require={
         'spec': [
-            "mamba>=0.9.99<1.1.0",
-            "expects>=0.8.0<1.1.0"
+            "mamba>=0.9.3<1.1.0",
+            "expects>=0.8.0<1.1.0",
+            "pipenv>=18.0.0<19.0.0",
         ]
     }
 )
