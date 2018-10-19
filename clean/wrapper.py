@@ -11,8 +11,6 @@ class Wrapper(object):
         self.__time_grid = time_grid
         self.__use_aver = use_aver
 
-    #TODO: move all methods from matrix_builder that are used only in one place
-    # the same should be done for matrix_builder specs
     def __estimate_max_freq(self):
         """estimates maximum frequency that can be found"""
         """if self.__time_grid is True, then average delta T is used"""
