@@ -24,7 +24,7 @@ class Iterator(object):
 
     def iterate(self, max_iterations):
         """iterator: steps 7 to 17 pp 51-52 ref 2"""
-        super_resultion_vector = mb.build_super_resultion_vector(self.__number_of_freq_estimations)
+        super_resultion_vector = self.__build_super_resultion_vector()
 
         current_step = 0
         dirty_vector = self.__dirty_vector
@@ -69,7 +69,7 @@ class Iterator(object):
     def __add_data_to_super_resultion_vector(self, super_resultion_vector, max_count_index, complex_amplitude):
         """eq 156 ref 2"""
         #self.__number_of_freq_estimations index corresponds the 0th index in eq 156 ref 2 for vector C
-        vector_to_add = mb.build_super_resultion_vector(self.__number_of_freq_estimations)
+        vector_to_add = self.__build_super_resultion_vector()
         vector_to_add[self.__number_of_freq_estimations + max_count_index] = self.__harmonic_share*complex_amplitude
         vector_to_add[self.__number_of_freq_estimations - max_count_index] = self.__harmonic_share*np.conj(complex_amplitude)
         result = vector_to_add + super_resultion_vector
@@ -117,3 +117,8 @@ class Iterator(object):
             return result
         else:
             return None
+
+    def __build_super_resultion_vector(self):
+        """eq 151 in ref 2"""
+        vector_size = mb.size_of_spectrum_vector(self.__number_of_freq_estimations)
+        return np.zeros((vector_size,1), dtype=complex)

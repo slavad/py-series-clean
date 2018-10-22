@@ -29,14 +29,13 @@ with description(itr.Iterator) as self:
 
         self.complex_amplitude = 4.690355355904826+1.7147337162545526j
 
-        self.super_resultion_vector = mb.build_super_resultion_vector(self.number_of_freq_estimations)
-
     with before.each:
         self.iterator = itr.Iterator(
             self.false_alarm_probability,
             self.harmonic_share, self.number_of_freq_estimations,
             self.time_grid, self.values, self.max_freq
         )
+        self.super_resultion_vector = self.iterator._Iterator__build_super_resultion_vector()
 
     with description('__init__'):
         with it('sets all values'):
@@ -210,12 +209,12 @@ with description(itr.Iterator) as self:
             self.expected_vector =  np.load(
                 "./spec/fixtures/super_resol_vector_with_added.pickle"
             )
-            self.initial_vector = self.super_resultion_vector
 
         with before.each:
             self.actual_vector = self.iterator._Iterator__add_data_to_super_resultion_vector(
                 self.super_resultion_vector, self.max_count_index, self.complex_amplitude
             )
+            self.initial_vector = self.super_resultion_vector
 
         with included_context('array comparer'):
             pass
@@ -309,10 +308,8 @@ with description(itr.Iterator) as self:
                 expect(self.global_max_count_index).to(equal(self.actual_max_count_index))
 
     with description('__one_step'):
-        with before.all:
-            self.old_super_resultion_vector = mb.build_super_resultion_vector(
-                self.number_of_freq_estimations
-            )
+        with before.each:
+            self.old_super_resultion_vector = self.iterator._Iterator__build_super_resultion_vector()
         with description('dirty_vector contains signal'):
             with before.all:
                 self.expected_super_resultion_vector_with_added_data =  np.load(
@@ -357,3 +354,11 @@ with description(itr.Iterator) as self:
                 )
             with it('returns None'):
                 expect(self.result).to(be_none)
+    with description('#__build_super_resultion_vector'):
+        with it('returns correct vector'):
+            actual_result = self.iterator._Iterator__build_super_resultion_vector()
+            vector_size = 71869
+            expected_result = np.zeros((vector_size,1), dtype=complex)
+            expect(
+                actual_result
+            ).to(equal_ndarray(expected_result))

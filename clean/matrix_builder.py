@@ -8,6 +8,10 @@ def generate_index_vector(vector_size):
     index_vector = np.arange(-max_index, max_index + 1, 1).reshape(-1,1)
     return index_vector
 
+def generate_freq_vector(index_vector, max_freq, number_of_freq_estimations):
+    """building frequency vector"""
+    return index_vector*max_freq/number_of_freq_estimations
+
 def run_ft(time_grid, values, freq_vector, number_of_freq_estimations, kind):
     """
         builds (index_vector.shape[0])xN exp matrix
@@ -32,10 +36,6 @@ def run_ft(time_grid, values, freq_vector, number_of_freq_estimations, kind):
         exp_vector_for_mult = exp_vector.T
     result = np.matmul(exp_vector_for_mult, values)*norm
     return result
-
-def generate_freq_vector(index_vector, max_freq, number_of_freq_estimations):
-    """building frequency vector"""
-    return index_vector*max_freq/number_of_freq_estimations
 
 def size_of_spectrum_vector(number_of_freq_estimations):
     """size of dirty vector"""
@@ -63,8 +63,3 @@ def calculate_window_vector(time_grid, number_of_freq_estimations, max_freq):
         time_grid, values, freq_vector,number_of_freq_estimations, 'direct'
     )
     return result
-
-def build_super_resultion_vector(number_of_freq_estimations):
-    """eq 151 in ref 2"""
-    vector_size = size_of_spectrum_vector(number_of_freq_estimations)
-    return np.zeros((vector_size,1), dtype=complex)
