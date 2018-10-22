@@ -23,22 +23,11 @@ setup(
         'License :: OSI Approved :: MIT License'
     ],
     install_requires=[
-       'numpy>=1.14.0<1.15.0'
+       'numpy>=1.15.0<2.0.0'
     ],
     scripts=[
         'bin/generate_test_series',
         'bin/py_series_clean',
         'bin/estimate_detection_treshold'
-    ],
-    #TODO: remove deprecated dependency_links
-    dependency_links = [
-        'git+https://github.com/nestorsalceda/mamba.git@915aa2e#egg=mamba-0.9.99'
-    ],
-    extras_require={
-        'spec': [
-            "mamba>=0.9.3<1.1.0",
-            "expects>=0.8.0<1.1.0",
-            "pipenv>=18.0.0<19.0.0",
-        ]
-    }
+    ]
 )

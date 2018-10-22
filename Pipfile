@@ -1,0 +1,14 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+numpy = "~=1.14"
+
+[dev-packages]
+expects = "~=0.8.0"
+mamba = {git = "https://github.com/nestorsalceda/mamba.git", ref = "915aa2e"}
+
+[requires]
+python_version = "3.6"
