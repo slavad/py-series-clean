@@ -15,9 +15,8 @@ class Iterator(object):
             self.__time_grid, self.__values, self.__number_of_freq_estimations, self.__max_freq
         )
         dirty_subvector = self.__dirty_vector[number_of_freq_estimations:]
-        schuster_count = sch.calc_schuster_counts(dirty_subvector, method_flag='average')[0]
         # eq 152 in ref 2
-        self.__detection_threshold = schuster_count*(1.0 - detection_threshold)
+        self.__detection_threshold = detection_threshold
         self.__window_vector = mb.calculate_window_vector(
             self.__time_grid, self.__number_of_freq_estimations, self.__max_freq
         )
