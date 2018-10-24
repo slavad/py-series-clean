@@ -10,7 +10,7 @@ with description(itr.Iterator) as self:
         self.khi = 4
         self.max_freq = 928.6049396317791 # precalculated value
         self.number_of_freq_estimations = 35934 # precalculated value
-        self.false_alarm_probability = 0.2
+        self.detection_treshold = 0.3
         self.harmonic_share = 0.5
 
         self.dirty_vector = mb.calculate_dirty_vector(
@@ -31,7 +31,7 @@ with description(itr.Iterator) as self:
 
     with before.each:
         self.iterator = itr.Iterator(
-            self.false_alarm_probability,
+            self.detection_treshold,
             self.harmonic_share, self.number_of_freq_estimations,
             self.time_grid, self.values, self.max_freq
         )
@@ -70,7 +70,7 @@ with description(itr.Iterator) as self:
                 equal_ndarray(self.iterator._Iterator__dirty_vector)
             )
             expect(
-                sch.calc_schuster_counts(self.dirty_vector[self.number_of_freq_estimations:], method_flag='average')[0]*(1.0 - self.false_alarm_probability)
+                self.detection_treshold
             ).to(
                 equal(self.iterator._Iterator__detection_threshold)
             )
@@ -147,7 +147,7 @@ with description(itr.Iterator) as self:
         with description('signal with noise only in dirty_vector'):
             with before.all:
                 self.values = np.random.normal(loc=0.0, scale=1, size=100).reshape(-1, 1)
-                self.false_alarm_probability = 0
+                self.detection_treshold = 0
                 self.max_iterations = 10
                 self.expected_iterations = 0
                 #self.expected_super_resultion_vector = np.load('./spec/fixtures/super_resultion_vector_with_result_3.pickle')
