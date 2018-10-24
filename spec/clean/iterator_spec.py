@@ -113,7 +113,7 @@ with description(itr.Iterator) as self:
                 np.abs(self.actual_iteration_result['super_resultion_vector'])
             )
 
-        with description('noise only in dirty_vector'):
+        with description('signal with noise'):
             with before.all:
                 self.max_iterations = 10
                 self.expected_iterations = 4
@@ -126,7 +126,7 @@ with description(itr.Iterator) as self:
                 pass
 
 
-        with description('itereations do not converge, because max_iterations is too small'):
+        with description('signal with noise, but iterations did not converge'):
             with before.all:
                 self.max_iterations = 3
                 self.expected_iterations = 3
@@ -144,24 +144,26 @@ with description(itr.Iterator) as self:
                     self.actual_iteration_result['super_resultion_vector']
                 ).not_to(equal_ndarray(self.expected_super_resultion_vector_converged))
 
-        with description('signal with noise only in dirty_vector'):
+        with description('noise only'):
             with before.all:
                 self.values = np.random.normal(loc=0.0, scale=1, size=100).reshape(-1, 1)
-                self.detection_treshold = 0
                 self.max_iterations = 10
                 self.expected_iterations = 0
-                #self.expected_super_resultion_vector = np.load('./spec/fixtures/super_resultion_vector_with_result_3.pickle')
+                self.expected_super_resultion_vector = np.load('./spec/fixtures/super_resultion_vector_with_result_3.pickle')
 
-            # with it('super_resultion_vector contains zero values'):
-            #     expect(self.max_value_abs).to(
-            #         equal(0.0)
-            #     )
-            #
-            # with included_context('iterations result checker'):
-            #     pass
-        #
-        # with description('signal without noise in dirty_vector'):
-        #     pass
+            with it('super_resultion_vector contains zero values'):
+                expect(self.max_value_abs).to(
+                    equal(0.0)
+                )
+
+            with included_context('iterations result checker'):
+                pass
+
+        with description('signal without noise'):
+            pass
+
+        with description('signal without noise, but iterations did not converge'):
+            pass
 
     with description('#__calculate_complex_amplitude'):
         with before.all:
@@ -357,7 +359,7 @@ with description(itr.Iterator) as self:
     with description('#__build_super_resultion_vector'):
         with it('returns correct vector'):
             actual_result = self.iterator._Iterator__build_super_resultion_vector()
-            vector_size = 71869
+            vector_size = 71869 #precalculated value
             expected_result = np.zeros((vector_size,1), dtype=complex)
             expect(
                 actual_result
