@@ -132,8 +132,8 @@ def main():
     """entry point"""
     args = parse_args()
     time_grid_and_values = frw.read_file(args.i)
-    wrapper = wrp.Wrapper(time_grid_and_values['time_grid'], args.u)
-    cleaning_result = wrapper.clean(time_grid_and_values['values'], args.t, args.r, args.g, args.k)
+    wrapper = wrp.Wrapper(time_grid_and_values['time_grid'], time_grid_and_values['values'])
+    cleaning_result = wrapper.clean(args.t, args.r, args.g, args.k, args.u)
     save_results(cleaning_result, args)
 
 main()
