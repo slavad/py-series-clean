@@ -5,7 +5,7 @@ import clean.restorer as rst
 
 class Wrapper(object):
     """
-        wraps Iterator, Restorer and DetectionTreshold classes
+        wraps Iterator, Restorer classes
     """
     def __init__(self, time_grid, values):
         self.__time_grid = time_grid
