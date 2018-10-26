@@ -27,7 +27,7 @@ with description(itr.Iterator) as self:
             self.number_of_freq_estimations:
         ][self.max_count_index][0]
 
-        self.complex_amplitude = 4.690355355904826+1.7147337162545526j
+        self.complex_amplitude = 4.690355355904826+1.7147337162545526j #precalculated value
 
     with before.each:
         self.iterator = itr.Iterator(
@@ -113,7 +113,7 @@ with description(itr.Iterator) as self:
                 np.abs(self.actual_iteration_result['super_resultion_vector'])
             )
 
-        with description('signal with noise'):
+        with description('can detect signal (there is a signal in the input)'):
             with before.all:
                 self.values = np.load("./spec/fixtures/series_1.pickle")
                 self.time_grid = np.load("./spec/fixtures/time_grid_1.pickle")
@@ -127,13 +127,7 @@ with description(itr.Iterator) as self:
             with included_context('iterations result checker'):
                 pass
 
-        with shared_context('non converged vector checker'):
-            with it('converged vector is not equal to expected_super_resultion_vector'):
-                expect(
-                    self.actual_iteration_result['super_resultion_vector']
-                ).not_to(equal_ndarray(self.expected_super_resultion_vector_converged))
-
-        with description('signal with noise, but iterations did not converge'):
+        with description('can detect signal, but iterations do not not converge'):
             with before.all:
                 self.values = np.load("./spec/fixtures/series_1.pickle")
                 self.time_grid = np.load("./spec/fixtures/time_grid_1.pickle")
@@ -148,10 +142,12 @@ with description(itr.Iterator) as self:
             with included_context('iterations result checker'):
                 pass
 
-            with included_context('non converged vector checker'):
-                pass
+            with it('converged vector is not equal to expected_super_resultion_vector'):
+                expect(
+                    self.actual_iteration_result['super_resultion_vector']
+                ).not_to(equal_ndarray(self.expected_super_resultion_vector_converged))
 
-        with description('noise only'):
+        with description('cannot detect signal (noise only in the input)'):
             with before.all:
                 self.values = np.load("./spec/fixtures/series_2.pickle")
                 self.time_grid = np.load("./spec/fixtures/time_grid_1.pickle")
@@ -166,40 +162,6 @@ with description(itr.Iterator) as self:
 
             with included_context('iterations result checker'):
                 pass
-
-        with description('signal without noise'):
-            with before.all:
-                self.time_grid = np.load("./spec/fixtures/time_grid_3.pickle")
-                self.values = np.load("./spec/fixtures/series_3.pickle")
-                self.max_iterations = 10
-                self.expected_iterations = 7
-                self.expected_super_resultion_vector = np.load('./spec/fixtures/super_resultion_vector_with_result_4.pickle')
-
-            with included_context('max value checker'):
-                pass
-
-            with included_context('iterations result checker'):
-                pass
-
-
-        with description('signal without noise, but iterations did not converge'):
-            with before.all:
-                self.time_grid = np.load("./spec/fixtures/time_grid_3.pickle")
-                self.values = np.load("./spec/fixtures/series_3.pickle")
-                self.max_iterations = 6
-                self.expected_iterations = 6
-                self.expected_super_resultion_vector_converged = np.load('./spec/fixtures/super_resultion_vector_with_result_4.pickle')
-                self.expected_super_resultion_vector = np.load('./spec/fixtures/super_resultion_vector_with_result_5.pickle')
-
-            with included_context('max value checker'):
-                pass
-
-            with included_context('iterations result checker'):
-                pass
-
-            with included_context('non converged vector checker'):
-                pass
-
     with description('#__calculate_complex_amplitude'):
         with before.all:
             self.expected_value = self.complex_amplitude
@@ -347,7 +309,7 @@ with description(itr.Iterator) as self:
     with description('__one_step'):
         with before.each:
             self.old_super_resultion_vector = self.iterator._Iterator__build_super_resultion_vector()
-        with description('dirty_vector contains signal'):
+        with description('can detect signal (there is a signal in the input)'):
             with before.all:
                 self.expected_super_resultion_vector_with_added_data =  np.load(
                     "./spec/fixtures/super_resol_vector_with_added.pickle"
@@ -380,7 +342,7 @@ with description(itr.Iterator) as self:
                 with included_context('array comparer'):
                     pass
 
-        with description('dirty vector does not contain signal'):
+        with description('cannot detect signal (noise only in the input)'):
             with before.all:
                 self.old_dirty_vector = np.load(
                     "./spec/fixtures/old_dirty_vector_no_signal.pickle"
@@ -391,6 +353,7 @@ with description(itr.Iterator) as self:
                 )
             with it('returns None'):
                 expect(self.result).to(be_none)
+
     with description('#__build_super_resultion_vector'):
         with it('returns correct vector'):
             actual_result = self.iterator._Iterator__build_super_resultion_vector()
