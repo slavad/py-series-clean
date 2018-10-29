@@ -4,7 +4,7 @@ import clean.schuster as sch
 
 class Restorer(object):
     """restores clean spectrum, algorithm steps 18 to 21 ref 2"""
-    def __init__(self, super_resultion_vector, iterations, number_of_freq_estimations, time_grid, max_freq):
+    def __init__(self, iterations, super_resultion_vector, number_of_freq_estimations, time_grid, max_freq):
         self.__iterations = iterations
         if iterations != 0:
             self.__super_resultion_vector = super_resultion_vector

@@ -15,7 +15,6 @@ with description(dtr.DetectionTreshold) as self:
         with it('sets all values'):
             expect(
                 self.time_grid
-
             ).to(
                 equal_ndarray(self.estimator._DetectionTreshold__time_grid)
             )
@@ -28,7 +27,7 @@ with description(dtr.DetectionTreshold) as self:
     with description('#estimate'):
         with before.all:
             self.expected_detection_treshold_min = 55.0
-            self.expected_detection_treshold_max = 60.0
+            self.expected_detection_treshold_max = 65.0
         with before.each:
             self.generated_detection_treshold = self.estimator.estimate(
                 self.number_of_random_series, self.false_alarm_probability

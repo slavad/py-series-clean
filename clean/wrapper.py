@@ -43,7 +43,7 @@ class Wrapper(object):
 
         iterations_result = iterator.iterate(max_iterations)
         restorer = rst.Restorer(
-            iterations_result['super_resultion_vector'], iterations_result['iterations'],
+            iterations_result['iterations'], iterations_result['super_resultion_vector'],
             number_of_freq_estimations, self.__time_grid, max_freq
         )
 
