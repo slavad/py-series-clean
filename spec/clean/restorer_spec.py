@@ -39,6 +39,10 @@ with description(rst.Restorer) as self:
         with description('__init__'):
             with included_context('common attrs values checker'):
                 pass
+        with description('restore'):
+            with it('resturns None'):
+                expect(self.restorer.restore()).to(be_none)
+
     with description('number of iterations is not zero'):
         with before.all:
             self.iterations = 4
@@ -87,3 +91,9 @@ with description(rst.Restorer) as self:
                 ).to(
                     equal_ndarray(self.restorer._Restorer__clean_window_vector)
                 )
+        with description('restore'):
+            with it('resturns non-None value'):
+                expect(self.restorer.restore()).not_to(be_none)
+
+            with it('returns dict with correct values'):
+                pass
