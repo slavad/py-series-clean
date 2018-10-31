@@ -202,120 +202,139 @@ with description(equal_ndarray) as self:
                 )
 
     with description('#_match'):
-        with before.each:
-            self.actual_result = self.matcher._match(self.actual)
-        with description('expected is not an ndarray'):
-            with before.all:
-                self.expected = [1.333,2.444,3.555]
-                self.precision = 2
-                self.actual = np.array([1.333,2.444,3.555])
-            with it('returns False with message'):
-                expect(
-                    self.actual_result
-                ).to(
-                    equal((False, ['expected was not an ndarray']))
-                )
-        with description('precision is not an integer'):
-            with before.all:
-                self.expected = np.array([1.333,2.444,3.555])
-                self.precision = 'qwerty'
-                self.actual = np.array([1.333,2.444,3.555])
-            with it('returns False with message'):
-                expect(
-                    self.actual_result
-                ).to(
-                    equal((False, ['precision was not an integer']))
-                )
-
-        with shared_context('comparer with default precision'):
-            with description('expected and actual are equal'):
-                with before.all:
-                   self.expected = np.array([1.333,2.444,3.555])
-                   self.precision = None
-                   self.actual = np.array([1.333,2.444,3.555])
-                with it('returns True with message'):
-                   expect(
-                       self.actual_result
-                   ).to(
-                       equal((True, ['arrays are equal']))
-                   )
-            with description('expected and actual are not equal'):
-                with before.all:
-                   self.expected = np.array([1.333,2.444,3.555])
-                   self.precision = None
-                   self.actual = np.array([1.33,2.44,3.56])
-                with it('returns True with message'):
-                   expect(
-                       self.actual_result
-                   ).to(
-                       equal((False, ['arrays are not equal']))
-                   )
-            with description('expected and actual have different shapes'):
-                with before.all:
-                   self.expected = np.array([1.333,2.444,3.555]).reshape((-1,1))
-                   self.precision = None
-                   self.actual = np.array([1.333,2.444,3.555])
-                with it('returns True with message'):
-                   expect(
-                       self.actual_result
-                   ).to(
-                       equal((False, ['arrays are not equal']))
-                   )
-
-        with description('precision has default value'):
+        with description('invalid input'):
             with before.each:
-                self.matcher = equal_ndarray(self.expected)
-            with before.all:
-               self.expected = np.array([1.333,2.444,3.555])
-               self.precision = None
-               self.actual = np.array([1.333,2.444,3.555])
-            with included_context('comparer with default precision'):
-                pass
+                self.action = lambda: self.matcher._match(self.actual)
 
-        with description('precision is None'):
-            with before.all:
-               self.expected = np.array([1.333,2.444,3.555])
-               self.precision = None
-               self.actual = np.array([1.333,2.444,3.555])
-            with included_context('comparer with default precision'):
-                pass
+                with description('expected is not an ndarray'):
+                    with before.all:
+                        self.expected = [1.333,2.444,3.555]
+                        self.precision = 2
+                        self.actual = np.array([1.333,2.444,3.555])
+                    with it('returns False with message'):
+                        expect(
+                            self.action
+                        ).to(
+                            raise_error(ValueError, 'expected was not an ndarray')
+                        )
 
-        with description('precision is integer'):
-            with description('arrays are equal within precision'):
+                with description('actual is not an ndarray'):
+                    with before.all:
+                        self.expected = np.array([1.333,2.444,3.555])
+                        self.precision = 2
+                        self.actual = [1.333,2.444,3.555]
+                    with it('returns False with message'):
+                        expect(
+                            self.action
+                        ).to(
+                            raise_error(ValueError, 'actual was not an ndarray')
+                        )
+
+                with description('precision is not an integer'):
+                    with before.all:
+                        self.expected = np.array([1.333,2.444,3.555])
+                        self.precision = 'qwerty'
+                        self.actual = np.array([1.333,2.444,3.555])
+                    with it('returns False with message'):
+                        expect(
+                            self.action
+                        ).to(
+                            raise_error(ValueError, 'precision was not an integer')
+                        )
+
+        with description('valid input'):
+            with before.each:
+                self.actual_result = self.matcher._match(self.actual)
+
+            with shared_context('comparer with default precision'):
+                with description('expected and actual are equal'):
+                    with before.all:
+                       self.expected = np.array([1.333,2.444,3.555])
+                       self.precision = None
+                       self.actual = np.array([1.333,2.444,3.555])
+                    with it('returns True with message'):
+                       expect(
+                           self.actual_result
+                       ).to(
+                           equal((True, ['arrays are equal']))
+                       )
+                with description('expected and actual are not equal'):
+                    with before.all:
+                       self.expected = np.array([1.333,2.444,3.555])
+                       self.precision = None
+                       self.actual = np.array([1.33,2.44,3.56])
+                    with it('returns True with message'):
+                       expect(
+                           self.actual_result
+                       ).to(
+                           equal((False, ['arrays are not equal']))
+                       )
+                with description('expected and actual have different shapes'):
+                    with before.all:
+                       self.expected = np.array([1.333,2.444,3.555]).reshape((-1,1))
+                       self.precision = None
+                       self.actual = np.array([1.333,2.444,3.555])
+                    with it('returns True with message'):
+                       expect(
+                           self.actual_result
+                       ).to(
+                           equal((False, ['arrays are not equal']))
+                       )
+
+            with description('precision has default value'):
+                with before.each:
+                    self.matcher = equal_ndarray(self.expected)
                 with before.all:
-                    self.expected = np.array([1.333,2.444,3.555])
-                    self.precision = 2
-                    self.actual = np.array([1.33,2.44,3.56])
-                with it('returns True with message'):
-                    expect(
-                        self.actual_result
-                    ).to(
-                        equal((True, ['arrays are equal with precision 2']))
-                    )
+                   self.expected = np.array([1.333,2.444,3.555])
+                   self.precision = None
+                   self.actual = np.array([1.333,2.444,3.555])
+                with included_context('comparer with default precision'):
+                    pass
 
-            with description('arrays are equal'):
+            with description('precision is None'):
                 with before.all:
-                    self.expected = np.array([1.33,2.44,3.56])
-                    self.precision = 2
-                    self.actual = np.array([1.33,2.44,3.56])
-                with it('returns True with message'):
-                    expect(
-                        self.actual_result
-                    ).to(
-                        equal((True, ['arrays are equal with precision 2']))
-                    )
+                   self.expected = np.array([1.333,2.444,3.555])
+                   self.precision = None
+                   self.actual = np.array([1.333,2.444,3.555])
+                with included_context('comparer with default precision'):
+                    pass
 
-            with description('arrays are not equal within precision'):
-                with before.all:
-                    self.expected = np.array([1.33,2.44,3.56])
-                    self.precision = 2
-                    self.actual = np.array([1.33,2.44,3.55])
-                with it('returns True with message'):
-                    expect(
-                        self.actual_result
-                    ).to(
-                        equal((False, ['arrays are not equal with precision 2']))
-                    )
+            with description('precision is integer'):
+                with description('arrays are equal within precision'):
+                    with before.all:
+                        self.expected = np.array([1.333,2.444,3.555])
+                        self.precision = 2
+                        self.actual = np.array([1.33,2.44,3.56])
+                    with it('returns True with message'):
+                        expect(
+                            self.actual_result
+                        ).to(
+                            equal((True, ['arrays are equal with precision 2']))
+                        )
+
+                with description('arrays are equal'):
+                    with before.all:
+                        self.expected = np.array([1.33,2.44,3.56])
+                        self.precision = 2
+                        self.actual = np.array([1.33,2.44,3.56])
+                    with it('returns True with message'):
+                        expect(
+                            self.actual_result
+                        ).to(
+                            equal((True, ['arrays are equal with precision 2']))
+                        )
+
+                with description('arrays are not equal within precision'):
+                    with before.all:
+                        self.expected = np.array([1.33,2.44,3.56])
+                        self.precision = 2
+                        self.actual = np.array([1.33,2.44,3.55])
+                    with it('returns True with message'):
+                        expect(
+                            self.actual_result
+                        ).to(
+                            equal((False, ['arrays are not equal with precision 2']))
+                        )
 
     with description('#__repr__'):
         with description('precision is None'):

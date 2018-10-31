@@ -5,7 +5,7 @@ import pdb
 class _contain_non_zero_vals(Matcher):
     def _match(self, actual_array):
         if not isinstance(actual_array, np.ndarray):
-            return False, ['is not an ndarray']
+            raise ValueError('actual is not an ndarray')
         if np.max(np.abs(actual_array)) > 0.0:
             return True, ['array does not contain zeroes']
         else:

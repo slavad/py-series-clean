@@ -9,13 +9,13 @@ class _equal_with_precision(Matcher):
 
     def _match(self, original_actual_number):
         if not isinstance(self._precision, int):
-            return False, ['precision was not an integer']
+            raise ValueError('precision was not an integer')
 
         if not isinstance(self._original_expected_number, numbers.Number):
-            return False, ['expected was not a number']
+            raise ValueError('expected was not a number')
 
         if  not isinstance(original_actual_number, numbers.Number):
-            return False, ['actual was not a number']
+            raise ValueError('actual was not a number')
 
         if np.round(self._original_expected_number, self._precision) == np.round(original_actual_number, self._precision):
             return True, ["numbers are equal with precision {}".format(self._precision)]

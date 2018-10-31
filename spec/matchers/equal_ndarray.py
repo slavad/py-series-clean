@@ -18,13 +18,13 @@ class _equal_ndarray(Matcher):
 
     def _match(self, original_actual_array):
         if self._precision != None and not isinstance(self._precision, int):
-            return False, ['precision was not an integer']
+            raise ValueError('precision was not an integer')
 
         if not isinstance(self._original_expected_array, np.ndarray):
-            return False, ['expected was not an ndarray']
+            raise ValueError('expected is not an ndarray')
 
         if not isinstance(original_actual_array, np.ndarray):
-            return False, ['actual was not an ndarray']
+            raise ValueError('actual is not an ndarray')
 
         if self._precision:
             rounded_actual_array = np.around(original_actual_array, self._precision)
