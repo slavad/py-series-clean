@@ -1,7 +1,7 @@
 from expects.matchers import Matcher
 import numpy as np
 
-class equal_ndarray(Matcher):
+class _equal_ndarray(Matcher):
 
     def __init__(self, original_expected_array, precision = None):
         self._precision = precision
@@ -64,3 +64,5 @@ class equal_ndarray(Matcher):
     def _failure_message_negated(self, subject, reasons):
         """custom failure message"""
         return self._failure_message_general(subject, reasons, True)
+
+equal_ndarray = _equal_ndarray

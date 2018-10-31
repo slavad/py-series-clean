@@ -2,7 +2,7 @@ from expects.matchers import Matcher
 import numbers
 import numpy as np
 
-class equal_with_precision(Matcher):
+class _equal_with_precision(Matcher):
     def __init__(self, original_expected_number, precision):
         self._precision = precision
         self._original_expected_number = original_expected_number
@@ -48,3 +48,5 @@ class equal_with_precision(Matcher):
     def _failure_message_negated(self, subject, reasons):
         """custom failure message"""
         return self._failure_message_general(subject, reasons, True)
+
+equal_with_precision = _equal_with_precision

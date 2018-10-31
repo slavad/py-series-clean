@@ -12,14 +12,17 @@ with description(rst.Restorer) as self:
         self.index_vector = np.load("./spec/fixtures/index_vector_1.pickle")
         self.freq_vector = np.load("./spec/fixtures/freq_vector_1.pickle")
         self.clean_window_vector = np.load("./spec/fixtures/clean_window_vector_1.pickle")
+        self.clean_spectrum = np.load("./spec/fixtures/clean_spectrum_1.pickle")
+        self.correlogram = np.load("./spec/fixtures/correlogram_1.pickle")
+        self.uniform_series = np.load("./spec/fixtures/uniform_series_1.pickle")
+        self.frequencies = np.load("./spec/fixtures/frequencies_1.pickle")
+        self.amplitudes = np.load("./spec/fixtures/amplitudes_1.pickle")
+        self.phases = np.load("./spec/fixtures/phases_1.pickle")
 
     with before.each:
         self.restorer = rst.Restorer(
             self.iterations, self.super_resultion_vector, self.number_of_freq_estimations, self.time_grid, self.max_freq
         )
-        self.restorer_vars = []
-        for key in self.restorer.__dict__.keys():
-            self.restorer_vars.append(key)
 
     with shared_context('common attrs values checker'):
         with it('sets only iterations value'):
@@ -28,9 +31,12 @@ with description(rst.Restorer) as self:
             ).to(
                 equal(self.restorer._Restorer__iterations)
             )
-            expect(self.restorer_vars).to(
-                equal(self.expected_restorer_vars)
+            expect(self.restorer.__dict__).to(
+                have_keys(*self.expected_restorer_vars)
             )
+            expect(
+                len(self.restorer.__dict__.keys())
+            ).to(equal(len(self.expected_restorer_vars)))
     with description('number of iterations in zero'):
         with before.all:
             self.iterations = 0
@@ -92,8 +98,80 @@ with description(rst.Restorer) as self:
                     equal_ndarray(self.restorer._Restorer__clean_window_vector)
                 )
         with description('restore'):
-            with it('resturns non-None value'):
-                expect(self.restorer.restore()).not_to(be_none)
+            with before.each:
+                self.restoration_result = self.restorer.restore()
+                self.expected_keys = [
+                    'freq_vector', 'uniform_time_grid',
+                    'iterations', 'clean_spectrum', 'correlogram',
+                    'uniform_series', 'frequencies', 'amplitudes', 'phases'
+                ]
 
-            with it('returns dict with correct values'):
-                pass
+            with it('resturns non-None value'):
+                expect(self.restoration_result).not_to(be_none)
+
+            with it('returns dict with correct keys'):
+                expect(self.restoration_result).to(have_keys(*self.expected_keys))
+                expect(
+                    len(self.restoration_result)
+                ).to(equal(len(self.expected_keys)))
+
+            with it('returns correct key values'):
+                expect(
+                    self.restoration_result['freq_vector']
+                ).to(contain_non_zero_vals)
+                expect(
+                    self.restoration_result['freq_vector']
+                ).to(equal_ndarray(self.freq_vector))
+
+                expect(
+                    self.restoration_result['uniform_time_grid']
+                ).to(contain_non_zero_vals)
+                expect(
+                    self.restoration_result['uniform_time_grid']
+                ).to(equal_ndarray(self.uniform_time_grid))
+
+                expect(
+                    self.restoration_result['iterations']
+                ).to(equal(self.iterations))
+
+                expect(
+                    self.restoration_result['clean_spectrum']
+                ).to(contain_non_zero_vals)
+                expect(
+                    self.restoration_result['clean_spectrum']
+                ).to(equal_ndarray(self.clean_spectrum))
+
+                expect(
+                    self.restoration_result['correlogram']
+                ).to(contain_non_zero_vals)
+                expect(
+                    self.restoration_result['correlogram']
+                ).to(equal_ndarray(self.correlogram))
+
+                expect(
+                    self.restoration_result['uniform_series']
+                ).to(contain_non_zero_vals)
+                expect(
+                    self.restoration_result['uniform_series']
+                ).to(equal_ndarray(self.uniform_series))
+
+                expect(
+                    self.restoration_result['frequencies']
+                ).to(contain_non_zero_vals)
+                expect(
+                    self.restoration_result['frequencies']
+                ).to(equal_ndarray(self.frequencies))
+
+                expect(
+                    self.restoration_result['amplitudes']
+                ).to(contain_non_zero_vals)
+                expect(
+                    self.restoration_result['amplitudes']
+                ).to(equal_ndarray(self.amplitudes))
+
+                expect(
+                    self.restoration_result['phases']
+                ).to(contain_non_zero_vals)
+                expect(
+                    self.restoration_result['phases']
+                ).to(equal_ndarray(self.phases))
