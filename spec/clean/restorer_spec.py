@@ -155,3 +155,17 @@ with description(rst.Restorer) as self:
 
             with included_context('restoration result checker'):
                 pass
+
+        with description('#__build_clean_window_vector'):
+            with before.each:
+                self.actual_result =  self.restorer._Restorer__build_clean_window_vector()
+
+            with it('returns correct value'):
+                expect(self.actual_result).to(equal_ndarray(self.clean_window_vector))
+
+        with description('#__build_uniform_time_grid'):
+            with before.each:
+                self.actual_result =  self.restorer._Restorer__build_uniform_time_grid(self.time_grid)
+
+            with it('returns correct value'):
+                expect(self.actual_result).to(equal_ndarray(self.uniform_time_grid))
