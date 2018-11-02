@@ -100,7 +100,7 @@ with description(rst.Restorer) as self:
                 expect(self.restoration_result).to(have_only_keys(*self.expected_keys))
 
             with it('has correct values'):
-                for key in self.expected_keys_arr_result:
+                for key in self.expected_keys:
                     expect(
                         self.restoration_result[key]
                     ).to(contain_non_zero_vals)
@@ -113,12 +113,6 @@ with description(rst.Restorer) as self:
                 self.restoration_result = self.restorer.restore()
                 self.expected_keys = [
                     'freq_vector', 'uniform_time_grid',
-                    'iterations', 'clean_spectrum', 'correlogram',
-                    'uniform_series', 'frequencies', 'amplitudes', 'phases'
-                ]
-
-                self.expected_keys_arr_result = [
-                    'freq_vector', 'uniform_time_grid',
                     'clean_spectrum', 'correlogram',
                     'uniform_series', 'frequencies', 'amplitudes', 'phases'
                 ]
@@ -129,10 +123,6 @@ with description(rst.Restorer) as self:
             with it('resturns non-None value'):
                 expect(self.restoration_result).not_to(be_none)
 
-            with it('returns correct iteration value'):
-                expect(
-                    self.restoration_result['iterations']
-                ).to(equal(self.iterations))
 
         with description('#__restore_ccs'):
             with before.each:
@@ -140,7 +130,6 @@ with description(rst.Restorer) as self:
                 self.expected_keys = [
                      'clean_spectrum', 'correlogram', 'uniform_series'
                 ]
-                self.expected_keys_arr_result = self.expected_keys
 
             with included_context('restoration result checker'):
                 pass
@@ -151,7 +140,6 @@ with description(rst.Restorer) as self:
                 self.expected_keys = [
                      'frequencies', 'amplitudes', 'phases'
                 ]
-                self.expected_keys_arr_result = self.expected_keys
 
             with included_context('restoration result checker'):
                 pass

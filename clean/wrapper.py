@@ -48,5 +48,12 @@ class Wrapper(object):
         )
 
         restoration_result = restorer.restore()
+        if restoration_result:
+            final_result = {
+                'iterations': iterations_result['iterations']
+            }
+            final_result.update(restoration_result)
+            return final_result
+        else:
+            return None
 
-        return restoration_result

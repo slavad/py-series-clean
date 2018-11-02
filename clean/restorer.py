@@ -30,8 +30,7 @@ class Restorer(object):
             fap_restoration_result = self.__restore_fap()
             result = {
                 'freq_vector': self.__freq_vector,
-                'uniform_time_grid': self.__uniform_time_grid,
-                'iterations': self.__iterations
+                'uniform_time_grid': self.__uniform_time_grid
             }
 
             result.update(ccs_restoration_result)
