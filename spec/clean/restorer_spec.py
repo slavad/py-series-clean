@@ -32,11 +32,8 @@ with description(rst.Restorer) as self:
                 equal(self.restorer._Restorer__iterations)
             )
             expect(self.restorer.__dict__).to(
-                have_keys(*self.expected_restorer_vars)
+                have_only_keys(*self.expected_restorer_vars)
             )
-            expect(
-                len(self.restorer.__dict__.keys())
-            ).to(equal(len(self.expected_restorer_vars)))
     with description('number of iterations in zero'):
         with before.all:
             self.iterations = 0
@@ -97,6 +94,20 @@ with description(rst.Restorer) as self:
                 ).to(
                     equal_ndarray(self.restorer._Restorer__clean_window_vector)
                 )
+
+        with shared_context('restoration result checker'):
+            with it('contains correct keys'):
+                expect(self.restoration_result).to(have_only_keys(*self.expected_keys))
+
+            with it('has correct values'):
+                for key in self.expected_keys_arr_result:
+                    expect(
+                        self.restoration_result[key]
+                    ).to(contain_non_zero_vals)
+                    expect(
+                        self.restoration_result[key]
+                    ).to(equal_ndarray(getattr(self, key)))
+
         with description('restore'):
             with before.each:
                 self.restoration_result = self.restorer.restore()
@@ -106,72 +117,41 @@ with description(rst.Restorer) as self:
                     'uniform_series', 'frequencies', 'amplitudes', 'phases'
                 ]
 
+                self.expected_keys_arr_result = [
+                    'freq_vector', 'uniform_time_grid',
+                    'clean_spectrum', 'correlogram',
+                    'uniform_series', 'frequencies', 'amplitudes', 'phases'
+                ]
+
+            with included_context('restoration result checker'):
+                pass
+
             with it('resturns non-None value'):
                 expect(self.restoration_result).not_to(be_none)
 
-            with it('returns dict with correct keys'):
-                expect(self.restoration_result).to(have_keys(*self.expected_keys))
-                expect(
-                    len(self.restoration_result)
-                ).to(equal(len(self.expected_keys)))
-
-            with it('returns correct key values'):
-                expect(
-                    self.restoration_result['freq_vector']
-                ).to(contain_non_zero_vals)
-                expect(
-                    self.restoration_result['freq_vector']
-                ).to(equal_ndarray(self.freq_vector))
-
-                expect(
-                    self.restoration_result['uniform_time_grid']
-                ).to(contain_non_zero_vals)
-                expect(
-                    self.restoration_result['uniform_time_grid']
-                ).to(equal_ndarray(self.uniform_time_grid))
-
+            with it('returns correct iteration value'):
                 expect(
                     self.restoration_result['iterations']
                 ).to(equal(self.iterations))
 
-                expect(
-                    self.restoration_result['clean_spectrum']
-                ).to(contain_non_zero_vals)
-                expect(
-                    self.restoration_result['clean_spectrum']
-                ).to(equal_ndarray(self.clean_spectrum))
+        with description('#__restore_ccs'):
+            with before.each:
+                self.restoration_result = self.restorer._Restorer__restore_ccs()
+                self.expected_keys = [
+                     'clean_spectrum', 'correlogram', 'uniform_series'
+                ]
+                self.expected_keys_arr_result = self.expected_keys
 
-                expect(
-                    self.restoration_result['correlogram']
-                ).to(contain_non_zero_vals)
-                expect(
-                    self.restoration_result['correlogram']
-                ).to(equal_ndarray(self.correlogram))
+            with included_context('restoration result checker'):
+                pass
 
-                expect(
-                    self.restoration_result['uniform_series']
-                ).to(contain_non_zero_vals)
-                expect(
-                    self.restoration_result['uniform_series']
-                ).to(equal_ndarray(self.uniform_series))
+        with description('__restore_fap'):
+            with before.each:
+                self.restoration_result = self.restorer._Restorer__restore_fap()
+                self.expected_keys = [
+                     'frequencies', 'amplitudes', 'phases'
+                ]
+                self.expected_keys_arr_result = self.expected_keys
 
-                expect(
-                    self.restoration_result['frequencies']
-                ).to(contain_non_zero_vals)
-                expect(
-                    self.restoration_result['frequencies']
-                ).to(equal_ndarray(self.frequencies))
-
-                expect(
-                    self.restoration_result['amplitudes']
-                ).to(contain_non_zero_vals)
-                expect(
-                    self.restoration_result['amplitudes']
-                ).to(equal_ndarray(self.amplitudes))
-
-                expect(
-                    self.restoration_result['phases']
-                ).to(contain_non_zero_vals)
-                expect(
-                    self.restoration_result['phases']
-                ).to(equal_ndarray(self.phases))
+            with included_context('restoration result checker'):
+                pass
