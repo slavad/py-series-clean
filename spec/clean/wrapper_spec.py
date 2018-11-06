@@ -6,8 +6,16 @@ with description(wrp.Wrapper) as self:
         self.use_aver = False
         self.time_grid = np.load("./spec/fixtures/time_grid_1.pickle")
         self.values = np.load("./spec/fixtures/series_1.pickle")
+        self.distance_vector = np.load("./spec/fixtures/distance_vector_1.pickle")
     with before.each:
         self.wrapper = wrp.Wrapper(self.time_grid, self.values)
+
+    with description('__init__'):
+        with it('sets correct values'):
+            expect(self.wrapper._Wrapper__time_grid).to(equal_ndarray(self.time_grid))
+            expect(self.wrapper._Wrapper__values).to(equal_ndarray(self.values))
+            expect(self.wrapper._Wrapper__distance_vector).to(equal_ndarray(self.distance_vector))
+
     with shared_context('#__estimate_max_freq checker'):
         with description('#__estimate_max_freq'):
             with before.all:
@@ -43,3 +51,12 @@ with description(wrp.Wrapper) as self:
             expect(self.wrapper._Wrapper__calculate_estimations_vector_size(max_freq, khi)).to(
                 equal(expected_num_of_freq_estimations)
             )
+
+    with description('clean'):
+        with description('use_aver is False'):
+            with before.all:
+                self.use_aver = False
+
+        with description('use_aver is True'):
+            with before.all:
+                self.use_aver = True
