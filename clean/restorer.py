@@ -83,16 +83,10 @@ class Restorer(object):
         number_of_rows = self.__super_resultion_vector.shape[0]
         array = []
         for index in range(0, number_of_rows):
-            #TODO: check correctness of the index shifts:
-            # probably shifts here are wrong.
-            # maybe reverse the array here?
-            # in eq 159 B[j-k]
-            # here j == index,
-            # but in our formula [k-j]!
-            # probably the subvector should also be flipped
             max_index = index + 2*self.__number_of_freq_estimations
             min_index = max_index - 2*self.__number_of_freq_estimations
             subvector = self.__clean_window_vector[min_index:max_index+1]
+            # subvector is flipped, because in eq 159 index of vector C (k) is substracted from index for vector S (j)
             array.append(np.matmul(self.__super_resultion_vector.T, np.flip(subvector, axis=0))[0][0])
         result = np.array(array).reshape(-1,1)
         return result

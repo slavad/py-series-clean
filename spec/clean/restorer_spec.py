@@ -1,6 +1,7 @@
 from spec.spec_helper import *
 import clean.restorer as rst
 import clean.matrix_builder as mb
+import clean.schuster as sch
 
 with description(rst.Restorer) as self:
     with before.all:
@@ -157,3 +158,57 @@ with description(rst.Restorer) as self:
 
             with it('returns correct value'):
                 expect(self.actual_result).to(equal_ndarray(self.uniform_time_grid))
+
+        with shared_context('correct value checker'):
+            with it('returns correct value'):
+                expect(self.actual_result).to(equal_ndarray(self.expected_result))
+
+        with description('#__build_clean_spectrum'):
+            with before.all:
+                self.expected_result = np.load("./spec/fixtures/clean_spectrum_1.pickle")
+
+            with before.each:
+                self.actual_result =  self.restorer._Restorer__build_clean_spectrum()
+
+            with included_context('correct value checker'):
+                pass
+
+        with description('#__build_correlogram'):
+            with before.all:
+                self.expected_result = np.load("./spec/fixtures/correlogram_1.pickle")
+
+            with before.each:
+                self.actual_result =  self.restorer._Restorer__build_correlogram(self.clean_spectrum)
+
+            with included_context('correct value checker'):
+                pass
+
+        with description('#__build_uniform_series'):
+            with before.all:
+                self.expected_result = np.load("./spec/fixtures/uniform_series_1.pickle")
+
+            with before.each:
+                self.actual_result =  self.restorer._Restorer__build_uniform_series(self.clean_spectrum)
+
+            with included_context('correct value checker'):
+                pass
+
+        with description('#__build_correlogram_or_uniform_series'):
+            with before.each:
+                self.actual_result =  self.restorer._Restorer__build_correlogram_or_uniform_series(self.values)
+
+            with description('argument is squared abs clean_spectrum)'):
+                with before.all:
+                    self.values = sch.squared_abs(self.clean_spectrum)
+                    self.expected_result = np.load("./spec/fixtures/correlogram_1.pickle")
+
+                with included_context('correct value checker'):
+                    pass
+
+            with description('argument is squared clean_spectrum)'):
+                with before.all:
+                    self.values = self.clean_spectrum
+                    self.expected_result = np.load("./spec/fixtures/uniform_series_1.pickle")
+
+                with included_context('correct value checker'):
+                    pass
