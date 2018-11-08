@@ -5,13 +5,15 @@ with description(mb) as self:
     with shared_context('compare actual and expected with precision'):
         with it('returns correct vector'):
             expect(
-                self.expected_result
+                self.actual_result
             ).to(
-                equal_ndarray(self.actual_result, self.precision)
+                equal_ndarray(self.expected_result, self.round_precision)
             )
+        with it('does not contain zeroes'):
+            expect(self.actual_result).to(contain_non_zero_vals(self.round_precision))
 
     with before.all:
-        self.precision = 7
+        self.round_precision = 7
     with description('#generate_index_vector'):
         with description('argument is odd'):
             with before.all:

@@ -5,6 +5,7 @@ import clean.schuster as sch
 
 with description(rst.Restorer) as self:
     with before.all:
+        self.round_precision = 10
         self.super_resultion_vector = np.load('./spec/fixtures/super_resultion_vector_with_result_1.pickle')
         self.max_freq = 928.6049396317791 # precalculated value
         self.number_of_freq_estimations = 35934 # precalculated value
@@ -100,14 +101,14 @@ with description(rst.Restorer) as self:
             with it('contains correct keys'):
                 expect(self.restoration_result).to(have_only_keys(*self.expected_keys))
 
-            with it('has correct values'):
+            with it('has correct values and does not contain zeroes'):
                 for key in self.expected_keys:
                     expect(
                         self.restoration_result[key]
-                    ).to(contain_non_zero_vals)
+                    ).to(contain_non_zero_vals(self.round_precision))
                     expect(
                         self.restoration_result[key]
-                    ).to(equal_ndarray(getattr(self, key)))
+                    ).to(equal_ndarray(getattr(self, key),self.round_precision))
 
         with description('restore'):
             with before.each:

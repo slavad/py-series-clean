@@ -81,6 +81,12 @@ with description(itr.Iterator) as self:
             )
 
     with description('iterate'):
+        with shared_context('non zero values checker'):
+            with it('has non-zero values in super_resultion_vector'):
+                expect(
+                    self.actual_iteration_result['super_resultion_vector']
+                ).to(contain_non_zero_vals(self.round_precision))
+
         with shared_context('max value checker'):
             with it('super_resultion_vector contains non-zero values'):
                 expect(self.max_value_abs).to(
@@ -89,9 +95,9 @@ with description(itr.Iterator) as self:
 
         with shared_context('iterations result checker'):
             with it('contains correct key list'):
-                expect(
-                    set(self.actual_iteration_result.keys())
-                ).to(equal(self.expected_key_list))
+                expect(self.actual_iteration_result).to(
+                    have_only_keys(*self.expected_key_list)
+                )
 
             with it('contains correct iterations count'):
                 expect(
@@ -105,7 +111,7 @@ with description(itr.Iterator) as self:
 
         with before.all:
             self.values = np.load("./spec/fixtures/series_1.pickle")
-            self.expected_key_list = {'super_resultion_vector', 'iterations'}
+            self.expected_key_list = ['super_resultion_vector', 'iterations']
 
         with before.each:
             self.actual_iteration_result = self.iterator.iterate(self.max_iterations)
@@ -127,6 +133,9 @@ with description(itr.Iterator) as self:
             with included_context('iterations result checker'):
                 pass
 
+            with included_context('non zero values checker'):
+                pass
+
         with description('can detect signal, but iterations do not not converge'):
             with before.all:
                 self.values = np.load("./spec/fixtures/series_1.pickle")
@@ -140,6 +149,9 @@ with description(itr.Iterator) as self:
                 pass
 
             with included_context('iterations result checker'):
+                pass
+
+            with included_context('non zero values checker'):
                 pass
 
             with it('converged vector is not equal to expected_super_resultion_vector'):
@@ -162,15 +174,19 @@ with description(itr.Iterator) as self:
 
             with included_context('iterations result checker'):
                 pass
+
     with description('#__calculate_complex_amplitude'):
         with before.all:
             self.expected_value = self.complex_amplitude
 
+        with before.each:
+            self.actual_complex_amplitude = self.iterator._Iterator__calculate_complex_amplitude(
+                self.dirty_vector, self.max_count_index, self.max_count_value
+            )
+
         with it('retruns correct value'):
             expect(
-                self.iterator._Iterator__calculate_complex_amplitude(
-                    self.dirty_vector, self.max_count_index, self.max_count_value
-                )
+                self.actual_complex_amplitude
             ).to(
                 equal_with_precision(self.expected_value, self.round_precision)
             )
@@ -188,6 +204,11 @@ with description(itr.Iterator) as self:
             expect(
                 self.actual_vector.shape
             ).to(equal(self.initial_vector.shape))
+
+        with it('contains no zero vals'):
+            expect(
+                self.actual_vector
+            ).to(contain_non_zero_vals(self.round_precision))
 
     with description('#__extract_data_from_dirty_vector'):
         with before.all:

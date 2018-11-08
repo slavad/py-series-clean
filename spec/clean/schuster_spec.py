@@ -10,6 +10,7 @@ with description(sch) as self:
                 8 - 10j
             ]
         ).reshape((-1,1))
+        self.round_precision = 2
 
     with description('#calc_schuster_counts'):
 
@@ -43,16 +44,24 @@ with description(sch) as self:
                 ).to(raise_error(ValueError, "unknown method_flag"))
 
     with description('#squared_abs'):
-        with it('returns correct values'):
-            expected_result = np.array(
+        with before.all:
+            self.expected_result = np.array(
                 [
                     np.power(0.1, 2) + np.power(10, 2),
                     np.power(0.3, 2) + np.power(1, 2),
                     np.power(8, 2) + np.power(10, 2)
                 ]
             ).reshape((-1,1))
+        with before.each:
+            self.actual_result = sch.squared_abs(self.array_to_test)
+
+        with it('returns correct values'):
             expect(
                 #it's ok if we round it to the 2nd number after the decimal point
                 #since the expected_result precision is the same
-                sch.squared_abs(self.array_to_test)
-            ).to(equal_ndarray(expected_result, precision=2))
+                self.actual_result
+            ).to(equal_ndarray(self.expected_result, self.round_precision))
+
+
+        with it('does not contain zeroes'):
+            expect(self.actual_result).to(contain_non_zero_vals(self.round_precision))

@@ -273,14 +273,21 @@ with description(ds.DirtySeries) as self:
 
     with shared_context('resulting series checker'):
         with before.each:
-            self.periodical_series = self.generator._DirtySeries__generate_periodical_series(self.time_grid)
+            self.actual_periodical_series = self.generator._DirtySeries__generate_periodical_series(self.time_grid)
 
         with description('single harmonic'):
             with it('returns correct result'):
                 expect(
-                    self.periodical_series
+                    self.actual_periodical_series
                 ).to(
                     equal_ndarray(self.expected_periodical_series, self.round_precision)
+                )
+
+            with it('does not contain zeroes'):
+                expect(
+                    self.actual_periodical_series
+                ).to(
+                    contain_non_zero_vals(self.round_precision)
                 )
 
     with description('#__generate_periodical_series'):
@@ -441,9 +448,16 @@ with description(ds.DirtySeries) as self:
                 self.dirty_periodical_series = self.generator._DirtySeries__generate_dirty_periodical_series(self.time_grid)
             with it('does not add noise'):
                 expect(
-                    self.clean_periodical_series
+                    self.dirty_periodical_series
                 ).to(
-                    equal_ndarray(self.dirty_periodical_series, self.round_precision)
+                    equal_ndarray(self.clean_periodical_series, self.round_precision)
+                )
+
+            with it('does not contain zeroes'):
+                expect(
+                    self.dirty_periodical_series
+                ).to(
+                    contain_non_zero_vals(self.round_precision)
                 )
         with description('sigma is not zero'):
             with before.each:

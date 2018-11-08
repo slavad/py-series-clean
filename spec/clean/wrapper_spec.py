@@ -97,11 +97,11 @@ with description(wrp.Wrapper) as self:
             with it('returns correct number of iterations'):
                 expect(self.result['iterations']).to(equal(self.expected_iterations))
 
-            with it('returns correct ndarray values'):
+            with it('returns correct values and does not contain zeroes'):
                 for key in self.expected_keys_arr:
                     expect(
                         self.result[key]
-                    ).to(contain_non_zero_vals)
+                    ).to(contain_non_zero_vals(self.round_precision))
                     expect(
                         self.result[key]
                     ).to(equal_ndarray(getattr(self, key), self.round_precision))
