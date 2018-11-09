@@ -77,20 +77,7 @@ with description(wrp.Wrapper) as self:
                 self.detection_treshold, self.max_iterations, self.harmonic_share, self.khi, self.use_aver
             )
 
-        with description('use_aver is False'):
-            with before.all:
-                self.use_aver = False
-
-                self.expected_iterations = 4
-                self.uniform_time_grid = np.load("./spec/fixtures/uniform_time_grid_1.pickle")
-                self.freq_vector = np.load("./spec/fixtures/freq_vector_1.pickle")
-                self.clean_spectrum = np.load("./spec/fixtures/clean_spectrum_1.pickle")
-                self.correlogram = np.load("./spec/fixtures/correlogram_1.pickle")
-                self.uniform_series = np.load("./spec/fixtures/uniform_series_1.pickle")
-                self.frequencies = np.load("./spec/fixtures/frequencies_1.pickle")
-                self.amplitudes = np.load("./spec/fixtures/amplitudes_1.pickle")
-                self.phases = np.load("./spec/fixtures/phases_1.pickle")
-
+        with shared_context('iteratoins result checker'):
             with it('returns dict with correct keys'):
                 expect(self.result).to(have_only_keys(*self.expected_keys))
 
@@ -106,6 +93,36 @@ with description(wrp.Wrapper) as self:
                         self.result[key]
                     ).to(equal_ndarray(getattr(self, key), self.round_precision))
 
+        with description('use_aver is False'):
+            with before.all:
+                self.use_aver = False
+
+                self.expected_iterations = 4
+                self.uniform_time_grid = np.load("./spec/fixtures/uniform_time_grid_1.pickle")
+                self.freq_vector = np.load("./spec/fixtures/freq_vector_1.pickle")
+                self.clean_spectrum = np.load("./spec/fixtures/clean_spectrum_1.pickle")
+                self.correlogram = np.load("./spec/fixtures/correlogram_1.pickle")
+                self.uniform_series = np.load("./spec/fixtures/uniform_series_1.pickle")
+                self.frequencies = np.load("./spec/fixtures/frequencies_1.pickle")
+                self.amplitudes = np.load("./spec/fixtures/amplitudes_1.pickle")
+                self.phases = np.load("./spec/fixtures/phases_1.pickle")
+
+            with included_context('iteratoins result checker'):
+                pass
+
         with description('use_aver is True'):
-            pass
-            #TBD
+            with before.all:
+                self.use_aver = True
+
+                self.expected_iterations = 4
+                self.uniform_time_grid = np.load("./spec/fixtures/uniform_time_grid_2.pickle")
+                self.freq_vector = np.load("./spec/fixtures/freq_vector_2.pickle")
+                self.clean_spectrum = np.load("./spec/fixtures/clean_spectrum_2.pickle")
+                self.correlogram = np.load("./spec/fixtures/correlogram_2.pickle")
+                self.uniform_series = np.load("./spec/fixtures/uniform_series_2.pickle")
+                self.frequencies = np.load("./spec/fixtures/frequencies_2.pickle")
+                self.amplitudes = np.load("./spec/fixtures/amplitudes_2.pickle")
+                self.phases = np.load("./spec/fixtures/phases_2.pickle")
+
+            with included_context('iteratoins result checker'):
+                pass
