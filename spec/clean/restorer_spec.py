@@ -6,20 +6,20 @@ import clean.schuster as sch
 with description(rst.Restorer) as self:
     with before.all:
         self.round_precision = 10
-        self.super_resultion_vector = np.load('./spec/fixtures/super_resultion_vector_with_result_1.pickle')
+        self.super_resultion_vector = np.load('./spec/fixtures/unit/super_resultion_vector_with_result_1.pickle')
         self.max_freq = 928.6049396317791 # precalculated value
         self.number_of_freq_estimations = 35934 # precalculated value
-        self.time_grid = np.load("./spec/fixtures/time_grid_1.pickle")
-        self.uniform_time_grid = np.load("./spec/fixtures/uniform_time_grid_1.pickle")
-        self.index_vector = np.load("./spec/fixtures/index_vector_1.pickle")
-        self.freq_vector = np.load("./spec/fixtures/freq_vector_1.pickle")
-        self.clean_window_vector = np.load("./spec/fixtures/clean_window_vector_1.pickle")
-        self.clean_spectrum = np.load("./spec/fixtures/clean_spectrum_1.pickle")
-        self.correlogram = np.load("./spec/fixtures/correlogram_1.pickle")
-        self.uniform_series = np.load("./spec/fixtures/uniform_series_1.pickle")
-        self.frequencies = np.load("./spec/fixtures/frequencies_1.pickle")
-        self.amplitudes = np.load("./spec/fixtures/amplitudes_1.pickle")
-        self.phases = np.load("./spec/fixtures/phases_1.pickle")
+        self.time_grid = np.load("./spec/fixtures/unit/time_grid_1.pickle")
+        self.uniform_time_grid = np.load("./spec/fixtures/unit/uniform_time_grid_1.pickle")
+        self.index_vector = np.load("./spec/fixtures/unit/index_vector_1.pickle")
+        self.freq_vector = np.load("./spec/fixtures/unit/freq_vector_1.pickle")
+        self.clean_window_vector = np.load("./spec/fixtures/unit/clean_window_vector_1.pickle")
+        self.clean_spectrum = np.load("./spec/fixtures/unit/clean_spectrum_1.pickle")
+        self.correlogram = np.load("./spec/fixtures/unit/correlogram_1.pickle")
+        self.uniform_series = np.load("./spec/fixtures/unit/uniform_series_1.pickle")
+        self.frequencies = np.load("./spec/fixtures/unit/frequencies_1.pickle")
+        self.amplitudes = np.load("./spec/fixtures/unit/amplitudes_1.pickle")
+        self.phases = np.load("./spec/fixtures/unit/phases_1.pickle")
 
     with before.each:
         self.restorer = rst.Restorer(
@@ -166,7 +166,7 @@ with description(rst.Restorer) as self:
 
         with description('#__build_clean_spectrum'):
             with before.all:
-                self.expected_result = np.load("./spec/fixtures/clean_spectrum_1.pickle")
+                self.expected_result = np.load("./spec/fixtures/unit/clean_spectrum_1.pickle")
 
             with before.each:
                 self.actual_result =  self.restorer._Restorer__build_clean_spectrum()
@@ -176,7 +176,7 @@ with description(rst.Restorer) as self:
 
         with description('#__build_correlogram'):
             with before.all:
-                self.expected_result = np.load("./spec/fixtures/correlogram_1.pickle")
+                self.expected_result = np.load("./spec/fixtures/unit/correlogram_1.pickle")
 
             with before.each:
                 self.actual_result =  self.restorer._Restorer__build_correlogram(self.clean_spectrum)
@@ -186,7 +186,7 @@ with description(rst.Restorer) as self:
 
         with description('#__build_uniform_series'):
             with before.all:
-                self.expected_result = np.load("./spec/fixtures/uniform_series_1.pickle")
+                self.expected_result = np.load("./spec/fixtures/unit/uniform_series_1.pickle")
 
             with before.each:
                 self.actual_result =  self.restorer._Restorer__build_uniform_series(self.clean_spectrum)
@@ -201,7 +201,7 @@ with description(rst.Restorer) as self:
             with description('argument is squared abs clean_spectrum)'):
                 with before.all:
                     self.values = sch.squared_abs(self.clean_spectrum)
-                    self.expected_result = np.load("./spec/fixtures/correlogram_1.pickle")
+                    self.expected_result = np.load("./spec/fixtures/unit/correlogram_1.pickle")
 
                 with included_context('correct value checker'):
                     pass
@@ -209,7 +209,7 @@ with description(rst.Restorer) as self:
             with description('argument is squared clean_spectrum)'):
                 with before.all:
                     self.values = self.clean_spectrum
-                    self.expected_result = np.load("./spec/fixtures/uniform_series_1.pickle")
+                    self.expected_result = np.load("./spec/fixtures/unit/uniform_series_1.pickle")
 
                 with included_context('correct value checker'):
                     pass

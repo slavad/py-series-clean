@@ -9,9 +9,9 @@ with description(wrp.Wrapper) as self:
         self.detection_treshold = 0.3
         self.harmonic_share = 0.5
         self.max_iterations = 10
-        self.time_grid = np.load("./spec/fixtures/time_grid_1.pickle")
-        self.values = np.load("./spec/fixtures/series_1.pickle")
-        self.distance_vector = np.load("./spec/fixtures/distance_vector_1.pickle")
+        self.time_grid = np.load("./spec/fixtures/unit/time_grid_1.pickle")
+        self.values = np.load("./spec/fixtures/unit/series_1.pickle")
+        self.distance_vector = np.load("./spec/fixtures/unit/distance_vector_1.pickle")
     with before.each:
         self.wrapper = wrp.Wrapper(self.time_grid, self.values)
 
@@ -98,14 +98,14 @@ with description(wrp.Wrapper) as self:
                 self.use_aver = False
 
                 self.expected_iterations = 4
-                self.uniform_time_grid = np.load("./spec/fixtures/uniform_time_grid_1.pickle")
-                self.freq_vector = np.load("./spec/fixtures/freq_vector_1.pickle")
-                self.clean_spectrum = np.load("./spec/fixtures/clean_spectrum_1.pickle")
-                self.correlogram = np.load("./spec/fixtures/correlogram_1.pickle")
-                self.uniform_series = np.load("./spec/fixtures/uniform_series_1.pickle")
-                self.frequencies = np.load("./spec/fixtures/frequencies_1.pickle")
-                self.amplitudes = np.load("./spec/fixtures/amplitudes_1.pickle")
-                self.phases = np.load("./spec/fixtures/phases_1.pickle")
+                self.uniform_time_grid = np.load("./spec/fixtures/unit/uniform_time_grid_1.pickle")
+                self.freq_vector = np.load("./spec/fixtures/unit/freq_vector_1.pickle")
+                self.clean_spectrum = np.load("./spec/fixtures/unit/clean_spectrum_1.pickle")
+                self.correlogram = np.load("./spec/fixtures/unit/correlogram_1.pickle")
+                self.uniform_series = np.load("./spec/fixtures/unit/uniform_series_1.pickle")
+                self.frequencies = np.load("./spec/fixtures/unit/frequencies_1.pickle")
+                self.amplitudes = np.load("./spec/fixtures/unit/amplitudes_1.pickle")
+                self.phases = np.load("./spec/fixtures/unit/phases_1.pickle")
 
             with included_context('iteratoins result checker'):
                 pass
@@ -115,14 +115,14 @@ with description(wrp.Wrapper) as self:
                 self.use_aver = True
 
                 self.expected_iterations = 4
-                self.uniform_time_grid = np.load("./spec/fixtures/uniform_time_grid_2.pickle")
-                self.freq_vector = np.load("./spec/fixtures/freq_vector_2.pickle")
-                self.clean_spectrum = np.load("./spec/fixtures/clean_spectrum_2.pickle")
-                self.correlogram = np.load("./spec/fixtures/correlogram_2.pickle")
-                self.uniform_series = np.load("./spec/fixtures/uniform_series_2.pickle")
-                self.frequencies = np.load("./spec/fixtures/frequencies_2.pickle")
-                self.amplitudes = np.load("./spec/fixtures/amplitudes_2.pickle")
-                self.phases = np.load("./spec/fixtures/phases_2.pickle")
+                self.uniform_time_grid = np.load("./spec/fixtures/unit/uniform_time_grid_2.pickle")
+                self.freq_vector = np.load("./spec/fixtures/unit/freq_vector_2.pickle")
+                self.clean_spectrum = np.load("./spec/fixtures/unit/clean_spectrum_2.pickle")
+                self.correlogram = np.load("./spec/fixtures/unit/correlogram_2.pickle")
+                self.uniform_series = np.load("./spec/fixtures/unit/uniform_series_2.pickle")
+                self.frequencies = np.load("./spec/fixtures/unit/frequencies_2.pickle")
+                self.amplitudes = np.load("./spec/fixtures/unit/amplitudes_2.pickle")
+                self.phases = np.load("./spec/fixtures/unit/phases_2.pickle")
 
             with included_context('iteratoins result checker'):
                 pass

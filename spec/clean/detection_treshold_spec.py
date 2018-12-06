@@ -6,7 +6,7 @@ with description(dtr.DetectionTreshold) as self:
         self.sigma = 2.5
         self.khi = 4
         self.number_of_random_series = 1000
-        self.time_grid = np.load("./spec/fixtures/time_grid_1.pickle")
+        self.time_grid = np.load("./spec/fixtures/unit/time_grid_1.pickle")
         self.false_alarm_probability = 0.80
         self.max_attemtps = 10
     with before.each:
@@ -67,13 +67,13 @@ with description(dtr.DetectionTreshold) as self:
                 equal_ndarray(self.random_series_array)
             )
         with it('has approx zero mean value'):
-            random_series_array = np.load('./spec/fixtures/random_series_array_1.pickle')
+            random_series_array = np.load('./spec/fixtures/unit/random_series_array_1.pickle')
             equal_with_precision
             expect(np.mean(random_series_array)).to(equal_with_precision(0.00, precision = 2))
 
     with description('#__find_detection_treshold'):
         with before.each:
-            random_series_array = np.load('./spec/fixtures/random_series_array_1.pickle')
+            random_series_array = np.load('./spec/fixtures/unit/random_series_array_1.pickle')
             self.generated_detection_treshold = self.estimator._DetectionTreshold__find_detection_treshold(
                 random_series_array, self.false_alarm_probability
             )

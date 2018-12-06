@@ -414,7 +414,7 @@ with description(ds.DirtySeries) as self:
                 equal_ndarray(self.noise)
             )
         with it('has approx zero mean'):
-            noise = np.load('./spec/fixtures/noise_1.pickle')
+            noise = np.load('./spec/fixtures/unit/noise_1.pickle')
             expect(np.mean(noise)).to(equal_with_precision(0.0, 2))
     with description('#__generate_dirty_periodical_series'):
         with before.all:

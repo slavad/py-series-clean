@@ -5,8 +5,8 @@ import clean.schuster as sch
 
 with description(itr.Iterator) as self:
     with before.all:
-        self.time_grid = np.load("./spec/fixtures/time_grid_1.pickle")
-        self.values = np.load("./spec/fixtures/series_1.pickle")
+        self.time_grid = np.load("./spec/fixtures/unit/time_grid_1.pickle")
+        self.values = np.load("./spec/fixtures/unit/series_1.pickle")
         self.khi = 4
         self.max_freq = 928.6049396317791 # precalculated value
         self.number_of_freq_estimations = 35934 # precalculated value
@@ -110,7 +110,7 @@ with description(itr.Iterator) as self:
                 ).to(equal_ndarray(self.expected_super_resultion_vector, self.round_precision))
 
         with before.all:
-            self.values = np.load("./spec/fixtures/series_1.pickle")
+            self.values = np.load("./spec/fixtures/unit/series_1.pickle")
             self.expected_key_list = ['super_resultion_vector', 'iterations']
 
         with before.each:
@@ -121,11 +121,11 @@ with description(itr.Iterator) as self:
 
         with description('can detect signal (there is a signal in the input)'):
             with before.all:
-                self.values = np.load("./spec/fixtures/series_1.pickle")
-                self.time_grid = np.load("./spec/fixtures/time_grid_1.pickle")
+                self.values = np.load("./spec/fixtures/unit/series_1.pickle")
+                self.time_grid = np.load("./spec/fixtures/unit/time_grid_1.pickle")
                 self.max_iterations = 10
                 self.expected_iterations = 4
-                self.expected_super_resultion_vector = np.load('./spec/fixtures/super_resultion_vector_with_result_1.pickle')
+                self.expected_super_resultion_vector = np.load('./spec/fixtures/unit/super_resultion_vector_with_result_1.pickle')
 
             with included_context('max value checker'):
                 pass
@@ -138,12 +138,12 @@ with description(itr.Iterator) as self:
 
         with description('can detect signal, but iterations do not not converge'):
             with before.all:
-                self.values = np.load("./spec/fixtures/series_1.pickle")
-                self.time_grid = np.load("./spec/fixtures/time_grid_1.pickle")
+                self.values = np.load("./spec/fixtures/unit/series_1.pickle")
+                self.time_grid = np.load("./spec/fixtures/unit/time_grid_1.pickle")
                 self.max_iterations = 3
                 self.expected_iterations = 3
-                self.expected_super_resultion_vector_converged = np.load('./spec/fixtures/super_resultion_vector_with_result_1.pickle')
-                self.expected_super_resultion_vector = np.load('./spec/fixtures/super_resultion_vector_with_result_2.pickle')
+                self.expected_super_resultion_vector_converged = np.load('./spec/fixtures/unit/super_resultion_vector_with_result_1.pickle')
+                self.expected_super_resultion_vector = np.load('./spec/fixtures/unit/super_resultion_vector_with_result_2.pickle')
 
             with included_context('max value checker'):
                 pass
@@ -161,11 +161,11 @@ with description(itr.Iterator) as self:
 
         with description('cannot detect signal (noise only in the input)'):
             with before.all:
-                self.values = np.load("./spec/fixtures/series_2.pickle")
-                self.time_grid = np.load("./spec/fixtures/time_grid_1.pickle")
+                self.values = np.load("./spec/fixtures/unit/series_2.pickle")
+                self.time_grid = np.load("./spec/fixtures/unit/time_grid_1.pickle")
                 self.max_iterations = 10
                 self.expected_iterations = 0
-                self.expected_super_resultion_vector = np.load('./spec/fixtures/super_resultion_vector_with_result_3.pickle')
+                self.expected_super_resultion_vector = np.load('./spec/fixtures/unit/super_resultion_vector_with_result_3.pickle')
 
             with it('super_resultion_vector contains zero values'):
                 expect(self.max_value_abs).to(
@@ -213,7 +213,7 @@ with description(itr.Iterator) as self:
     with description('#__extract_data_from_dirty_vector'):
         with before.all:
             self.expected_vector =  np.load(
-                "./spec/fixtures/dirty_vector_with_extracted_data.pickle"
+                "./spec/fixtures/unit/dirty_vector_with_extracted_data.pickle"
             )
             self.initial_vector = self.dirty_vector
         with before.each:
@@ -227,7 +227,7 @@ with description(itr.Iterator) as self:
     with description('#__add_data_to_super_resultion_vector'):
         with before.all:
             self.expected_vector =  np.load(
-                "./spec/fixtures/super_resol_vector_with_added.pickle"
+                "./spec/fixtures/unit/super_resol_vector_with_added.pickle"
             )
 
         with before.each:
@@ -333,10 +333,10 @@ with description(itr.Iterator) as self:
         with description('can detect signal (there is a signal in the input)'):
             with before.all:
                 self.expected_super_resultion_vector_with_added_data =  np.load(
-                    "./spec/fixtures/super_resol_vector_with_added.pickle"
+                    "./spec/fixtures/unit/super_resol_vector_with_added.pickle"
                 )
                 self.expected_dirty_vector_with_extracted_data =  np.load(
-                    "./spec/fixtures/dirty_vector_with_extracted_data.pickle"
+                    "./spec/fixtures/unit/dirty_vector_with_extracted_data.pickle"
                 )
                 self.old_dirty_vector = self.dirty_vector
             with before.each:
@@ -366,7 +366,7 @@ with description(itr.Iterator) as self:
         with description('cannot detect signal (noise only in the input)'):
             with before.all:
                 self.old_dirty_vector = np.load(
-                    "./spec/fixtures/old_dirty_vector_no_signal.pickle"
+                    "./spec/fixtures/unit/old_dirty_vector_no_signal.pickle"
                 )
             with before.each:
                 self.result = self.iterator._Iterator__one_step(
